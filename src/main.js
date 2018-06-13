@@ -16,8 +16,10 @@ Vue.use(Mint);
 //全局组件
 require('./components/index');
 //全局样式
+import './style/animate'
 import './style/reset'
 import './style/base'
+
 new Vue({
     el: '#app',
     router,

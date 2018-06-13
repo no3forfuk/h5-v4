@@ -6,5 +6,6 @@ function _path(component) {
 }
 
 module.exports = [
-    {path: '/', name: 'home', component: _path('Home')}
+    {path: '/', name: 'home', component: _path('Home')},
+    {path: '/userCenter', name: 'userCenter', component: _path('UserCenter')},
 ]
