@@ -6,6 +6,9 @@ function _path(component) {
 }
 
 module.exports = [
-    {path: '/', name: 'home', component: _path('Home')},
+    {path: '*', redirect: '/index'},
+    {path: '/', redirect: '/index'},
+    {path: '/index', name: 'home', component: _path('Home')},
     {path: '/userCenter', name: 'userCenter', component: _path('UserCenter')},
+    {path: '/myself', name: 'myself', component: _path('MySelf')},
 ]

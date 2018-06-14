@@ -1,0 +1,28 @@
+/*icon*/
+@font-face {
+    font-family: 'iconfont';  /* project id 707731 */
+    src: url('//at.alicdn.com/t/font_707731_c4izs187dqf.eot');
+    src: url('//at.alicdn.com/t/font_707731_c4izs187dqf.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_707731_c4izs187dqf.woff') format('woff'),
+    url('//at.alicdn.com/t/font_707731_c4izs187dqf.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_707731_c4izs187dqf.svg#iconfont') format('svg');
+}
+
+/*全局样式*/
+/*字体*/
+.font-size-16 {
+    font-size: 16px;
+}
+
+.font-size-20 {
+    font-size: 20px;
+}
+
+/*颜色*/
+.color-header {
+    color: #7D09FF;
+}
+
+.color-white {
+    color: #fff;
+}

@@ -1,10 +1,18 @@
 <template>
-    <transition name="slideInLeft">
+    <transition name="transitionName" mode="out-in">
         <div class="home">
             <rcm-header>
-
+                <i slot="left"
+                   style="font-family: iconfont"
+                   @click="goUserCenter"
+                   class="font-size-20">
+                    &#xe609;
+                </i>
+                <div slot="right" class="color-header">
+                    <span>发现</span>
+                    <i style="font-family: iconfont" class="font-size-20 ">&#xe952;</i>
+                </div>
             </rcm-header>
-            <router-link :to="{name:'userCenter'}">个人中心</router-link>
         </div>
     </transition>
 </template>
@@ -16,6 +24,11 @@
             return {
                 popupVisible: true
             }
+        },
+        methods: {
+            goUserCenter() {
+                this.$router.push('userCenter')
+            }
         }
     }
 
@@ -24,16 +37,15 @@
 <style scoped lang="less">
     .home {
         width: 100%;
-        height: 1000px;
-        background-color: #ccc;
     }
 
-    .slideInLeft-enter-active, .slideInLeft-leave-active {
-        animation: slideInLeft 0.5s;
+    .transitionName-enter-active, transitionName-leave {
+        animation: slideInRight 0.5s;
+        /*position: absolute;*/
     }
 
-    .slideInLeft-enter, .slideInLeft-leave-to {
-        animation: slideInLeft 0.5s;
+    .transitionName-leave-active {
+        animation: slideOutRight 0.5s;
+        animation-delay: 0.1s;
     }
-
 </style>
