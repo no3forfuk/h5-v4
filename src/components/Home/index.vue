@@ -3,21 +3,23 @@
         <div class="home">
             <rcm-header>
                 <i slot="left"
-                   style="font-family: iconfont"
+                   style="font-family: iconfont;"
                    @click="goUserCenter"
-                   class="font-size-20">
+                   class="font-size-28">
                     &#xe609;
                 </i>
-                <div slot="right" class="color-header">
-                    <span>发现</span>
+                <div slot="right" class="color-header" @click="findMore">
+                    <span class="font-size-16">发现</span>
                     <i style="font-family: iconfont" class="font-size-20 ">&#xe952;</i>
                 </div>
             </rcm-header>
+            <finder class="finder"></finder>
         </div>
     </transition>
 </template>
 
 <script>
+    import finder from './headerFind'
 
     export default {
         data() {
@@ -28,7 +30,15 @@
         methods: {
             goUserCenter() {
                 this.$router.push('userCenter')
+            },
+            findMore() {
+                $('.finder').css({
+                    height: 0
+                })
             }
+        },
+        components: {
+            finder
         }
     }
 
@@ -40,12 +50,15 @@
     }
 
     .transitionName-enter-active, transitionName-leave {
-        animation: slideInRight 0.5s;
-        /*position: absolute;*/
+        animation: slideInRight 0.2s;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out;
     }
 
     .transitionName-leave-active {
-        animation: slideOutRight 0.5s;
-        animation-delay: 0.1s;
+        animation: slideOutRight 0.2s;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out;
+
     }
 </style>

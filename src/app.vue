@@ -1,5 +1,6 @@
 <template>
     <div class="app">
+
         <router-view class="router-view"></router-view>
     </div>
 </template>
@@ -15,6 +16,7 @@
 </script>
 
 <style scoped lang="less">
+
     .app {
         width: 100%;
     }

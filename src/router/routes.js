@@ -5,6 +5,10 @@ function _path(component) {
     return resolve => require(['../components/' + component + '/index'], resolve)
 }
 
+function subPath(component) {
+    return resolve => require(['../components/' + component], resolve)
+}
+
 module.exports = [
     {path: '*', redirect: '/index'},
     {path: '/', redirect: '/index'},
@@ -12,7 +16,11 @@ module.exports = [
     {path: '/userCenter', name: 'userCenter', component: _path('UserCenter')},
     {
         path: '/myself', name: 'myself', component: _path('MySelf'), children: [
-            {path: '/myself/all', name: 'myselfAll'}
+            {path: '/myself/all', name: 'myselfAll', component: subPath('MySelf/myselfAll')},
+            {path: '/myself/BuildRank', name: 'myselfBuildRank', component: subPath('MySelf/myselfBuildRank')},
+            {path: '/myself/Comment', name: 'myselfComment', component: subPath('MySelf/myselfComment')},
+            {path: '/myself/Examine', name: 'myselfExamine', component: subPath('MySelf/myselfExamine')},
+            {path: '/myself/fPost', name: 'myselfPost', component: subPath('MySelf/myselfPost')}
         ]
     },
 ]

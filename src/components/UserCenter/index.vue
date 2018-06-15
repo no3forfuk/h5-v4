@@ -45,6 +45,7 @@
 <style scoped lang="less">
     .user-center {
         width: 100%;
+        background-color: #fff;
     }
 
     .footer {
@@ -57,12 +58,15 @@
     }
 
     .transitionName-enter-active {
-        animation: slideInLeft 0.5s;
+        animation: slideInLeft 0.2s;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out;
     }
 
     .transitionName-leave-active {
-        animation: slideOutLeft 0.5s;
-        animation-delay: 0.1s;
+        animation: slideOutLeft 0.2s;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out;
     }
 
 </style>

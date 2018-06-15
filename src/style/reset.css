@@ -3,6 +3,9 @@ html {
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
     font-size: 62.5%;
+    width: 100%;
+    height: 100%;
+    background-color: #ccc;
 }
 
 i, b, em {
@@ -12,7 +15,6 @@ i, b, em {
 body {
     margin: 0;
     font-size: 1.4rem;
-    line-height: 1.5;
     color: #333333;
     background-color: white;
     height: 100%;

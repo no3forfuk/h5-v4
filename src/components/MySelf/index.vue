@@ -1,6 +1,6 @@
 <template>
     <transition name="transitionName" mode="in-out">
-        <div>
+        <div class="myself">
             <rcm-header>
                 <div slot="left" @click="goPrve">
                     <i style="font-family: iconfont">&#xe600;</i><span>我的</span>
@@ -8,7 +8,6 @@
             </rcm-header>
             <banner></banner>
             <tabs></tabs>
-            <router-view></router-view>
         </div>
     </transition>
 </template>
@@ -35,12 +34,19 @@
 </script>
 
 <style scoped lang="less">
+    .myself {
+        background-color: #fff;
+    }
+
     .transitionName-enter-active {
-        animation: slideInRight 0.5s;
+        animation: slideInRight 0.2s;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out;
     }
 
     .transitionName-leave-active {
-        animation: slideOutRight 0.5s;
-        animation-delay: 0.1s;
+        animation: slideOutRight 0.2s;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out;
     }
 </style>
