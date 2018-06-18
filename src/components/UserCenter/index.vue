@@ -2,7 +2,7 @@
     <transition name="transitionName" mode="out-in">
         <div class="user-center">
             <rcm-header>
-                <div slot="left" @click="goHome">
+                <div slot="back" @click="goHome">
                     <i style="font-family: iconfont">&#xe600;</i><span>首页</span>
                 </div>
             </rcm-header>
@@ -58,15 +58,13 @@
     }
 
     .transitionName-enter-active {
-        animation: slideInLeft 0.2s;
-        -webkit-animation-timing-function: ease-in-out;
-        animation-timing-function: ease-in-out;
+        animation: slideInLeft 0.4s;
+        position: absolute;
     }
 
     .transitionName-leave-active {
-        animation: slideOutLeft 0.2s;
-        -webkit-animation-timing-function: ease-in-out;
-        animation-timing-function: ease-in-out;
+        animation: slideOutLeft 0.4s;
+        position: absolute;
     }
 
 </style>

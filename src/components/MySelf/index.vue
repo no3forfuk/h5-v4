@@ -2,7 +2,7 @@
     <transition name="transitionName" mode="in-out">
         <div class="myself">
             <rcm-header>
-                <div slot="left" @click="goPrve">
+                <div slot="back" @click="goPrve">
                     <i style="font-family: iconfont">&#xe600;</i><span>我的</span>
                 </div>
             </rcm-header>
@@ -39,14 +39,12 @@
     }
 
     .transitionName-enter-active {
-        animation: slideInRight 0.2s;
-        -webkit-animation-timing-function: ease-in-out;
-        animation-timing-function: ease-in-out;
+        animation: slideInRight 0.4s;
+        position: absolute;
     }
 
     .transitionName-leave-active {
-        animation: slideOutRight 0.2s;
-        -webkit-animation-timing-function: ease-in-out;
-        animation-timing-function: ease-in-out;
+        animation: slideOutRight 0.4s;
+        position: absolute;
     }
 </style>

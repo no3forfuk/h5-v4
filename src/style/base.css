@@ -1,13 +1,12 @@
 /*icon*/
 @font-face {
     font-family: 'iconfont';  /* project id 707731 */
-    src: url('//at.alicdn.com/t/font_707731_c4izs187dqf.eot');
-    src: url('//at.alicdn.com/t/font_707731_c4izs187dqf.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_707731_c4izs187dqf.woff') format('woff'),
-    url('//at.alicdn.com/t/font_707731_c4izs187dqf.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_707731_c4izs187dqf.svg#iconfont') format('svg');
+    src: url('//at.alicdn.com/t/font_707731_xhblzkr5s08.eot');
+    src: url('//at.alicdn.com/t/font_707731_xhblzkr5s08.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_707731_xhblzkr5s08.woff') format('woff'),
+    url('//at.alicdn.com/t/font_707731_xhblzkr5s08.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_707731_xhblzkr5s08.svg#iconfont') format('svg');
 }
-
 /*全局样式*/
 /*字体*/
 .font-size-16 {

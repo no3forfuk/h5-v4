@@ -50,7 +50,7 @@
                         index: 4
                     }
                 ],
-                tabIndex: 0
+                tabIndex: 0.1
             }
         },
         methods: {
@@ -77,6 +77,8 @@
                     if (this.$route.name == this.tabData[i].routerName) {
                         this.setSpanPosition(i)
                         this.tabIndex = i;
+                    } else {
+                        this.tabIndex = 0;
                     }
                 }
             },
@@ -130,7 +132,6 @@
         },
         watch: {
             tabIndex(n, o) {
-                if (n == o) return
                 if (n < 0) return
                 if (n + 1 > this.tabData.length) return
                 this.toggleRouter(n)
@@ -151,6 +152,7 @@
     }
 
     .router-view {
+        width: 100%;
         position: absolute;
     }
 

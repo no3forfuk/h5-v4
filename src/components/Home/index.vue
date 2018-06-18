@@ -1,44 +1,78 @@
 <template>
-    <transition name="transitionName" mode="out-in">
+    <transition v-bind:name="transitionName" mode="in-out">
         <div class="home">
             <rcm-header>
-                <i slot="left"
+                <i slot="back"
                    style="font-family: iconfont;"
                    @click="goUserCenter"
                    class="font-size-28">
                     &#xe609;
                 </i>
-                <div slot="right" class="color-header" @click="findMore">
-                    <span class="font-size-16">发现</span>
-                    <i style="font-family: iconfont" class="font-size-20 ">&#xe952;</i>
-                </div>
+                <find-ctrl slot="right"
+                           color="#7D09FF">
+                </find-ctrl>
+                <find-body slot="find"></find-body>
             </rcm-header>
-            <finder class="finder"></finder>
+            <p class="page-header">开荒神器RCM</p>
+            <ul class="ranklist">
+                <rankList class="list"
+                          v-for="(item,index) in list"
+                          :key="index">
+                </rankList>
+            </ul>
         </div>
     </transition>
 </template>
 
 <script>
-    import finder from './headerFind'
+    import findBody from '../common/Find/findBody'
+    import rankList from '../FirstRank/index'
+    import findCtrl from '../common/Find/findCtrl'
+    import {getIendx} from '../../api/api'
 
     export default {
         data() {
             return {
-                popupVisible: true
+                popupVisible: true,
+                forward: '',
+                list: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             }
+        },
+
+        created() {
+            getIendx('2018-06-15').then(res => {
+                // console.log(res);
+            }).catch(err => {
+                throw err
+            })
+        },
+        watch: {},
+        beforeRouteLeave(to, from, next) {
+            this.$store.commit('SETROUTERFROM', 'home')
+            next()
         },
         methods: {
             goUserCenter() {
-                this.$router.push('userCenter')
-            },
-            findMore() {
-                $('.finder').css({
-                    height: 0
+                this.forward = 'usercenter'
+                this.$nextTick(() => {
+                    this.$router.push({name: 'userCenter'})
                 })
             }
         },
+        computed: {
+            transitionName() {
+                if (this.forward === 'usercenter') {
+                    return 'gouser'
+                } else {
+                    return 'gother'
+                }
+
+            }
+        },
         components: {
-            finder
+            findBody,
+            findCtrl,
+            rankList
         }
     }
 
@@ -47,18 +81,42 @@
 <style scoped lang="less">
     .home {
         width: 100%;
+        background-color: #fff;
     }
 
-    .transitionName-enter-active, transitionName-leave {
-        animation: slideInRight 0.2s;
-        -webkit-animation-timing-function: ease-in-out;
-        animation-timing-function: ease-in-out;
+    .ranklist {
+        width: 100%;
+        padding: 5px 0px;
     }
 
-    .transitionName-leave-active {
-        animation: slideOutRight 0.2s;
-        -webkit-animation-timing-function: ease-in-out;
-        animation-timing-function: ease-in-out;
+    .gouser-enter-active {
+        animation: slideInRight 0.4s;
+        position: absolute;
+    }
+
+    .gouser-leave-active {
+        animation: slideOutRight 0.4s;
+        position: absolute;
 
     }
+
+    .gother-enter-active {
+        animation: slideInRight 0.4s;
+        position: absolute;
+    }
+
+    .gother-leave-active {
+        animation: slideOutLeft 0.4s;
+        position: absolute;
+    }
+
+    .page-header {
+        width: 100%;
+        padding: 0 10px;
+        padding-bottom: 5px;
+        font-size: 30px;
+        border-bottom: 1px solid #C8C7CD;
+    }
+
+
 </style>

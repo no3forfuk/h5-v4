@@ -21,8 +21,8 @@ module.exports = merge(base, {
         new HtmlWebpackPlugin({template: './index.html', filename: 'index.html'}),
     ],
     devServer: {
-        host: '192.168.0.122',
-        // host: '192.168.199.101',
+        // host: '192.168.0.122',
+        host: '192.168.199.101',
         port: 3000,
         contentBase: './dist',
         before(app) {
@@ -30,8 +30,8 @@ module.exports = merge(base, {
             const rp = require('request-promise');
             app.use(bodyParser.urlencoded({extended: false}));
             app.use(bodyParser.json());
-            var baseUrl = 'http://test.bantangtv.com';
-            // var baseUrl = 'http://www.rcm.ink';
+            // var baseUrl = 'http://test.bantangtv.com';
+            var baseUrl = 'http://www.rcm.ink';
             const go = function (requset, response) {
                 var method = requset.method;
                 var options;

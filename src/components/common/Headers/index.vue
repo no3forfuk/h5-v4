@@ -1,15 +1,18 @@
 <template>
-    <div class="rcm-header">
-        <slot name="left">
-            <div class="left font-size-16">
-                <i style="font-family: iconfont" class="font-size-24">&#xe609;</i>
+    <div>
+        <div class="rcm-header">
+            <div class="left">
+                <slot name="back"></slot>
+                <slot name="text"></slot>
             </div>
-        </slot>
-        <slot name="right">
-            <div class="right font-size-16 color-header">
-
+            <div class="right" @click="active">
+                <slot name="right"></slot>
             </div>
-        </slot>
+        </div>
+        <div class="find-bottom">
+            <slot name="find">
+            </slot>
+        </div>
     </div>
 </template>
 
@@ -18,7 +21,11 @@
         data() {
             return {};
         },
-
+        methods: {
+            active() {
+                $('.find-bottom').slideToggle(200)
+            }
+        }
     };
 </script>
 <style scoped lang="less">

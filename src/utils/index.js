@@ -23,4 +23,8 @@ utils.getTouchType = function (vm, jqueryObj, index) {
         leaveX = e.changedTouches[0].pageX;
     })
 }
+//获取屏幕高度
+utils.getWindowHeight = function () {
+    return $(window).height();
+}
 module.exports = utils;
