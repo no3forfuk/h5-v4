@@ -82,13 +82,13 @@
             align-items: baseline;
             flex-direction: row;
             border-radius: 4px;
-            padding: 4px 15px 7px 5px;
+            padding: 4px 15px 5px 5px;
             .icon {
                 color: #FF2C09;
-                margin: 0 10px;
+                margin: 0 5px;
             }
             span:nth-child(2) {
-                font-size: 16px;
+                font-size: 14px;
                 color: #939398;
             }
         }

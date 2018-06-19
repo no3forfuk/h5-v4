@@ -47,6 +47,11 @@ module.exports = [
         component: _path('UserCenter')
     },
     {
+        path: '/userInfo',
+        name: 'userInfo',
+        component: _path('UserInfo')
+    },
+    {
         path: '/secondRank',
         name: 'secondRank',
         component: _path('SecondRank'),

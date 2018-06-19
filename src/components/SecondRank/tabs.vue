@@ -9,7 +9,7 @@
             </li>
             <span class="__" :style="spanPosition"></span>
         </ul>
-        <transition name="transitionName" mode="in-out">
+        <transition name="transitionName" mode="out-in">
             <router-view></router-view>
         </transition>
     </div>

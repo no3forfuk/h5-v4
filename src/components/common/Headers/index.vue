@@ -38,4 +38,11 @@
         align-items: center;
         padding: 5px 10px;
     }
+
+    .left {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
 </style>

@@ -12,6 +12,9 @@
                 </find-ctrl>
                 <find-body slot="find"></find-body>
             </rcm-header>
+            <element-header></element-header>
+            <element-body></element-body>
+            <element-footer></element-footer>
         </div>
     </transition>
 </template>
@@ -19,6 +22,9 @@
 <script>
     import findCtrl from '../common/Find/findCtrl'
     import findBody from '../common/Find/findBody'
+    import elementHeader from './elementHeader'
+    import elementBody from './elementBody'
+    import elementFooter from './elementFooter'
 
     export default {
         data() {
@@ -37,7 +43,10 @@
         methods: {},
         components: {
             findCtrl,
-            findBody
+            findBody,
+            elementHeader,
+            elementBody,
+            elementFooter
         }
     }
 

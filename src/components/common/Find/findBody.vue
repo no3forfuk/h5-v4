@@ -95,7 +95,7 @@
                 params.level = 1;
                 params.page = 1;
                 getFirstRank(params).then(res => {
-                    console.log(res);
+                    // console.log(res);
                 }).catch(err => {
                     throw err;
                 })

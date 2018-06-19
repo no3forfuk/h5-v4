@@ -6,10 +6,29 @@
           content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="http://at.alicdn.com/t/font_681939_n8bbyb0td8izr529.css">
-    <link rel="shortcut icon" type="image/x-icon" href="./bitbug_favicon.ico" rel="external nofollow" />
+    <link rel="shortcut icon" type="image/x-icon" href="./bitbug_favicon.ico" rel="external nofollow"/>
     <title>RCM</title>
 </head>
 <body>
 <div id="app"></div>
+<script>
+    window.onload = function () {
+        document.documentElement.addEventListener('touchstart', function (event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, false);
+
+
+        var lastTouchEnd = 0;
+        document.documentElement.addEventListener('touchend', function (event) {
+            var now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    }
+</script>
 </body>
 </html>

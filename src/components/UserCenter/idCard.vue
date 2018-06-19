@@ -2,7 +2,9 @@
     <div class="user-card">
         <div class="pic">
             <img src="http://p9w69x04q.bkt.clouddn.com/20141214131233_YsRmd.png" alt="">
-            <i style="font-family: iconfont">&#xe602;</i>
+            <span @click="editUserInfo">
+                <icon :value="'&#xe602;'">编辑</icon>
+            </span>
         </div>
         <p class="name">
             <span>意大利万岁__昵称</span>
@@ -27,6 +29,11 @@
     export default {
         data() {
             return {}
+        },
+        methods: {
+            editUserInfo() {
+                this.$router.push({name: 'userInfo'})
+            }
         }
     }
 

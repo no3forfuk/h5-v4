@@ -19,12 +19,13 @@
 
     .app {
         width: 100%;
+        height: 100%;
         position: relative;
-        background-color: #fff;
     }
 
     .router-view {
         width: 100%;
+        height: 100%;
     }
 
     .home-usercenter-enter-active {
