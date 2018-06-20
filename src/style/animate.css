@@ -293,7 +293,7 @@
 
 @-webkit-keyframes scaleToCenter {
     from {
-        transform: translate3d(50%, 50%, 0);
+        transform: translate3d(50%, -50%, 0);
         transform: scale3d(0, 0, 0);
         opacity: 0;
     }
@@ -306,7 +306,7 @@
 
 @keyframes scaleToCenter {
     from {
-        transform: translate3d(50%, 50%, 0);
+        transform: translate3d(50%, -50%, 0);
         transform: scale3d(0, 0, 0);
         opacity: 0;
     }

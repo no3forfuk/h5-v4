@@ -7,58 +7,134 @@
                       slot="back"></icon>
                 <span slot="text">我的</span>
             </rcm-header>
-            <div class="user-pic" @click="changePic">
-                <span class="font-size-16">
-                    <span>修改</span><span>头像</span>
-                    <input type="file"
-                           style="width: 0;opacity: 0;height: 0px;position: absolute;"
-                           accept="image/jpg,image/png"
-                           ref="pic">
-                </span>
-                <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
-            </div>
-            <div class="user-name">
-                <span class="font-size-16">
-                    <span>修改</span><span>昵称</span>
-                </span>
-                <icon :value="'&#xe601;'" class="font-size-20"></icon>
-            </div>
-            <div class="user-fav">
-                <span class="font-size-16">
-                    <span>修改</span><span>擅长领域</span>
-                </span>
-                <icon :value="'&#xe601;'" class="font-size-20"></icon>
-            </div>
-            <div class="user-sign">
-                <span class="font-size-16">
-                    <span>修改</span><span>个性签名</span>
-                </span>
-                <icon :value="'&#xe601;'" class="font-size-20"></icon>
-            </div>
+            <edit-pic :value="userpic"></edit-pic>
+            <edit-username @click="editStart" :value="username"></edit-username>
+            <edit-userfav @click="editStart" :value="userfav"></edit-userfav>
+            <edit-usersign @click="editStart" :value="usersign"></edit-usersign>
             <div class="belt"></div>
             <div class="confirm">完 成</div>
             <div class="belt"></div>
             <div class="footer"><p>用爱喂食挚爱，那么TA将GO BIG</p></div>
+            <transition name="editModal">
+                <div class="modal-edit" v-show="editActive">
+                    <rcm-header>
+                    <span slot="text"
+                          class="font-size-16"
+                          @click="editCancel"
+                          style="color:#FF2C09;">取消</span>
+                        <span slot="right"
+                              class="font-size-16"
+                              @click="editComplete"
+                              style="color:#FF2C09;">完成</span>
+                    </rcm-header>
+                    <div class="modal-body">
+                        <div class="input-box">
+                            <input type="text"
+                                   placeholder="有趣的昵称很重要哦！"
+                                   v-model="username"
+                                   ref="username"
+                                   v-show="editItem == 'username'">
+                            <input type="text"
+                                   placeholder="输入自己的个性签名"
+                                   v-model="usersign"
+                                   v-show="editItem == 'usersign'">
+                            <input type="text"
+                                   v-model="userfav"
+                                   disabled
+                                   placeholder="选择一个自己的擅长领域"
+                                   v-show="editItem == 'userfav'">
+                        </div>
+                        <scroll-select></scroll-select>
+                    </div>
+                </div>
+            </transition>
         </div>
     </transition>
 </template>
 
 <script>
+    import editPic from './editPic'
+    import editUsername from './editUsername'
+    import editUserfav from './editUserfav'
+    import editUsersign from './editUsersign'
+    import scrollSelect from './scrollSelect'
 
     export default {
         data() {
-            return {}
+            return {
+                editActive: false,
+                editItem: '',
+                username: '修改昵称',
+                usersign: '修改个性签名',
+                userpic: '修改头像',
+                userfav: '修改擅长领域',
+                temp: {}
+            }
         },
         methods: {
-            changePic() {
-                this.$refs.pic.click()
+            editStart(msg) {
+                this.editItem = msg;
+                this.editActive = true;
+                this.temp = {[msg]: this[msg]};
+                this[msg] = '';
+            },
+            editComplete() {
+                this.editActive = false;
+            },
+            editCancel() {
+                this.editActive = false;
+                for (let k in this.temp) {
+                    this[k] = this.temp[k]
+                }
             }
+        },
+        mounted() {
+
+        },
+        components: {
+            editPic,
+            editUsername,
+            editUserfav,
+            editUsersign,
+            scrollSelect
         }
     }
 
 </script>
 
 <style scoped lang="less">
+    .user-info {
+        width: 100%;
+    }
+
+    .modal-edit {
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        padding: 10px;
+        .modal-body {
+            padding: 10px;
+            width: 100%;
+            .input-box {
+                width: 100%;
+                border: 1px solid #C8C7CD;
+                input {
+                    width: 100%;
+                    height: 32px;
+                    border: 0 none;
+                    color: #000;
+                    opacity: 1;
+                    background-color: #fff;
+                }
+            }
+        }
+
+    }
+
     .belt {
         width: 100%;
         height: 7px;
@@ -66,7 +142,6 @@
     }
 
     .footer {
-
         width: 100%;
         height: 50px;
         line-height: 50px;
@@ -91,55 +166,6 @@
         padding: 10px;
     }
 
-    .user-info {
-        width: 100%;
-        .user-pic {
-            width: 100%;
-            padding: 15px 26px 15px 20px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-            img {
-                width: 53px;
-                height: 53px;
-                border-radius: 50%;
-            }
-        }
-        .user-name {
-            width: 100%;
-            padding: 15px 26px 15px 20px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-        }
-        .user-fav {
-            width: 100%;
-            padding: 15px 26px 15px 20px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-        }
-        .user-sign {
-            width: 100%;
-            padding: 15px 26px 15px 20px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-        }
-    }
-
     .transitionName-enter-active {
         animation: slideInRight 0.4s;
         position: absolute;
@@ -147,6 +173,16 @@
 
     .transitionName-leave-active {
         animation: slideOutLeft 0.4s;
+        position: absolute;
+    }
+
+    .editModal-enter-active {
+        animation: slideInRight 0.4s;
+        position: absolute;
+    }
+
+    .editModal-leave-active {
+        animation: slideOutRight 0.4s;
         position: absolute;
     }
 </style>
