@@ -1,6 +1,6 @@
 <template>
     <ul>
-        <li v-for="(item,index) in postLists">
+        <li v-for="(item,index) in postLists" :key="index">
             <div class="left">
                 <icon :value="'&#xe64b;'" class="font-size-20"></icon>
                 <span>125</span>

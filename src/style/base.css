@@ -7,6 +7,7 @@
     url('//at.alicdn.com/t/font_707731_x0xcfsi1cg.ttf') format('truetype'),
     url('//at.alicdn.com/t/font_707731_x0xcfsi1cg.svg#iconfont') format('svg');
 }
+
 /*全局样式*/
 /*字体*/
 .font-size-16 {
@@ -28,6 +29,10 @@
 /*颜色*/
 .color-header {
     color: #7D09FF;
+}
+
+.color-cancel {
+    color: #FF2C09;
 }
 
 .color-white {

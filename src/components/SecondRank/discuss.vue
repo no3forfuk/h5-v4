@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="list-head">
-            <div class="add-element">
+            <div class="add-element" @click="activeDiscuss">
                 <icon :value="'&#xe685;'" class="icon"></icon>
                 <span>说点什么，参与讨论</span>
             </div>
@@ -26,6 +26,27 @@
             </div>
         </div>
         <discuess-list></discuess-list>
+        <transition name="discuss">
+            <div class="add-discuss" v-show="discussIsOpen">
+                <rcm-header>
+                    <span slot="text" @click.stop="cancelDiscuss" class="color-cancel">取消</span>
+                    <span slot="right" @click.stop="confirmDiscuss" class="color-cancel">完成</span>
+                </rcm-header>
+                <div class="discuss-body">
+                    <div class="discuss-user">
+                        <div class="left">
+                            <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
+                            <span>广东猎人</span>
+                        </div>
+                        <span class="right">注册并享受更多好礼</span>
+                    </div>
+                    <div class="discuss-content">
+                        <textarea v-model="discussText" @focus="getTextareaFocus"></textarea>
+                        <span>{{wordLength}}/350</span>
+                    </div>
+                </div>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -47,6 +68,9 @@
                         }
                     ]
                 },
+                discussIsOpen: false,
+                wordLength: 0,
+                discussText: ''
             }
         },
         methods: {
@@ -56,6 +80,25 @@
             toggleSelect(i) {
                 this.selection.selectActive = false;
                 this.selection.value = this.selection.selectItems[i].text;
+            },
+            activeDiscuss() {
+                this.discussIsOpen = true;
+                this.getTextareaFocus()
+            },
+            cancelDiscuss() {
+                this.discussIsOpen = false;
+            },
+            getTextareaFocus() {
+
+            },
+            confirmDiscuss() {
+                this.discussIsOpen = false;
+            }
+
+        },
+        watch: {
+            discussText(n, o) {
+                this.wordLength = n.length;
             }
         },
         components: {
@@ -139,6 +182,71 @@
         }
     }
 
+    .add-discuss {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #fff;
+        z-index: 3;
+        .discuss-body {
+            padding: 10px;
+            .discuss-user {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                padding-bottom: 10px;
+                .left {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    justify-content: left;
+                    align-items: center;
+                    img {
+                        width: 18px;
+                        height: 18px;
+                        border-radius: 50%;
+                    }
+                    span {
+                        margin-left: 10px;
+                    }
+                }
+                .right {
+                    padding: 2px 5px;
+                    background-color: #E4E4E4;
+                    color: #FF2C09;
+                    font-weight: bold;
+                    border-radius: 4px;
+                }
+            }
+            .discuss-content {
+                position: relative;
+                width: 100%;
+                height: 90px;
+                border-radius: 6px;
+                overflow: hidden;
+                border: 1px solid #D6D6D6;
+                padding: 1px 5px;
+                textarea {
+                    display: block;
+                    width: 100%;
+                    height: 80%;
+                    border: 0 none;
+                    resize: none;
+                    border-radius: 7px;
+                    font-size: 14px;
+                }
+                span {
+                    position: absolute;
+                    right: 3px;
+                    bottom: 0;
+                }
+            }
+        }
+
+    }
+
     .sort-select-enter-active {
         animation: fadeIn 0.5s;
         position: absolute;
@@ -146,6 +254,16 @@
 
     .sort-select-leave-active {
         animation: fadeOut 0.5s;
+        position: absolute;
+    }
+
+    .discuss-enter-active {
+        animation: slideInUp 0.4s;
+        position: absolute;
+    }
+
+    .discuss-leave-active {
+        animation: slideOutDown 0.4s;
         position: absolute;
     }
 </style>

@@ -21,6 +21,12 @@
         data() {
             return {};
         },
+        mounted() {
+            this.$nextTick(() => {
+
+            })
+
+        },
         methods: {
             active() {
                 $('.find-bottom').slideToggle(200)
@@ -31,6 +37,7 @@
 <style scoped lang="less">
     .rcm-header {
         width: 100%;
+        background-color: #fff;
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;

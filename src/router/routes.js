@@ -17,6 +17,11 @@ module.exports = [
         path: '/', redirect: '/index'
     },
     {
+        path: '/addPost',
+        name: 'addPost',
+        component: resolve => require(['../components/Post/publicPost'], resolve)
+    },
+    {
         path: '/index',
         name: 'home',
         component: _path('Home')

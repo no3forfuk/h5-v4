@@ -15,7 +15,7 @@
             </div>
             <div class="father-rank">
                 <ul>
-                    <li v-for="(item,index) in fatherData">
+                    <li v-for="(item,index) in fatherData" :key="index">
                         <router-link :to="{name:'secondRankList'}">
                             <div>
                                 <span>#1</span>
@@ -31,7 +31,7 @@
         <div class="bottom">
             <div class="add-element">
                 <icon :value="'&#xe685;'" class="icon"></icon>
-                <span>说点什么，参与讨论</span>
+                <span @click.stop="addPost">说点什么，参与讨论</span>
             </div>
             <div class="sort-element">
                 <div class="sort-ctrl" @click="toggleSort">
@@ -84,6 +84,9 @@
             toggleSelect(i) {
                 this.selection.selectActive = false;
                 this.selection.value = this.selection.selectItems[i].text;
+            },
+            addPost() {
+                this.$router.push({name: 'addPost'})
             }
         }
     }

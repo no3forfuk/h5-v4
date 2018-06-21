@@ -10,6 +10,14 @@
         data() {
             return {}
         },
+        mounted() {
+            this.$nextTick(() => {
+                $('.app').css({
+                    height: $(window).height()
+                })
+            })
+        },
+        methods: {},
         computed: {}
     }
 
@@ -19,13 +27,15 @@
 
     .app {
         width: 100%;
-        height: 100%;
+        overflow: hidden;
         position: relative;
+        background-color: #fff;
     }
 
     .router-view {
         width: 100%;
         height: 100%;
+        background-color: #fff;
     }
 
     .home-usercenter-enter-active {

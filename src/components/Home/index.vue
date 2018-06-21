@@ -1,7 +1,7 @@
 <template>
     <transition v-bind:name="transitionName" mode="in-out">
         <div class="home">
-            <rcm-header>
+            <rcm-header class="home-header">
                 <i slot="back"
                    style="font-family: iconfont;"
                    @click="goUserCenter"
@@ -11,15 +11,17 @@
                 <find-ctrl slot="right"
                            color="#7D09FF">
                 </find-ctrl>
-                <find-body slot="find"></find-body>
+                <find-body slot="find" class="find-body"></find-body>
             </rcm-header>
-            <p class="page-header">开荒神器RCM</p>
-            <ul class="ranklist">
-                <rankList class="list"
-                          v-for="(item,index) in list"
-                          :key="index">
-                </rankList>
-            </ul>
+            <div class="home-body">
+                <p class="page-header">开荒神器RCM</p>
+                <ul class="ranklist">
+                    <rankList class="list"
+                              v-for="(item,index) in list"
+                              :key="index">
+                    </rankList>
+                </ul>
+            </div>
         </div>
     </transition>
 </template>
@@ -35,7 +37,8 @@
             return {
                 popupVisible: true,
                 forward: '',
-                list: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                list: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                scrollY: 0
             }
         },
 
@@ -46,12 +49,29 @@
                 throw err
             })
         },
+        mounted() {
+            this.$nextTick(() => {
+                this.setScrollHeight()
+            })
+        },
+        updated() {
+            this.$nextTick(() => {
+                this.setScrollHeight()
+            })
+        },
         watch: {},
         beforeRouteLeave(to, from, next) {
             this.$store.commit('SETROUTERFROM', 'home')
             next()
         },
         methods: {
+            setScrollHeight() {
+                let windowHeight = $(window).height();
+                let headerHeight = $('.home-header').height()
+                let activeHeight = $('.find-body').height()
+                let bodyHeight = windowHeight - headerHeight + activeHeight;
+                $('.home-body').height(bodyHeight)
+            },
             goUserCenter() {
                 this.forward = 'usercenter'
                 this.$nextTick(() => {
@@ -82,6 +102,9 @@
     .home {
         width: 100%;
         background-color: #fff;
+        .home-body {
+            overflow-y: auto;
+        }
     }
 
     .ranklist {
