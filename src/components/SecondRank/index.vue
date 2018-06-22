@@ -1,10 +1,9 @@
 <template>
-    <transition name="transitionName" mode="in-out">
+    <transition :name="transitionName" mode="in-out">
         <div class="second-page">
-            <rcm-header>
+            <rcm-header :routerTo="backName">
                 <icon slot="back"
                       :value="'&#xe600;'"
-                      :pathName="backName"
                       class="font-size-20">
                 </icon>
                 <find-ctrl slot="right"
@@ -31,8 +30,17 @@
             }
         },
         beforeRouteLeave(to, from, next) {
-            this.$store.commit('SETROUTERFROM', 'secondrank')
+
             next()
+        },
+        computed: {
+            transitionName() {
+                if (this.$store.state.routerFrom == 'home') {
+                    return 'next'
+                } else {
+                    return 'prev'
+                }
+            }
         },
         components: {
             findCtrl,
@@ -50,13 +58,23 @@
         width: 100%;
     }
 
-    .transitionName-enter-active {
+    .next-enter-active {
         animation: slideInRight 0.4s;
         position: absolute;
     }
 
-    .transitionName-leave-active {
-        animation: slideOutLeft 0.4s;
+    .next-leave-active {
+        animation: slideOutRight 0.4s;
+        position: absolute;
+    }
+
+    .prev-enter-active {
+        animation: slideInLeft 0.4s;
+        position: absolute;
+    }
+
+    .prev-leave-active {
+        animation: slideOutRight 0.4s;
         position: absolute;
     }
 </style>

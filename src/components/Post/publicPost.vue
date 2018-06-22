@@ -1,12 +1,22 @@
 <template>
-    <div style="position: relative;" class="public-post">
-        <rcm-header>
-            <span slot="text" class="color-cancel">取消</span>
-            <span slot="right" class="color-cancel">完成</span>
-        </rcm-header>
-        <p class="ele-title">@元素标题</p>
-        <div contenteditable="true" class="edit-body" @focus="getEditorBoxFocus" @blur="lostEditorBoxFocus"></div>
-        <div class="edit-ctrl"></div>
+    <div class="public-post">
+        <div>
+            <rcm-header>
+                <span slot="text" class="color-cancel">取消</span>
+                <span slot="right" class="color-cancel">完成</span>
+            </rcm-header>
+            <p class="ele-title">@元素标题</p>
+            <div class="edit-box">
+                <div contenteditable="true"
+                     class="edit-body"
+                     @focus="getEditorBoxFocus"
+                     @blur="lostEditorBoxFocus">
+                </div>
+            </div>
+        </div>
+        <div class="edit-ctrl">
+            aa
+        </div>
     </div>
 </template>
 
@@ -18,21 +28,19 @@
         },
         mounted() {
             this.$nextTick(() => {
-                $('public-post').css({
-                    height: 300
-                })
+                // $('.edit-body').css({
+                //     maxHeight: 736 - 80 - 20
+                // })
+                $('.public-post').height(736)
             })
         },
         methods: {
             getEditorBoxFocus() {
-                $('.edit-ctrl').css({
-                    position: 'fixed'
-                })
+
+
             },
             lostEditorBoxFocus() {
-                $('.edit-ctrl').css({
-                    position: 'absolute'
-                })
+
             }
         },
         watch: {}
@@ -52,17 +60,20 @@
         }
     }
 
+    .edit-box {
+        width: 100%;
+        overflow-y: auto;
+        max-height: 500px;
+    }
+
     .edit-body {
         width: 100%;
-        height: 300px;
-        border: 1px solid #ccc;
+        overflow-y: auto;
+        max-height: 400px;
     }
 
     .edit-ctrl {
         width: 60%;
-        position: absolute;
-        bottom: 0;
-        right: 0;
         height: 20px;
         border: 1px solid #ccc;
     }

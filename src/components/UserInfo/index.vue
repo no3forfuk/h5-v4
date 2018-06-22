@@ -1,7 +1,7 @@
 <template>
     <transition name="transitionName" mode="in-out">
         <div class="user-info">
-            <rcm-header>
+            <rcm-header :routerTo="'userCenter'">
                 <icon :value="'&#xe600;'"
                       class="font-size-20"
                       slot="back"></icon>

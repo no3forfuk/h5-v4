@@ -43,11 +43,7 @@
         },
 
         created() {
-            getIendx('2018-06-15').then(res => {
-                // console.log(res);
-            }).catch(err => {
-                throw err
-            })
+
         },
         mounted() {
             this.$nextTick(() => {
@@ -60,8 +56,14 @@
             })
         },
         watch: {},
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                vm.$store.commit('SETROUTERTO', from.name)
+            })
+        },
         beforeRouteLeave(to, from, next) {
-            this.$store.commit('SETROUTERFROM', 'home')
+            this.$store.commit('SETROUTERTO', to.name)
+            this.$store.commit('SETROUTERFROM', from.name)
             next()
         },
         methods: {
@@ -73,7 +75,7 @@
                 $('.home-body').height(bodyHeight)
             },
             goUserCenter() {
-                this.forward = 'usercenter'
+                this.$store.commit('SETROUTERTO', 'userCenter')
                 this.$nextTick(() => {
                     this.$router.push({name: 'userCenter'})
                 })
@@ -81,12 +83,11 @@
         },
         computed: {
             transitionName() {
-                if (this.forward === 'usercenter') {
-                    return 'gouser'
+                if (this.$store.state.routerTo == 'userCenter') {
+                    return 'prev'
                 } else {
-                    return 'gother'
+                    return 'next'
                 }
-
             }
         },
         components: {
@@ -112,23 +113,22 @@
         padding: 5px 0px;
     }
 
-    .gouser-enter-active {
-        animation: slideInRight 0.4s;
+    .next-enter-active {
+        animation: slideInLeft 0.4s;
         position: absolute;
     }
 
-    .gouser-leave-active {
+    .prev-leave-active {
         animation: slideOutRight 0.4s;
         position: absolute;
-
     }
 
-    .gother-enter-active {
+    .prev-enter-active {
         animation: slideInRight 0.4s;
         position: absolute;
     }
 
-    .gother-leave-active {
+    .next-leave-active {
         animation: slideOutLeft 0.4s;
         position: absolute;
     }

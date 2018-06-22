@@ -28,6 +28,12 @@
                 this.direction = 'home'
             }
         },
+        beforeRouteLeave(to, from, next) {
+            // if (to.name == 'home') {
+            //     this.$store.commit('SETROUTERFROM', from.name)
+            // }
+            next()
+        },
         methods: {
             goHome() {
                 this.$router.push({name: 'home'})

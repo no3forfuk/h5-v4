@@ -31,6 +31,7 @@
                 list: [0, 1, 3, 3, 3, 3]
             }
         },
+        methods: {},
         components: {
             firstRank,
             cell
