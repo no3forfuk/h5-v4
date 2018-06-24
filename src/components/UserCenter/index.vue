@@ -1,16 +1,14 @@
 <template>
-    <transition name="transitionName" mode="out-in">
-        <div class="user-center">
-            <rcm-header>
-                <div slot="back" @click="goHome">
-                    <i style="font-family: iconfont">&#xe600;</i><span>首页</span>
-                </div>
-            </rcm-header>
-            <card></card>
-            <opts></opts>
-            <footer class="footer">为了保证RCM榜单数据的客观真实，需要您的支持</footer>
-        </div>
-    </transition>
+    <div class="user-center">
+        <rcm-header>
+            <div slot="back" @click="goHome">
+                <i style="font-family: iconfont">&#xe600;</i><span>首页</span>
+            </div>
+        </rcm-header>
+        <card></card>
+        <opts></opts>
+        <footer class="footer">为了保证RCM榜单数据的客观真实，需要您的支持</footer>
+    </div>
 </template>
 
 <script>
@@ -29,9 +27,8 @@
             }
         },
         beforeRouteLeave(to, from, next) {
-            // if (to.name == 'home') {
-            //     this.$store.commit('SETROUTERFROM', from.name)
-            // }
+            this.$store.commit('SETROUTERFROM', from.name)
+            this.$store.commit('SETROUTERTO', to.name)
             next()
         },
         methods: {
@@ -63,14 +60,5 @@
         line-height: 40px;
     }
 
-    .transitionName-enter-active {
-        animation: slideInLeft 0.4s;
-        position: absolute;
-    }
-
-    .transitionName-leave-active {
-        animation: slideOutLeft 0.4s;
-        position: absolute;
-    }
 
 </style>

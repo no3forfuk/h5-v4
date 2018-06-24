@@ -1,10 +1,9 @@
 <template>
-    <transition :name="transitionName" mode="in-out">
+
         <div class="element-page">
-            <rcm-header>
+            <rcm-header class="element-header">
                 <icon slot="back"
                       :value="'&#xe600;'"
-                      :pathName="backName"
                       class="font-size-20">
                 </icon>
                 <find-ctrl slot="right"
@@ -12,11 +11,13 @@
                 </find-ctrl>
                 <find-body slot="find"></find-body>
             </rcm-header>
-            <element-header></element-header>
-            <element-body></element-body>
-            <element-footer></element-footer>
+            <div class="element-body">
+                <element-header></element-header>
+                <element-body></element-body>
+                <element-footer></element-footer>
+            </div>
         </div>
-    </transition>
+
 </template>
 
 <script>
@@ -29,18 +30,26 @@
     export default {
         data() {
             return {
-                backName: 'secondRankList',
+
             }
         },
         created() {
 
         },
+        mounted() {
+            this.$nextTick(() => {
+                this.setScrollBoxHeight()
+            })
+        },
         computed: {
-            transitionName() {
-                return this.$store.state.routerFrom
+
+        },
+        methods: {
+            setScrollBoxHeight() {
+                let Height = $(window).height() - $('.element-header').height()
+                $('.element-body').height(Height + 27)
             }
         },
-        methods: {},
         components: {
             findCtrl,
             findBody,
@@ -58,15 +67,10 @@
         width: 100%;
     }
 
-    .secondrank-enter-active {
-        animation: slideInRight 0.4s;
+    .element-body {
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
-    .home-enter-active {
-        animation: scaleToCenter 0.5s;
-    }
-
-    .secondrank-leave-active, .home-leave-active {
-        animation: slideOutLeft 0.4s;
-    }
 </style>

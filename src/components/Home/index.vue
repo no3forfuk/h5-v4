@@ -1,29 +1,27 @@
 <template>
-    <transition v-bind:name="transitionName" mode="in-out">
-        <div class="home">
-            <rcm-header class="home-header">
-                <i slot="back"
-                   style="font-family: iconfont;"
-                   @click="goUserCenter"
-                   class="font-size-28">
-                    &#xe609;
-                </i>
-                <find-ctrl slot="right"
-                           color="#7D09FF">
-                </find-ctrl>
-                <find-body slot="find" class="find-body"></find-body>
-            </rcm-header>
-            <div class="home-body">
-                <p class="page-header">开荒神器RCM</p>
-                <ul class="ranklist">
-                    <rankList class="list"
-                              v-for="(item,index) in list"
-                              :key="index">
-                    </rankList>
-                </ul>
-            </div>
+    <div class="home">
+        <rcm-header class="home-header">
+            <icon slot="back"
+                  @click="goUserCenter"
+                  :value="'&#xe609;'"
+                  class="font-size-28">
+            </icon>
+            <find-ctrl slot="right"
+                       color="#7D09FF">
+            </find-ctrl>
+            <find-body slot="find" class="find-body"></find-body>
+        </rcm-header>
+        <div class="home-body">
+            <p class="page-header">开荒神器RCM</p>
+            <ul class="ranklist">
+                <rankList class="list"
+                          v-for="(item,index) in list"
+                          :key="index">
+                </rankList>
+            </ul>
         </div>
-    </transition>
+    </div>
+
 </template>
 
 <script>
@@ -56,14 +54,10 @@
             })
         },
         watch: {},
-        beforeRouteEnter(to, from, next) {
-            next(vm => {
-                vm.$store.commit('SETROUTERTO', from.name)
-            })
-        },
+
         beforeRouteLeave(to, from, next) {
-            this.$store.commit('SETROUTERTO', to.name)
             this.$store.commit('SETROUTERFROM', from.name)
+            this.$store.commit('SETROUTERTO', to.name)
             next()
         },
         methods: {
@@ -75,21 +69,10 @@
                 $('.home-body').height(bodyHeight)
             },
             goUserCenter() {
-                this.$store.commit('SETROUTERTO', 'userCenter')
-                this.$nextTick(() => {
-                    this.$router.push({name: 'userCenter'})
-                })
+                this.$router.push({name: 'userCenter'})
             }
         },
-        computed: {
-            transitionName() {
-                if (this.$store.state.routerTo == 'userCenter') {
-                    return 'prev'
-                } else {
-                    return 'next'
-                }
-            }
-        },
+        computed: {},
         components: {
             findBody,
             findCtrl,
@@ -111,26 +94,6 @@
     .ranklist {
         width: 100%;
         padding: 5px 0px;
-    }
-
-    .next-enter-active {
-        animation: slideInLeft 0.4s;
-        position: absolute;
-    }
-
-    .prev-leave-active {
-        animation: slideOutRight 0.4s;
-        position: absolute;
-    }
-
-    .prev-enter-active {
-        animation: slideInRight 0.4s;
-        position: absolute;
-    }
-
-    .next-leave-active {
-        animation: slideOutLeft 0.4s;
-        position: absolute;
     }
 
     .page-header {

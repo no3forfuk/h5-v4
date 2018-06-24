@@ -1,6 +1,8 @@
 <template>
     <div class="app">
-        <router-view class="router-view"></router-view>
+        <transition :name="transitionName">
+            <router-view class="router-view"></router-view>
+        </transition>
     </div>
 </template>
 
@@ -10,6 +12,9 @@
         data() {
             return {}
         },
+        created() {
+            this.$store.commit('SETROUTERDIRECTION', 'forward')
+        },
         mounted() {
             this.$nextTick(() => {
                 $('.app').css({
@@ -18,7 +23,11 @@
             })
         },
         methods: {},
-        computed: {}
+        computed: {
+            transitionName() {
+                return this.$store.state.routerFrom + '-' + this.$store.state.routerTo
+            }
+        }
     }
 
 </script>
@@ -38,33 +47,23 @@
         background-color: #fff;
     }
 
-    .home-usercenter-enter-active {
-        animation: slideInLeft 0.4s;
-        position: absolute;
-    }
-
-    .home-usercenter-leave-active, .base-leave-active {
-        animation: slideOutLeft 0.4s;
-        position: absolute;
-    }
-
-    .usercenter-home-enter-active, .base-enter-active {
+    .forward-enter-active, .forward-userCenter-home-enter-active {
         animation: slideInRight 0.4s;
         position: absolute;
     }
 
-    .usercenter-home-leave-active {
-        animation: slideOutRight 0.4s;
-        position: absolute;
-    }
-
-    .home-element-enter-active {
-        animation: scaleToCenter 0.5s;
-        position: absolute;
-    }
-
-    .home-element-leave-active {
+    .forward-leave-active, .forward-userCenter-home-leave-active {
         animation: slideOutLeft 0.4s;
+        position: absolute;
+    }
+
+    .back-enter-active, .forward-home-userCenter-enter-active {
+        animation: slideInLeft 0.4s;
+        position: absolute;
+    }
+
+    .back-leave-active, .forward-home-userCenter-leave-active {
+        animation: slideOutRight 0.4s;
         position: absolute;
     }
 </style>

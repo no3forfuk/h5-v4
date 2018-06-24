@@ -4,7 +4,7 @@
 const state = {
     routerFrom: '',
     routerTo: '',
-    routerForword: true
+    routerDirection: 'forward'
 }
 const mutations = {
     SETROUTERFROM(state, direction) {
@@ -13,8 +13,8 @@ const mutations = {
     SETROUTERTO(state, direction) {
         state.routerTo = direction
     },
-    SETROUTERFORWORD(state, direction) {
-        state.routerForword = direction
+    SETROUTERDIRECTION(state, direction) {
+        state.routerDirection = direction
     }
 };
 module.exports = {

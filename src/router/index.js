@@ -2,6 +2,7 @@
 'use strict'
 const routes = require('./routes');
 module.exports = {
+    // mode: 'history',
     routes,
     // scrollBehavior(to, from, savedPosition) {
     //     if (savedPosition) {

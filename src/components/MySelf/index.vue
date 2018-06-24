@@ -1,5 +1,5 @@
 <template>
-    <transition name="transitionName" mode="in-out">
+
         <div class="myself">
             <rcm-header>
                 <div slot="back" @click="goPrve">
@@ -9,7 +9,7 @@
             <banner></banner>
             <tabs></tabs>
         </div>
-    </transition>
+
 </template>
 
 <script>
@@ -38,13 +38,5 @@
         background-color: #fff;
     }
 
-    .transitionName-enter-active {
-        animation: slideInRight 0.4s;
-        position: absolute;
-    }
 
-    .transitionName-leave-active {
-        animation: slideOutRight 0.4s;
-        position: absolute;
-    }
 </style>

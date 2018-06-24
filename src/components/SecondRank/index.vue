@@ -1,7 +1,6 @@
 <template>
-    <transition :name="transitionName" mode="in-out">
         <div class="second-page">
-            <rcm-header :routerTo="backName">
+            <rcm-header>
                 <icon slot="back"
                       :value="'&#xe600;'"
                       class="font-size-20">
@@ -14,7 +13,6 @@
             <second-head></second-head>
             <tabs></tabs>
         </div>
-    </transition>
 </template>
 
 <script>
@@ -34,13 +32,7 @@
             next()
         },
         computed: {
-            transitionName() {
-                if (this.$store.state.routerFrom == 'home') {
-                    return 'next'
-                } else {
-                    return 'prev'
-                }
-            }
+
         },
         components: {
             findCtrl,
@@ -58,23 +50,5 @@
         width: 100%;
     }
 
-    .next-enter-active {
-        animation: slideInRight 0.4s;
-        position: absolute;
-    }
 
-    .next-leave-active {
-        animation: slideOutRight 0.4s;
-        position: absolute;
-    }
-
-    .prev-enter-active {
-        animation: slideInLeft 0.4s;
-        position: absolute;
-    }
-
-    .prev-leave-active {
-        animation: slideOutRight 0.4s;
-        position: absolute;
-    }
 </style>

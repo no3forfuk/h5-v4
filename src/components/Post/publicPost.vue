@@ -1,22 +1,16 @@
 <template>
     <div class="public-post">
-        <div>
+        <div class="top">
             <rcm-header>
-                <span slot="text" class="color-cancel">取消</span>
-                <span slot="right" class="color-cancel">完成</span>
+                <span slot="text">取消</span>
+                <span slot="right">完成</span>
             </rcm-header>
-            <p class="ele-title">@元素标题</p>
-            <div class="edit-box">
-                <div contenteditable="true"
-                     class="edit-body"
-                     @focus="getEditorBoxFocus"
-                     @blur="lostEditorBoxFocus">
-                </div>
-            </div>
+            <p>@元素名称</p>
         </div>
-        <div class="edit-ctrl">
-            aa
+        <div class="center">
+            <div contenteditable="true" class="edit-box" @focus="getEditBoxFocus" @blur="lostEditBoxFocus"></div>
         </div>
+        <div class="footer" @click="aa"></div>
     </div>
 </template>
 
@@ -28,19 +22,24 @@
         },
         mounted() {
             this.$nextTick(() => {
-                // $('.edit-body').css({
-                //     maxHeight: 736 - 80 - 20
-                // })
-                $('.public-post').height(736)
+                $('.public-post').height($(window).height())
             })
         },
         methods: {
-            getEditorBoxFocus() {
+            aa() {
+                alert($(window).height())
+            },
+            getEditBoxFocus() {
+                // $('.public-post').height()
+                setTimeout(() => {
+                    let height = $('.public-post')[0].clientHeight / 2
 
+                    $('.public-post').height(height)
+                }, 1000)
 
             },
-            lostEditorBoxFocus() {
-
+            lostEditBoxFocus() {
+                $('.public-post').height($(window).height())
             }
         },
         watch: {}
@@ -52,29 +51,23 @@
     .public-post {
         width: 100%;
         position: relative;
-        .ele-title {
+        transition: all 0.5s;
+        .center {
             width: 100%;
-            padding: 10px;
-            font-weight: bold;
-            font-size: 16px;
+            border: 1px solid #000;
+            .edit-box {
+                width: 100%;
+                height: 170px;
+            }
         }
     }
 
-    .edit-box {
+    .footer {
         width: 100%;
-        overflow-y: auto;
-        max-height: 500px;
-    }
-
-    .edit-body {
-        width: 100%;
-        overflow-y: auto;
-        max-height: 400px;
-    }
-
-    .edit-ctrl {
-        width: 60%;
         height: 20px;
-        border: 1px solid #ccc;
+        background-color: #ccc;
+        position: absolute;
+        bottom: 0;
+        left: 0;
     }
 </style>

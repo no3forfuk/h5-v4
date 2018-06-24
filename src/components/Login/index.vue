@@ -1,5 +1,5 @@
 <template>
-    <transition name="transitionName" mode="in-out">
+
         <div class="login">
             <rcm-header>
                 <icon slot="back"
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-    </transition>
+
 </template>
 
 <script>
@@ -70,15 +70,6 @@
 </script>
 
 <style scoped lang="less">
-    .transitionName-enter-active {
-        animation: slideInRight 0.4s;
-        position: absolute;
-    }
-
-    .transitionName-leave-active {
-        animation: slideOutLeft 0.4s;
-        position: absolute;
-    }
 
     .login {
         width: 100%;

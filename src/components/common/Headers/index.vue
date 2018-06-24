@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="rcm-header">
-            <div class="left" @click="goBack">
+            <div class="left">
                 <slot name="back"></slot>
                 <slot name="text"></slot>
             </div>
@@ -28,9 +28,6 @@
 
         },
         methods: {
-            goBack() {
-                this.$router.replace({name: this.routerTo})
-            },
             active() {
                 $('.find-bottom').slideToggle(200)
             }
