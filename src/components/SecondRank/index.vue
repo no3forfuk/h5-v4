@@ -1,18 +1,19 @@
 <template>
-        <div class="second-page">
-            <rcm-header>
-                <icon slot="back"
-                      :value="'&#xe600;'"
-                      class="font-size-20">
-                </icon>
-                <find-ctrl slot="right"
-                           color="#7D09FF">
-                </find-ctrl>
-                <find-body slot="find"></find-body>
-            </rcm-header>
-            <second-head></second-head>
-            <tabs></tabs>
-        </div>
+    <div class="second-page">
+        <rcm-header>
+            <icon slot="back"
+                  @click="goHome"
+                  :value="'&#xe600;'"
+                  class="font-size-20">
+            </icon>
+            <find-ctrl slot="right"
+                       color="#7D09FF">
+            </find-ctrl>
+            <find-body slot="find"></find-body>
+        </rcm-header>
+        <second-head></second-head>
+        <tabs></tabs>
+    </div>
 </template>
 
 <script>
@@ -28,11 +29,15 @@
             }
         },
         beforeRouteLeave(to, from, next) {
-
+            this.$store.commit('SETROUTERFROM', from.name)
+            this.$store.commit('SETROUTERTO', to.name)
             next()
         },
-        computed: {
-
+        computed: {},
+        methods: {
+            goHome() {
+                this.$router.back()
+            }
         },
         components: {
             findCtrl,

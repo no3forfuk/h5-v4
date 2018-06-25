@@ -2,7 +2,9 @@
     <div>
         <div class="rcm-header">
             <div class="left">
-                <slot name="back"></slot>
+                <slot name="back">
+                    <icon :value="'&#xe600;'" class="font-size-20" @click="goBack"></icon>
+                </slot>
                 <slot name="text"></slot>
             </div>
             <div class="right" @click="active">
@@ -28,6 +30,12 @@
 
         },
         methods: {
+            goBack() {
+                this.$store.commit('SETROUTERDIRECTION', 'back')
+                this.$nextTick(() => {
+                    this.$router.back()
+                })
+            },
             active() {
                 $('.find-bottom').slideToggle(200)
             }

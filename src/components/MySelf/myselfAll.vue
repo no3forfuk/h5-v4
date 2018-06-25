@@ -1,6 +1,7 @@
 <template>
     <div>
         all
+        <button @click="ds">asdasdad</button>
     </div>
 </template>
 
@@ -9,6 +10,11 @@
     export default {
         data() {
             return {}
+        },
+        methods: {
+            ds() {
+                console.log('a');
+            }
         }
     }
 

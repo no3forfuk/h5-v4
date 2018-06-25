@@ -6,7 +6,7 @@
                 <span>125</span>
             </div>
             <div class="right">
-                <router-link :to="{name:''}">
+                <router-link :to="{name:'post'}">
                     <text-post v-if="item.type == 1"></text-post>
                     <img-text v-if="item.type == 2"></img-text>
                     <img-post v-if="item.type == 3"></img-post>

@@ -31,7 +31,8 @@
                     {
                         type: 'opts',
                         title: '发布的榜单',
-                        icon: '&#xe6c5;'
+                        icon: '&#xe6c5;',
+                        routeName: 'myselfBuildRank'
                     },
                     {
                         type: 'opts',

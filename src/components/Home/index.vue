@@ -14,10 +14,8 @@
         <div class="home-body">
             <p class="page-header">开荒神器RCM</p>
             <ul class="ranklist">
-                <rankList class="list"
-                          v-for="(item,index) in list"
-                          :key="index">
-                </rankList>
+                <rank-card v-for="(item,index) in list"
+                           :key="index"></rank-card>
             </ul>
         </div>
     </div>

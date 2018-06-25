@@ -9,11 +9,9 @@
             </li>
             <span :style="spanPosition"></span>
         </ul>
-        <div class="tabs-view">
-            <transition name="transitonName" mode="out-in">
-                <router-view class="router-view"></router-view>
-            </transition>
-        </div>
+        <transition name="transitonName" mode="out-in">
+            <router-view></router-view>
+        </transition>
     </div>
 </template>
 
@@ -22,7 +20,7 @@
     export default {
         data() {
             return {
-                liOffsetX: 0,
+                liOffsetX: 2,
                 tabData: [
                     {
                         title: '全部',
@@ -31,12 +29,12 @@
                     },
                     {
                         title: '评论',
-                        routerName: 'myselfBuildRank',
+                        routerName: 'myselfComment',
                         index: 1
                     },
                     {
                         title: '建榜',
-                        routerName: 'myselfComment',
+                        routerName: 'myselfBuildRank',
                         index: 2
                     },
                     {
@@ -77,6 +75,7 @@
                     if (this.$route.name == this.tabData[i].routerName) {
                         this.setSpanPosition(i)
                         this.tabIndex = i;
+                        break;
                     } else {
                         this.tabIndex = 0;
                     }
@@ -153,7 +152,6 @@
 
     .router-view {
         width: 100%;
-        position: absolute;
     }
 
     .tabs-view {

@@ -93,6 +93,7 @@
             }
         }
         .sort-element {
+            background-color: #fff;
             position: relative;
             .sort-ctrl {
                 display: flex;
@@ -108,6 +109,7 @@
                 }
             }
             .sort-select {
+                background-color: #fff;
                 width: 66px;
                 height: 40px;
                 border: 1px solid rgba(0, 0, 0, 0.1);

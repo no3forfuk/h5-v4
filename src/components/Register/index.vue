@@ -142,6 +142,7 @@
             text-align: center;
             color: #8B8B8B;
             .protocol {
+                text-align: center;
                 span {
                     i {
                         text-decoration: underline;

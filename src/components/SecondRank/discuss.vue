@@ -29,7 +29,7 @@
         <transition name="discuss">
             <div class="add-discuss" v-show="discussIsOpen">
                 <rcm-header>
-                    <span slot="text" @click.stop="cancelDiscuss" class="color-cancel">取消</span>
+                    <span slot="back" @click.stop="cancelDiscuss" class="color-cancel">取消</span>
                     <span slot="right" @click.stop="confirmDiscuss" class="color-cancel">完成</span>
                 </rcm-header>
                 <div class="discuss-body">
@@ -41,8 +41,8 @@
                         <span class="right">注册并享受更多好礼</span>
                     </div>
                     <div class="discuss-content">
-                        <textarea v-model="discussText" @focus="getTextareaFocus"></textarea>
-                        <span>{{wordLength}}/350</span>
+                        <textarea v-model="discussText" ref="discussTextarea" id="discussTextarea"></textarea>
+                        <span style="color: #D3D3D3;">{{wordLength}}/350</span>
                     </div>
                 </div>
             </div>
@@ -83,7 +83,12 @@
             },
             activeDiscuss() {
                 this.discussIsOpen = true;
-                this.getTextareaFocus()
+
+                setTimeout(() => {
+                    console.log('a');
+                    $('#discussTextarea').focus()
+                }, 3000)
+
             },
             cancelDiscuss() {
                 this.discussIsOpen = false;
@@ -135,6 +140,7 @@
         }
         .sort-element {
             position: relative;
+            background-color: #fff;
             flex: 0 0 24px;
             .sort-ctrl {
                 display: flex;
@@ -153,6 +159,7 @@
                 width: 66px;
                 height: 40px;
                 border: 1px solid rgba(0, 0, 0, 0.1);
+                background-color: #fff;
                 position: absolute;
                 right: 0px;
                 top: 40px;

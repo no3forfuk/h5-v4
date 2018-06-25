@@ -1,9 +1,9 @@
 <template>
     <ul>
         <li>
-            <div class="left">
-                <icon :value="'&#xe647;'" class="font-size-20"></icon>
-                <span>123</span>
+            <div class="left" @click="didGreat">
+                <icon :value="'&#xe647;'" class="font-size-20" :style="activeStyle"></icon>
+                <span :style="activeStyle">123</span>
             </div>
             <div class="center">
                 <div class="user">
@@ -29,13 +29,31 @@
 
     export default {
         data() {
-            return {}
+            return {
+                greatActive: false
+            }
+        },
+        methods: {
+            didGreat() {
+                this.greatActive = true;
+            }
+        },
+        computed: {
+            activeStyle() {
+                return this.greatActive ? {
+                    color: '#FF2C09'
+                } : {}
+            }
         }
     }
 
 </script>
 
 <style scoped lang="less">
+    .activeColor {
+        color: #FF2C09;
+    }
+
     ul {
         width: 100%;
         li {
@@ -48,6 +66,12 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                i {
+                    color: #000;
+                }
+                span {
+                    color: #8B8B8B;
+                }
             }
             .center {
                 flex: 1;

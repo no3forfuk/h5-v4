@@ -84,6 +84,11 @@ module.exports = [
         component: _path('Element'),
     },
     {
+        path: '/post',
+        name: 'post',
+        component: _path('Post'),
+    },
+    {
         path: '/myself',
         name: 'myself',
         component: _path('MySelf'),

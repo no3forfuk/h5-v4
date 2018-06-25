@@ -27,7 +27,7 @@
         },
         methods: {
             aa() {
-                alert($(window).height())
+                $('.edit-box').focus()
             },
             getEditBoxFocus() {
                 // $('.public-post').height()

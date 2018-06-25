@@ -2,9 +2,19 @@
     <div class="ele-header">
         <div class="top">
             <div class="ele-info">
-                <p>@我就算饿死都不会吃你一口东西（王境泽）</p>
+                <p @click="$emit('openDetails','')">@我就算饿死都不会吃你一口东西（王境泽）</p>
                 <p>来自变形记某王姓嘉宾</p>
-                <p>投一票</p>
+                <p @click="vote">投一票</p>
+                <div class="more-options">
+                    <div class="collect">
+                        <icon :value="'&#xe62b;'" class="font-size-16"></icon>
+                        <span>收藏</span>
+                    </div>
+                    <div class="more">
+                        <icon :value="'&#xe62f;'" class="font-size-16"></icon>
+                        <span>更多</span>
+                    </div>
+                </div>
             </div>
             <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
         </div>
@@ -87,6 +97,14 @@
             },
             addPost() {
                 this.$router.push({name: 'addPost'})
+            },
+            vote() {
+                if (!sessionStorage.getItem('X-Auth-Token')) {
+                    this.$router.push({name: 'login'})
+                }
+            },
+            goElementDetails() {
+                this.$router.push({name: 'elementDetails'})
             }
         }
     }
@@ -105,6 +123,33 @@
             .ele-info {
                 flex: 1;
                 padding-right: 15px;
+                position: relative;
+                .more-options {
+                    position: absolute;
+                    right: 10px;
+                    bottom: 0px;
+                    display: inline-flex;
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    .collect {
+                        width: 30px;
+                        display: flex;
+                        flex-direction: column;
+                        font-size: 12px;
+                        justify-content: center;
+                        align-items: center;
+                    }
+
+                    .more {
+                        width: 30px;
+                        display: flex;
+                        flex-direction: column;
+                        font-size: 12px;
+                        justify-content: center;
+                        align-items: center;
+                        margin-left: 10px;
+                    }
+                }
                 p:nth-child(1) {
                     font-weight: bold;
                     line-height: 24px;
@@ -214,6 +259,7 @@
             }
             .sort-element {
                 position: relative;
+                background-color: #fff;
                 .sort-ctrl {
                     display: flex;
                     flex-direction: column;
@@ -234,6 +280,7 @@
                     position: absolute;
                     right: 0px;
                     top: 40px;
+                    background-color: #fff;
                     .sanjiao {
                         display: block;
                         width: 10px;

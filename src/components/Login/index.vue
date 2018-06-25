@@ -1,43 +1,40 @@
 <template>
 
-        <div class="login">
-            <rcm-header>
-                <icon slot="back"
-                      :value="'&#xe600;'"
-                      class="font-size-20">
-                </icon>
-            </rcm-header>
-            <p style="font-size: 22px;line-height: 24px;padding: 10px">欢迎来到RCM</p>
-            <div class="login-body">
-                <div class="login-form">
-                    <div class="phone-number">
-                        <input type="number" placeholder="手机号">
-                    </div>
-                    <div class="pass-word">
-                        <input type="password" placeholder="密码">
-                    </div>
+    <div class="login">
+        <rcm-header>
+            <span slot="left"></span>
+        </rcm-header>
+        <p style="font-size: 22px;line-height: 24px;padding: 10px">欢迎来到RCM</p>
+        <div class="login-body">
+            <div class="login-form">
+                <div class="phone-number">
+                    <input type="number" placeholder="手机号">
                 </div>
-                <div class="login-opts">
-                    <div>
-                        <button @click="goIndex">登入</button>
-                    </div>
-                    <div>
-                        <span @click="goRegiser">注册RCM</span>
-                        <span></span>
-                        <span @click="resetPassword">忘记密码</span>
-                    </div>
+                <div class="pass-word">
+                    <input type="password" placeholder="密码">
                 </div>
-                <div class="login-tpye">
-                    <div class="wechat">
-                        <span><i>微信登录</i><i>微信登录</i></span>
-                    </div>
+            </div>
+            <div class="login-opts">
+                <div>
+                    <button @click="goIndex">登入</button>
+                </div>
+                <div>
+                    <span @click="goRegiser">注册RCM</span>
                     <span></span>
-                    <div class="tx-qq">
-                        <span><i>QQ登录</i><i>QQ登录</i></span>
-                    </div>
+                    <span @click="resetPassword">忘记密码</span>
+                </div>
+            </div>
+            <div class="login-tpye">
+                <div class="wechat">
+                    <span><i>微信登录</i><i>微信登录</i></span>
+                </div>
+                <span></span>
+                <div class="tx-qq">
+                    <span><i>QQ登录</i><i>QQ登录</i></span>
                 </div>
             </div>
         </div>
+    </div>
 
 </template>
 
@@ -53,6 +50,11 @@
                     height: $(window).height()
                 })
             })
+        },
+        beforeRouteLeave(to, from, next) {
+            this.$store.commit('SETROUTERFROM', from.name)
+            this.$store.commit('SETROUTERTO', to.name)
+            next()
         },
         methods: {
             goIndex() {

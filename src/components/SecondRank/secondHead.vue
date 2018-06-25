@@ -5,6 +5,16 @@
             <div class="desc">
                 <p>收集了一些带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游</p>
             </div>
+            <div class="more-options">
+                <div class="collect">
+                    <icon :value="'&#xe62b;'" class="font-size-16"></icon>
+                    <span>收藏</span>
+                </div>
+                <div class="more">
+                    <icon :value="'&#xe62f;'" class="font-size-16"></icon>
+                    <span>更多</span>
+                </div>
+            </div>
         </div>
         <div class="right">
             <span>RCM评级</span>
@@ -33,6 +43,8 @@
 </script>
 
 <style scoped lang="less">
+
+
     .second-head {
         width: 100%;
         display: flex;
@@ -43,6 +55,7 @@
         .left {
             flex: 1;
             padding-right: 10px;
+            position: relative;
             h2 {
                 font-weight: bold;
             }
@@ -52,6 +65,32 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
+                }
+            }
+            .more-options {
+                position: absolute;
+                right: 10px;
+                bottom: 0px;
+                display: inline-flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                .collect {
+                    width: 30px;
+                    display: flex;
+                    flex-direction: column;
+                    font-size: 12px;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .more {
+                    width: 30px;
+                    display: flex;
+                    flex-direction: column;
+                    font-size: 12px;
+                    justify-content: center;
+                    align-items: center;
+                    margin-left: 10px;
                 }
             }
         }

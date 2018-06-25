@@ -4,6 +4,7 @@
             <rcm-header :routerTo="'userCenter'">
                 <icon :value="'&#xe600;'"
                       class="font-size-20"
+                      @click="goBack"
                       slot="back"></icon>
                 <span slot="text">我的</span>
             </rcm-header>
@@ -71,6 +72,11 @@
                 temp: {}
             }
         },
+        beforeRouteLeave(to, from, next) {
+            this.$store.commit('SETROUTERFROM', from.name)
+            this.$store.commit('SETROUTERTO', to.name)
+            next()
+        },
         methods: {
             editStart(msg) {
                 this.editItem = msg;
@@ -86,6 +92,9 @@
                 for (let k in this.temp) {
                     this[k] = this.temp[k]
                 }
+            },
+            goBack() {
+                this.$router.back()
             }
         },
         mounted() {

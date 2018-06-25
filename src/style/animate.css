@@ -383,3 +383,36 @@
     -webkit-animation-name: scaleToCenter;
     animation-name: scaleToCenter;
 }
+
+@-webkit-keyframes scaleFromCenter {
+    from {
+        transform: translate3d(0, 0, 0);
+        transform: scale3d(1, 1, 1);
+        opacity: 1;
+
+    }
+    to {
+        transform: translate3d(50%, -50%, 0);
+        transform: scale3d(0, 0, 0);
+        opacity: 0;
+    }
+}
+
+@keyframes scaleFromCenter {
+    from {
+        transform: translate3d(0, 0, 0);
+        transform: scale3d(1, 1, 1);
+        opacity: 1;
+
+    }
+    to {
+        transform: translate3d(50%, -50%, 0);
+        transform: scale3d(0, 0, 0);
+        opacity: 0;
+    }
+}
+
+.scaleFromCenter {
+    -webkit-animation-name: scaleFromCenter;
+    animation-name: scaleFromCenter;
+}
