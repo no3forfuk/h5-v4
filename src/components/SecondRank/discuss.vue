@@ -42,7 +42,7 @@
                     </div>
                     <div class="discuss-content">
                         <textarea v-model="discussText" ref="discussTextarea" id="discussTextarea"></textarea>
-                        <span style="color: #D3D3D3;">{{wordLength}}/350</span>
+                        <span style="color: #D3D3D3;">{{wordLength}}/350</span>m
                     </div>
                 </div>
             </div>

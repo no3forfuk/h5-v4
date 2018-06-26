@@ -1,13 +1,17 @@
 <template>
     <div class="scroll-select">
+        <p>修改擅长榜单</p>
         <div class="select-box">
             <icon :value="'&#xe790;'" class="icon"></icon>
             <ul>
                 <li v-for="(item,index) in scrollData"
+                    ref="lis"
                     :key="index">
                     <span>{{item.value}}</span>
                 </li>
             </ul>
+            <div class="mark-top"></div>
+            <div class="mark-bottom"></div>
         </div>
     </div>
 </template>
@@ -17,6 +21,7 @@
     export default {
         data() {
             return {
+                ulTranslateY: 0,
                 scrollData: [
                     {
                         value: '热门'
@@ -42,6 +47,44 @@
                 ]
             }
         },
+        mounted() {
+            this.selectScroll()
+        },
+        computed: {},
+        methods: {
+            selectScroll() {
+                let heightAll = 0
+                for (let i = 0; i < this.$refs.lis.length; i++) {
+                    heightAll += $(this.$refs.lis[i]).height()
+                }
+                $('.select-box').on('touchstart', (e) => {
+                    let enterY = e.changedTouches[0].pageY;
+                    console.log(enterY);
+                    let Y = this.ulTranslateY
+                    $('.select-box').on('touchmove', (e) => {
+                        e.preventDefault()
+                        let changeY = e.changedTouches[0].pageY - enterY;
+
+                        this.ulTranslateY = Y + changeY
+                        console.log(e.changedTouches[0].pageY);
+                        if (this.ulTranslateY > 30) {
+                            return
+                        }
+
+                        $('.select-box>ul').css({
+                            transform: 'translateY(' + this.ulTranslateY + 'px)'
+                        })
+                    })
+                })
+                $('.select-box').on('touchend', (e) => {
+                    if (this.ulTranslateY > 0) {
+                        $('.select-box>ul').css({
+                            transform: 'translateY(' + 0 + 'px)'
+                        })
+                    }
+                })
+            }
+        },
         computed: {}
     }
 
@@ -49,19 +92,40 @@
 
 <style scoped lang="less">
     .scroll-select {
-        display: flex;
-        flex-direction: row;
+        .mark-top {
+            width: 100%;
+            height: 140px;
+            position: fixed;
+            bottom: 140px;
+            left: 0;
+            z-index: 4;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 1));
+        }
+        .mark-bottom {
+            width: 100%;
+            height: 120px;
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            z-index: 4;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 1));
+        }
         height: 300px;
         width: 100%;
         border-top: 1px solid rgba(0, 0, 0, 0.2);
-        align-items: center;
-        position: fixed;
+        overflow: hidden;
+        position: absolute;
         z-index: 2;
         bottom: 0;
         background-color: #fff;
         left: 0;
+        p {
+            width: 100%;
+            text-align: center;
+        }
         .select-box {
-            height: 20px;
+            height: 300px;
+            overflow: hidden;
             width: 100%;
             position: relative;
             .icon {
@@ -71,7 +135,9 @@
             }
             ul {
                 width: 100%;
-                height: 20px;
+                padding-top: 140px;
+                padding-bottom: 140px;
+                transition: all 0.5s;
                 li {
                     display: flex;
                     flex-direction: row;

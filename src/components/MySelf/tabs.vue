@@ -20,7 +20,7 @@
     export default {
         data() {
             return {
-                liOffsetX: 2,
+                liOffsetX: 0,
                 tabData: [
                     {
                         title: '全部',

@@ -19,7 +19,7 @@
             <transition name="editModal">
                 <div class="modal-edit" v-show="editActive">
                     <rcm-header>
-                    <span slot="text"
+                    <span slot="back"
                           class="font-size-16"
                           @click="editCancel"
                           style="color:#FF2C09;">取消</span>
