@@ -42,7 +42,7 @@
                     </div>
                     <div class="discuss-content">
                         <textarea v-model="discussText" ref="discussTextarea" id="discussTextarea"></textarea>
-                        <span style="color: #D3D3D3;">{{wordLength}}/350</span>m
+                        <span style="color: #D3D3D3;">{{wordLength}}/350</span>
                     </div>
                 </div>
             </div>
@@ -83,12 +83,6 @@
             },
             activeDiscuss() {
                 this.discussIsOpen = true;
-
-                setTimeout(() => {
-                    console.log('a');
-                    $('#discussTextarea').focus()
-                }, 3000)
-
             },
             cancelDiscuss() {
                 this.discussIsOpen = false;

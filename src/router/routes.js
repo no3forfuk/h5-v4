@@ -76,12 +76,19 @@ module.exports = [
                 name: 'secondRankActivity',
                 component: subPath('SecondRank/activity')
             },
+
         ]
     },
     {
         path: '/element',
         name: 'element',
         component: _path('Element'),
+        children: []
+    },
+    {
+        path: '/addElement',
+        name: 'addElement',
+        component: subPath('SecondRank/addElement')
     },
     {
         path: '/post',

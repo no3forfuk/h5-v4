@@ -1,6 +1,6 @@
 <template>
     <div class="app">
-        <transition :name="transitionName" >
+        <transition :name="transitionName">
             <router-view class="router-view"></router-view>
         </transition>
     </div>
@@ -58,6 +58,7 @@
     .userCenter-userInfo-enter-active,
     .secondRankList-element-enter-active,
     .home-secondRankList-enter-active,
+    .element-addPost-enter-active,
     .userCenter-home-enter-active {
         animation: slideInRight 0.4s;
         position: absolute;
@@ -73,6 +74,7 @@
     .userCenter-userInfo-leave-active,
     .secondRankList-element-leave-active,
     .home-secondRankList-leave-active,
+    .element-addPost-leave-active,
     .userCenter-home-leave-active {
         animation: slideOutLeft 0.4s;
         position: absolute;
@@ -86,6 +88,7 @@
     .element-secondRankList-enter-active,
     .element-home-enter-active,
     .secondRankList-home-enter-active,
+    .addPost-element-enter-active,
     .home-userCenter-enter-active {
         animation: slideInLeft 0.4s;
         position: absolute;
@@ -99,6 +102,7 @@
     .element-secondRankList-leave-active,
     .element-home-leave-active,
     .secondRankList-home-leave-active,
+    .addPost-element-leave-active,
     .home-userCenter-leave-active {
         animation: slideOutRight 0.4s;
         position: absolute;

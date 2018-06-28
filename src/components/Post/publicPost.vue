@@ -48,6 +48,11 @@
                 videoNewHtml: ''
             }
         },
+        beforeRouteLeave(to, from, next) {
+            this.$store.commit('SETROUTERFROM', from.name)
+            this.$store.commit('SETROUTERTO', to.name)
+            next()
+        },
         mounted() {
             this.$nextTick(() => {
                 $('.public-post').height($(window).height())
@@ -55,7 +60,7 @@
         },
         methods: {
             cancelPublic() {
-
+                this.$router.replace({name: 'element'})
             },
             confirmPublic() {
                 console.log($('.edit-box').html());

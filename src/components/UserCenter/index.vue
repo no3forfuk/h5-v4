@@ -5,9 +5,11 @@
                 <i style="font-family: iconfont">&#xe600;</i><span>首页</span>
             </div>
         </rcm-header>
-        <card></card>
-        <opts></opts>
-        <footer class="footer">为了保证RCM榜单数据的客观真实，需要您的支持</footer>
+        <div class="user-body">
+            <card></card>
+            <opts></opts>
+            <footer class="footer">为了保证RCM榜单数据的客观真实，需要您的支持</footer>
+        </div>
     </div>
 </template>
 
@@ -25,6 +27,12 @@
             go() {
                 this.direction = 'home'
             }
+        },
+        mounted() {
+            this.$nextTick(() => {
+                $('.user-center').height($(window).height())
+                $('.user-body').height($(window).height() - 29)
+            })
         },
         beforeRouteLeave(to, from, next) {
             this.$store.commit('SETROUTERFROM', from.name)
@@ -49,6 +57,11 @@
     .user-center {
         width: 100%;
         background-color: #fff;
+    }
+
+    .user-body {
+        width: 100%;
+        overflow-y: auto;
     }
 
     .footer {

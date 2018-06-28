@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="list-head">
-            <div class="add-element">
+            <div class="add-element" @click="addElement">
                 <icon :value="'&#xe685;'" class="icon"></icon>
                 <span>添加新的排名</span>
             </div>
@@ -52,6 +52,9 @@
             }
         },
         methods: {
+            addElement() {
+                this.$router.push({name: 'addElement'})
+            },
             toggleSort() {
                 this.selection.selectActive = !this.selection.selectActive;
             },

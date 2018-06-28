@@ -2,7 +2,6 @@
     <div class="scroll-select">
         <p>修改擅长榜单</p>
         <div class="select-box">
-            <icon :value="'&#xe790;'" class="icon"></icon>
             <ul>
                 <li v-for="(item,index) in scrollData"
                     ref="lis"
@@ -10,8 +9,6 @@
                     <span>{{item.value}}</span>
                 </li>
             </ul>
-            <div class="mark-top"></div>
-            <div class="mark-bottom"></div>
         </div>
     </div>
 </template>
@@ -48,43 +45,12 @@
             }
         },
         mounted() {
-            this.selectScroll()
+            this.$nextTick(() => {
+
+            })
         },
         computed: {},
-        methods: {
-            selectScroll() {
-                let heightAll = 0
-                for (let i = 0; i < this.$refs.lis.length; i++) {
-                    heightAll += $(this.$refs.lis[i]).height()
-                }
-                $('.select-box').on('touchstart', (e) => {
-                    let enterY = e.changedTouches[0].pageY;
-                    console.log(enterY);
-                    let Y = this.ulTranslateY
-                    $('.select-box').on('touchmove', (e) => {
-                        e.preventDefault()
-                        let changeY = e.changedTouches[0].pageY - enterY;
-
-                        this.ulTranslateY = Y + changeY
-                        console.log(e.changedTouches[0].pageY);
-                        if (this.ulTranslateY > 30) {
-                            return
-                        }
-
-                        $('.select-box>ul').css({
-                            transform: 'translateY(' + this.ulTranslateY + 'px)'
-                        })
-                    })
-                })
-                $('.select-box').on('touchend', (e) => {
-                    if (this.ulTranslateY > 0) {
-                        $('.select-box>ul').css({
-                            transform: 'translateY(' + 0 + 'px)'
-                        })
-                    }
-                })
-            }
-        },
+        methods: {},
         computed: {}
     }
 
@@ -125,9 +91,9 @@
         }
         .select-box {
             height: 300px;
-            overflow: hidden;
             width: 100%;
             position: relative;
+            overflow-y: auto;
             .icon {
                 position: absolute;
                 top: 4px;
