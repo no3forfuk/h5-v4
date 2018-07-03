@@ -11,8 +11,8 @@
             </find-ctrl>
             <find-body slot="find"></find-body>
         </rcm-header>
-        <second-head></second-head>
-        <tabs></tabs>
+        <second-head :value="secondInfo"></second-head>
+        <tabs :value="secondInfo.data"></tabs>
     </div>
 </template>
 
@@ -21,12 +21,17 @@
     import findBody from '../common/Find/findBody'
     import secondHead from './secondHead'
     import tabs from './tabs'
+    import {getRankList} from '../../api/api'
 
     export default {
         data() {
             return {
-                backName: 'home'
+                backName: 'home',
+                secondInfo: {}
             }
+        },
+        created() {
+            this.getInfo()
         },
         beforeRouteLeave(to, from, next) {
             this.$store.commit('SETROUTERFROM', from.name)
@@ -36,7 +41,23 @@
         computed: {},
         methods: {
             goHome() {
-                this.$router.back()
+                window.history.back()
+            },
+            getInfo() {
+                let params = {};
+                params.id = this.$route.query.secondId;
+                params.level = 2;
+                getRankList(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.secondInfo = res.data.data;
+                        }
+                    } else {
+
+                    }
+                }).catch(err => {
+                    throw err
+                })
             }
         },
         components: {

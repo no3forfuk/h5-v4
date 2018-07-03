@@ -2,8 +2,8 @@
     <div class="ele-header">
         <div class="top">
             <div class="ele-info">
-                <p @click="$emit('openDetails','')">@我就算饿死都不会吃你一口东西（王境泽）</p>
-                <p>来自变形记某王姓嘉宾</p>
+                <p @click="$emit('openDetails','')">@{{value.element_name}}</p>
+                <p @click="$emit('openDetails','')">{{value.element_desc}}</p>
                 <p @click="vote">投一票</p>
                 <div class="more-options">
                     <div class="collect">
@@ -106,7 +106,8 @@
             goElementDetails() {
                 this.$router.push({name: 'elementDetails'})
             }
-        }
+        },
+        props: ['value']
     }
 
 </script>
@@ -158,6 +159,8 @@
                 p:nth-child(2) {
                     color: #939398;
                     margin: 5px 0;
+                    max-height: 60px;
+                    overflow: hidden;
                 }
                 p:nth-child(3) {
                     color: #FF2C09;

@@ -1,9 +1,9 @@
 <template>
     <div class="second-head">
         <div class="left">
-            <h2>#最适合带妹子的桌游</h2>
+            <h2>#{{value.ranking_name}}</h2>
             <div class="desc">
-                <p>收集了一些带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游带妹子的桌游</p>
+                <p>{{value.ranking_desc}}</p>
             </div>
             <div class="more-options">
                 <div class="collect">
@@ -18,7 +18,7 @@
         </div>
         <div class="right">
             <span>RCM评级</span>
-            <span>S+</span>
+            <span>{{value.rating}}</span>
             <span>8909(票)</span>
             <span>33(排名)</span>
         </div>
@@ -37,7 +37,8 @@
                     width: $(window).width() - 150
                 })
             })
-        }
+        },
+        props: ['value']
     }
 
 </script>

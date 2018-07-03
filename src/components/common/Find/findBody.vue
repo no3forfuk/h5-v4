@@ -7,9 +7,9 @@
                 <li v-for="(item,index) in rankData"
                     ref="lis"
                     :class="{scalePulse:crtIndex == index}"
-                    @click="toggleLi(index)"
+                    @click="toggleLi(index,item)"
                     :key="index">
-                    {{item.name}}
+                    {{item.ranking_name}}
                 </li>
                 <span :style="spanPosition"></span>
             </ul>
@@ -18,70 +18,36 @@
 </template>
 
 <script>
-    import {getFirstRank} from '../../../api/api'
+    import {getFirstRankList} from '../../../api/api'
 
     export default {
         data() {
             return {
                 crtIndex: 0,
                 crtPositon: 0,
-                leftBoundary: true,
+                leftBoundary: false,
                 rightBoundary: false,
-                rankData: [
-                    {
-                        name: '热门榜单',
-                        id: 1
-                    },
-                    {
-                        name: '最热',
-                        id: 2
-                    },
-                    {
-                        name: '最冷门',
-                        id: 3
-                    },
-                    {
-                        name: '动漫',
-                        id: 4
-                    },
-                    {
-                        name: 'NBA',
-                        id: 5
-                    },
-                    {
-                        name: '世界杯',
-                        id: 6
-                    },
-                    {
-                        name: '热门榜单',
-                        id: 7
-                    },
-                    {
-                        name: '热门榜单',
-                        id: 8
-                    },
-                    {
-                        name: '热门榜单',
-                        id: 9
-                    }
-
-                ]
+                rankData: []
             }
         },
         created() {
-
+            this.getListInfo()
         },
         mounted() {
             this.$nextTick(() => {
                 this.setCrtPosition(0);
                 this.initUlWidth()
                 this.judgeBoundary()
-
             })
         },
         methods: {
-            toggleLi(i) {
+
+            toggleLi(i, item) {
                 this.crtIndex = i;
+                this.$emit('getRankIndex', {
+                    index: i,
+                    value: item
+                })
             },
             initCrtPosition() {
 
@@ -89,15 +55,20 @@
 
                 }
             },
-            getFirstRank() {
-                const params = {};
-                params.id = 3;
-                params.level = 1;
-                params.page = 1;
-                getFirstRank(params).then(res => {
-                    // console.log(res);
+            getListInfo() {
+                getFirstRankList().then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.rankData = res.data.data.data
+                            this.rankData.unshift({ranking_name: '热门榜单'})
+                        } else {
+
+                        }
+                    } else {
+
+                    }
                 }).catch(err => {
-                    throw err;
+                    throw err
                 })
             },
             navScroll() {
@@ -153,8 +124,7 @@
             crtIndex(n, o) {
                 this.setCrtPosition(n);
                 this.setSelectLiPosition(n);
-                this.judgeBoundary()
-                this.getFirstRank()
+                this.judgeBoundary(n);
             }
         }
     }

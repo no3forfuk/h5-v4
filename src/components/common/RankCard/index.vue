@@ -4,18 +4,18 @@
             <span>A<sup>+</sup></span>
         </div>
         <div class="rank-info">
-            <router-link :to="{name:'secondRankList'}">
-                <h3>#适合带妹子的桌游</h3>
+            <router-link :to="{name:'secondRankList',query:{secondId:value.id}}">
+                <h3>#{{value.ranking_name}}</h3>
             </router-link>
             <div class="info-body">
                 <span class="prevmask" v-if="leftBoundary"></span>
                 <span class="nextmask" v-if="rightBoundary"></span>
                 <ul class="info-ul" @scroll="judgeBoundary">
-                    <li v-for="(item,index) in [0,1,1,1,11,1,1]" :key="index"
+                    <li v-for="(item,index) in value.data" :key="index"
                         ref="lis">
-                        <router-link :to="{name:'element'}">
-                            <i>No.1</i>
-                            <span>这个男人来自地球</span>
+                        <router-link :to="{name:'element',query:{elementId:item.id}}">
+                            <i>No.{{index+1}}</i>
+                            <span>{{item.element_name}}</span>
                         </router-link>
                     </li>
                     <li ref="more">
@@ -43,31 +43,32 @@
                 this.initUlWidth()
                 this.judgeBoundary()
             })
-
         },
         methods: {
             initUlWidth() {
                 $('.info-ul').width($(window).width() - 30)
             },
             judgeBoundary() {
-                let lastLiWidth = $(this.$refs.more).width();
-                let windowWidth = $(window).width();
-                let ulOffSetX = $('.info-ul').offset().left;
-                let lastLiOffSetX = $(this.$refs.more).offset().left;
-                let firstLiOffSetX = $(this.$refs.lis[0]).offset().left;
-                if (lastLiOffSetX + lastLiWidth > windowWidth) {
-                    this.rightBoundary = true;
-                } else {
-                    this.rightBoundary = false;
-                }
-                if (ulOffSetX - firstLiOffSetX > 15) {
-                    this.leftBoundary = true;
-                } else {
-                    this.leftBoundary = false;
-                }
-
+                this.$nextTick(() => {
+                    let lastLiWidth = $(this.$refs.more).width();
+                    let windowWidth = $(window).width();
+                    let ulOffSetX = $('.info-ul').offset().left;
+                    let lastLiOffSetX = $(this.$refs.more).offset().left;
+                    let firstLiOffSetX = $(this.$refs.lis[0]).offset().left;
+                    if (lastLiOffSetX + lastLiWidth > windowWidth) {
+                        this.rightBoundary = true;
+                    } else {
+                        this.rightBoundary = false;
+                    }
+                    if (ulOffSetX - firstLiOffSetX > 15) {
+                        this.leftBoundary = true;
+                    } else {
+                        this.leftBoundary = false;
+                    }
+                })
             }
-        }
+        },
+        props: ['value']
     }
 
 </script>

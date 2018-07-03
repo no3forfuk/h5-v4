@@ -45,7 +45,11 @@
                 this.setSpanPosition(i);
             },
             toggleRouter(i) {
-                this.$router.replace({name: this.tabData[i].routerName})
+                this.$router.replace({
+                    name: this.tabData[i].routerName,
+                    query: this.$route.query,
+                    params: {secondList: this.$props.value}
+                })
             },
             setSpanPosition(i) {
                 let width = $(this.$refs.lis[i]).width();
@@ -76,7 +80,8 @@
                 this.init()
             })
         },
-        wathch: {}
+        wathch: {},
+        props: ['value']
     }
 
 </script>

@@ -9,14 +9,13 @@
             <find-ctrl slot="right"
                        color="#7D09FF">
             </find-ctrl>
-            <find-body slot="find" class="find-body"></find-body>
+            <find-body slot="find" class="find-body" @getRankIndex="getFirstList"></find-body>
         </rcm-header>
         <div class="home-body">
             <p class="page-header">开荒神器RCM</p>
-            <ul class="ranklist">
-                <rank-card v-for="(item,index) in list"
-                           :key="index"></rank-card>
-            </ul>
+            <transition name="transitionName" mode="out-in">
+                <router-view></router-view>
+            </transition>
         </div>
     </div>
 
@@ -26,20 +25,20 @@
     import findBody from '../common/Find/findBody'
     import rankList from '../FirstRank/index'
     import findCtrl from '../common/Find/findCtrl'
-    import {getIendx} from '../../api/api'
+    import {getIndex} from '../../api/api'
 
     export default {
         data() {
             return {
                 popupVisible: true,
                 forward: '',
-                list: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                list: [],
                 scrollY: 0
             }
         },
 
         created() {
-
+            this.getIndexData()
         },
         mounted() {
             this.$nextTick(() => {
@@ -59,6 +58,27 @@
             next()
         },
         methods: {
+            getFirstList(val) {
+                this.$router.push({
+                    name: 'firstRank',
+                    query: {firstId: val.value.id}
+                })
+            },
+            getIndexData() {
+                let params = {};
+                params.time = '2018-07-03'
+                getIndex(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.list = res.data.data
+                        }
+                    } else {
+
+                    }
+                }).catch(err => {
+                    throw err
+                })
+            },
             setScrollHeight() {
                 let windowHeight = $(window).height();
                 let headerHeight = $('.home-header').height()
@@ -89,11 +109,6 @@
         }
     }
 
-    .ranklist {
-        width: 100%;
-        padding: 5px 0px;
-    }
-
     .page-header {
         width: 100%;
         padding: 0 10px;
@@ -102,5 +117,14 @@
         border-bottom: 1px solid #C8C7CD;
     }
 
+    .transitionName-enter-active {
+        animation: fadeIn 0.3s;
+        position: absolute;
+    }
+
+    .transitionName-leave-active {
+        animation: fadeOut 0.3s;
+        position: absolute;
+    }
 
 </style>

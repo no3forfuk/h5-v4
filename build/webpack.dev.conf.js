@@ -30,8 +30,8 @@ module.exports = merge(base, {
             const rp = require('request-promise');
             app.use(bodyParser.urlencoded({extended: false}));
             app.use(bodyParser.json());
-            // var baseUrl = 'http://test.bantangtv.com';
-            var baseUrl = 'http://www.rcm.ink';
+            var baseUrl = 'http://test.bantangtv.com';
+            // var baseUrl = 'http://www.rcm.ink';
             const go = function (requset, response) {
                 var method = requset.method;
                 var options;
@@ -58,21 +58,22 @@ module.exports = merge(base, {
                 })
             }
             //获取首页推送
-            app.post('/api/Home/index', function (req, res) {
+            app.post('/api/home/index', function (req, res) {
                 go(req, res)
             });
-            //获取榜单
-            app.get('/api/Ranking/getRanking', function (req, res) {
+            //获取一级榜单列表
+            app.get('/api/home/index/firstList', function (req, res) {
+                go(req, res)
+            })
+            //获取二级榜单详情
+            app.get('/api/home/ranking/getRanking', function (req, res) {
                 go(req, res)
             })
             //获取元素详情
-            app.get('/api/Element/getElementDetails', function (req, res) {
+            app.get('/api/home/element/getElementDetails', (req, res) => {
                 go(req, res)
             })
-            //获取POST详情
-            app.get('/api/Post/getPostDetails', (req, res) => {
-                go(req, res)
-            })
+            //--------------------------------------------
             //获取评论
             app.get('/api/Ranking/getComment', (req, res) => {
                 go(req, res)

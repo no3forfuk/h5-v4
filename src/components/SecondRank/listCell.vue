@@ -1,16 +1,17 @@
 <template>
     <li class="cell">
-        <router-link :to="{name:'element'}">
+        <router-link :to="{name:'element',query:{elementId:value.id},params:{elementDetails:value}}">
             <div class="left">
-                <span>1</span>
+                <span>{{index+1}}</span>
             </div>
             <div class="right">
                 <div class="element-text">
-                    <h2>@火影忍者</h2>
-                    <p>
-                        日本动漫《火影忍者》中的重要人物。火之国木叶隐村宇智波一族的成员，宇智波佐助的哥哥。是宇智波一族的天才忍者，年幼时跟宇智波止水是挚友，实力强大，擅长使用幻术。为了保护村子免受战乱，被迫接受了灭族任务，留下了弟弟佐助并刺激他向自己复仇，之后加入晓组织做卧底</p>
+                    <h2>@{{value.element_name}}</h2>
+                    <p>{{value.element_desc}}</p>
                 </div>
-                <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
+                <img :src="value.img"
+                     v-if="value.img"
+                     alt="">
             </div>
         </router-link>
     </li>
@@ -21,7 +22,8 @@
     export default {
         data() {
             return {}
-        }
+        },
+        props: ['value', 'index']
     }
 
 </script>

@@ -26,7 +26,10 @@
             </div>
         </div>
         <ul class="list-body">
-            <cell></cell>
+            <cell v-for="(item,index) in $parent.value.data"
+                  :value="item"
+                  :index="index"
+                  :key="index"></cell>
         </ul>
     </div>
 </template>
@@ -51,7 +54,13 @@
                 },
             }
         },
+        created() {
+
+        },
         methods: {
+            getList() {
+
+            },
             addElement() {
                 this.$router.push({name: 'addElement'})
             },

@@ -2,6 +2,8 @@
 'use strict'
 import Vue from 'vue';
 import App from './app'
+//全局过滤器
+
 //vuex
 import Vuex from 'vuex';
 

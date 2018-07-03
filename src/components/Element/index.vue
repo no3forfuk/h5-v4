@@ -12,8 +12,8 @@
             <find-body slot="find"></find-body>
         </rcm-header>
         <div class="element-body">
-            <element-header @openDetails="toggleDetails"></element-header>
-            <element-body></element-body>
+            <element-header @openDetails="toggleDetails" :value="elementData"></element-header>
+            <element-body :value="elementData.data"></element-body>
             <element-footer></element-footer>
         </div>
         <transition name="openDetails">
@@ -29,15 +29,17 @@
     import elementBody from './elementBody'
     import elementDetails from './elementDetails'
     import elementFooter from './elementFooter'
+    import {getElementDetails} from '../../api/api'
 
     export default {
         data() {
             return {
-                detailsIsOpen: false
+                detailsIsOpen: false,
+                elementData: {}
             }
         },
         created() {
-
+            this.elementInfo()
         },
         mounted() {
             this.$nextTick(() => {
@@ -51,12 +53,27 @@
         },
         computed: {},
         methods: {
+            elementInfo() {
+                let params = {}
+                params.id = this.$route.query.elementId;
+                getElementDetails(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.elementData = res.data.data
+                        }
+                    } else {
+
+                    }
+                }).catch(err => {
+                    throw err
+                })
+            },
             setScrollBoxHeight() {
                 let Height = $(window).height() - $('.element-header').height()
                 $('.element-body').height(Height + 27)
             },
             goback() {
-                this.$router.replace({name: 'secondRankList'})
+                window.history.back()
             },
             toggleDetails(e) {
                 this.detailsIsOpen = !this.detailsIsOpen

@@ -4,14 +4,14 @@
             <span slot="text" class="font-size-16">排名</span>
         </rcm-header>
         <div class="post-user">
-            <user-card></user-card>
+            <user-card :value="$route.params.postDetails.user"></user-card>
         </div>
         <div class="post-content">
-            asdkashdkj
+            {{$route.params.postDetails.post_content}}
         </div>
-        <h3 class="discuss-title">评论(<span>32</span>)</h3>
+        <h3 class="discuss-title">评论(<span>{{$route.params.postDetails.comment_num}}</span>)</h3>
         <ul class="discuss-list">
-            <discuss-card></discuss-card>
+            <discuss-card v-for="(item,index) in $route.params.postDetails" :key="index"></discuss-card>
         </ul>
     </div>
 </template>
@@ -22,6 +22,9 @@
     export default {
         data() {
             return {}
+        },
+        created() {
+            console.log(this.$route);
         },
         components: {
             discussCard

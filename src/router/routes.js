@@ -24,7 +24,21 @@ module.exports = [
     {
         path: '/index',
         name: 'home',
-        component: _path('Home')
+        query: {firstId: 'id'},
+        component: _path('Home'),
+        children: [
+            // {
+            //     path: '/index/hot',
+            //     name: 'hot',
+            //     component: subPath('First/index')
+            // },
+            {
+                path: '/index/firstRank',
+                name: 'firstRank',
+                query: {firstId: 'id'},
+                component: subPath('FirstRank/index')
+            }
+        ]
     },
     {
         path: '/login',
@@ -64,6 +78,8 @@ module.exports = [
             {
                 path: '/secondRank/list',
                 name: 'secondRankList',
+                query: {secondId: 'id'},
+                params: {secondList: 'secondId'},
                 component: subPath('SecondRank/list')
             },
             {
@@ -83,6 +99,7 @@ module.exports = [
         path: '/element',
         name: 'element',
         component: _path('Element'),
+        params: {elementDetails: 'elementDetails'},
         children: []
     },
     {

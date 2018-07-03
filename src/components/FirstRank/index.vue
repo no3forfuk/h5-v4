@@ -1,84 +1,52 @@
 <template>
-
-    <firstRank v-bind:leftFlex='30'
-               class="first-rank">
-
-        <div slot="left" class="left">
-            <span>A<sup>+</sup></span>
-        </div>
-        <div slot="right" class="right">
-            <router-link :to="{name:'secondRankList'}" slot="top" class="top">
-                #适合带妹的网友
-            </router-link>
-            <div slot="bottom" class="bottom">
-                <ul>
-                    <cell v-for="(item,index) in list" :key="index"></cell>
-                </ul>
-            </div>
-        </div>
-
-    </firstRank>
+    <ul class="ranklist">
+        <rank-card v-for="(item,index) in list"
+                   :value="item"
+                   :key="index"></rank-card>
+    </ul>
 
 </template>
 
 <script>
-    import firstRank from '../common/Bone/index'
-    import cell from './cell'
+    import {getRankList} from '../../api/api'
 
     export default {
         data() {
             return {
-                list: [0, 1, 3, 3, 3, 3]
+                list: []
             }
         },
-        methods: {},
-        components: {
-            firstRank,
-            cell
+        created() {
+            this.getFirstList()
+        },
+        methods: {
+            getFirstList() {
+                let params = {}
+                params.level = 1;
+                params.id = this.$route.params.firstId
+                getRankList(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            console.log(res.data);
+                        } else {
+
+                        }
+                    } else {
+
+                    }
+                }).catch(err => {
+                    throw err
+                })
+            }
         }
     }
 
 </script>
 
 <style scoped lang="less">
-    .first-rank {
-        padding-bottom: 10px;
-        .left {
-            padding: 10px 5px;
-            span {
-                color: #FF2C09;
-                font-size: 16px;
-                font-weight: bold;
-                background-color: #E4E4E4;
-                padding: 3px;
-                border-radius: 1px;
-            }
-        }
-        .right {
-            .top {
-                display: block;
-                font-size: 16px;
-                line-height: 20px;
-                font-weight: bold;
-                padding: 6px 4px;
-                color: #000;
-            }
-            .bottom {
-                padding-left: 4px;
-                width: 100%;
-                height: 72px;
-                border-bottom: 1px solid #C8C7CD;
-
-                overflow: hidden;
-                ul {
-                    width: 100%;
-                    overflow-x: auto;
-                    white-space: nowrap;
-                    padding-bottom: 20px;
-                    padding-right: 10px;
-                }
-            }
-        }
+    .ranklist {
+        width: 100%;
+        padding: 5px 0px;
     }
 
 </style>

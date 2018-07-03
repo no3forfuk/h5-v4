@@ -3,7 +3,7 @@
 import axios from 'axios'
 
 const service = axios.create({
-    baseURL: '/api'
+    baseURL: '/api/home'
 })
 
 service.interceptors.request.use(config => {

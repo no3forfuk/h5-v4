@@ -2,7 +2,7 @@
     <div class="user-card">
         <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
         <div class="user-info">
-            <h6>名称</h6>
+            <h6>{{value.name}}</h6>
             <p>
                 <span>#榜单</span>
                 <span></span>
@@ -17,7 +17,12 @@
     export default {
         data() {
             return {}
-        }
+        },
+        created() {
+            console.log(this.$route);
+            console.log(this.value);
+        },
+        props: ['value']
     }
 
 </script>

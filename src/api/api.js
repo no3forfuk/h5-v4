@@ -4,78 +4,42 @@ import request from './request'
 
 module.exports = {
     //获取首页推送
-    getIendx(parmas) {
+    getIndex(data) {
         return request({
-            url: '/Home/index',
+            url: '/index',
             method: 'POST',
-            data: {
-                time: parmas
-            }
+            data: data
         })
     },
-    //获取二级榜单
-    getSecondRank(params) {
+    getFirstRankList(params) {
         return request({
-            url: '/Ranking/getRanking',
-            method: 'GET',
-            params: {
-                level: params.level,
-                id: params.id,
-                page: params.page
-            }
-        })
-    },
-    //获取一级榜单
-    getFirstRank(params) {
-        return request({
-            url: '/Ranking/getRanking',
-            method: 'GET',
-            params: {
-                level: params.level,
-                id: params.id
-            }
-        })
-    },
-    //获取微信鉴权
-    getWXConfig(params) {
-        return request({
-            url: '/Wx/signature',
-            method: 'POST',
-            data: params
-        })
-    },
-    //获取元素详情
-    getElement(params) {
-        return request({
-            url: '/Element/getElementDetails',
+            url: '/index/firstList',
             method: 'GET',
             params: params
         })
     },
-    //获取评论
-    getDiscuss(params) {
+    //【榜单】1级/2级---榜单详情以及子元素
+    getRankList(params) {
         return request({
-            url: '/Ranking/getComment',
+            url: '/ranking/getRanking',
             method: 'GET',
             params: params
         })
     },
-    //获取POST详情
-    getPostDetailsById(params) {
+    //获取评论列表
+    getDiscussList(params) {
         return request({
-            url: '/Post/getPostDetails',
+            url: '/ranking/getComment',
             method: 'GET',
-            params: {
-                id: params
-            }
+            params: params
         })
     },
-    //添加评论
-    addComment(params) {
+    getElementDetails(params) {
         return request({
-            url: '/Comment/visitorAdd',
-            method: 'POST',
-            data: params
+            url: '/element/getElementDetails',
+            method: 'GET',
+            params: params
         })
     }
+
 }

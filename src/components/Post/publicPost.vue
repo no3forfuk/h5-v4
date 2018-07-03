@@ -22,15 +22,17 @@
                  v-html="postContent"
                  @click="saveFocusPosition"
                  @focus="getEditBoxFocus"
-                 @blur="lostEditBoxFocus"></div>
+                 @blur="lostEditBoxFocus">
+            </div>
+            <div class="footer-placeholder"></div>
+            <div class="footer">
+                <icon :value="'&#xe649;'" @click="insertText" class="font-size-28"></icon>
+                <icon :value="'&#xe615;'" @click="insertImg" class="font-size-28"></icon>
+                <icon :value="'&#xe603;'" @click="insertVideo" class="font-size-28"></icon>
+                <icon :value="'&#xe628;'" class="font-size-28"></icon>
+            </div>
         </div>
-        <div class="footer">
-            <icon :value="'&#xe649;'" @click="insertText" class="font-size-28"></icon>
-            <icon :value="'&#xe615;'" @click="insertImg" class="font-size-28"></icon>
-            <icon :value="'&#xe603;'" @click="insertVideo" class="font-size-28"></icon>
-            <icon :value="'&#xe628;'" class="font-size-28"></icon>
 
-        </div>
     </div>
 </template>
 
@@ -56,6 +58,12 @@
         mounted() {
             this.$nextTick(() => {
                 $('.public-post').height($(window).height())
+                let windowHeight = $(window).height();
+                let topHeight = $('.top').height();
+                let footerHeight = $('.footer').height();
+                let centerHeight = windowHeight - topHeight;
+                $('.center').height(centerHeight);
+
             })
         },
         methods: {
@@ -63,7 +71,7 @@
                 this.$router.replace({name: 'element'})
             },
             confirmPublic() {
-                console.log($('.edit-box').html());
+
             },
             getRangePosition(element) {
 
@@ -113,16 +121,16 @@
                 }
             },
             getEditBoxFocus() {
-
-                // $('.public-post').height()
-                // setTimeout(() => {
-                //     let height = $('.public-post')[0].clientHeight / 2
-                //     $('.public-post').height(height)
-                // }, 500)
+                //获取屏幕宽度
+                let width = $(window).width()
+                $('.center').height(200)
+                // $('.edit-box').height(200 - $('.footer').height());
 
             },
             lostEditBoxFocus() {
                 $('.edit-box').on('keyup', null)
+                $('.center').height($(window).height() - $('.top').height())
+                // $('.edit-box').height($(window).height() - $('.top').height() - $('.footer').height());
             },
             saveFocusPosition() {
                 if (window.getSelection) {
@@ -143,28 +151,38 @@
 <style scoped lang="less">
     .public-post {
         width: 100%;
-        position: relative;
-        transition: all 0.5s;
+        transition: all 0.8s;
         .center {
             width: 100%;
+            position: relative;
             border: 1px solid #000;
+            transition: all 0.8s;
             .edit-box {
                 width: 100%;
-                height: 170px;
+                min-height: 170px;
+                border-bottom: 1px solid #ccc;
                 text-align: left;
                 overflow-x: hidden;
                 overflow-y: auto;
+                transition: all 0.8s;
             }
         }
     }
 
+    .footer-placeholder {
+        transition: all 0.8s;
+        width: 100%;
+        height: 40px;
+    }
+
     .footer {
+        transition: all 0.8s;
         width: 100%;
         height: 40px;
         background-color: #ccc;
-        /*position: absolute;*/
-        /*bottom: 0;*/
-        /*left: 0;*/
+        position: absolute;
+        bottom: 0;
+        left: 0;
         i {
             padding: 0 5px;
         }

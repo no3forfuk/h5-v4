@@ -1,17 +1,17 @@
 <template>
     <ul>
-        <li v-for="(item,index) in postLists" :key="index">
+        <li v-for="(item,index) in value.data" :key="index">
             <div class="left">
                 <icon :value="'&#xe64b;'" class="font-size-20"></icon>
                 <span>125</span>
             </div>
             <div class="right">
-                <router-link :to="{name:'post'}">
-                    <text-post v-if="item.type == 1"></text-post>
-                    <img-text v-if="item.type == 2"></img-text>
-                    <img-post v-if="item.type == 3"></img-post>
-                    <ext-web v-if="item.type == 4"></ext-web>
-                    <video-post v-if="item.type == 5"></video-post>
+                <router-link :to="{name:'post',query:{postId:item.id},params:{postDetails:item}}">
+                    <text-post v-if="item.type == 1" :value="item"></text-post>
+                    <img-text v-if="item.type == 2" :value="item"></img-text>
+                    <img-post v-if="item.type == 3" :value="item"></img-post>
+                    <ext-web v-if="item.type == 4" :value="item"></ext-web>
+                    <video-post v-if="item.type == 5" :value="item"></video-post>
                 </router-link>
                 <div class="user">
                     <div>
@@ -34,26 +34,9 @@
 
     export default {
         data() {
-            return {
-                postLists: [
-                    {
-                        type: 1
-                    },
-                    {
-                        type: 2
-                    },
-                    {
-                        type: 3
-                    },
-                    {
-                        type: 4
-                    },
-                    {
-                        type: 5
-                    }
-                ]
-            }
+            return {}
         },
+        props: ['value'],
         components: {
             textPost,
             imgText,
