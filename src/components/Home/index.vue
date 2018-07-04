@@ -1,20 +1,9 @@
 <template>
     <div class="home">
-        <rcm-header class="home-header">
-            <icon slot="back"
-                  @click="goUserCenter"
-                  :value="'&#xe609;'"
-                  class="font-size-28">
-            </icon>
-            <find-ctrl slot="right"
-                       color="#7D09FF">
-            </find-ctrl>
-            <find-body slot="find" class="find-body" @getRankIndex="getFirstList"></find-body>
-        </rcm-header>
         <div class="home-body">
             <p class="page-header">开荒神器RCM</p>
             <transition name="transitionName" mode="out-in">
-                <router-view></router-view>
+                <router-view class="home-view"></router-view>
             </transition>
         </div>
     </div>
@@ -43,6 +32,7 @@
         mounted() {
             this.$nextTick(() => {
                 this.setScrollHeight()
+                $('.home-view').height($('.home').height() - $('.page-header').height() - 68);
             })
         },
         updated() {
@@ -59,10 +49,17 @@
         },
         methods: {
             getFirstList(val) {
-                this.$router.push({
-                    name: 'firstRank',
-                    query: {firstId: val.value.id}
-                })
+                if (val.index == 0) {
+                    this.$router.replace({
+                        name: 'hot',
+                        query: {idx: val.index}
+                    })
+                } else {
+                    this.$router.replace({
+                        name: 'firstRank',
+                        query: {firstId: val.value.id, idx: val.index}
+                    })
+                }
             },
             getIndexData() {
                 let params = {};
@@ -103,9 +100,17 @@
 <style scoped lang="less">
     .home {
         width: 100%;
+        height: 100%;
         background-color: #fff;
         .home-body {
-            overflow-y: auto;
+            width: 100%;
+            height: 100%;
+            .home-view {
+                width: 100%;
+                height: 100%;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
         }
     }
 

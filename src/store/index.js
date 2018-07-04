@@ -4,7 +4,8 @@
 const state = {
     routerFrom: '',
     routerTo: '',
-    routerDirection: 'forward'
+    routerDirection: 'forward',
+    rankIndex: 0
 }
 const mutations = {
     SETROUTERFROM(state, direction) {
@@ -15,6 +16,9 @@ const mutations = {
     },
     SETROUTERDIRECTION(state, direction) {
         state.routerDirection = direction
+    },
+    SETRANKINDEX(state, index) {
+        state.rankIndex = index
     }
 };
 module.exports = {

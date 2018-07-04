@@ -1,7 +1,10 @@
 <template>
     <div class="app">
+        <rcm-headers :color="'#7D09FF'" class="header"></rcm-headers>
         <transition :name="transitionName">
-            <router-view class="router-view"></router-view>
+            <keep-alive>
+                <router-view class="router-view"></router-view>
+            </keep-alive>
         </transition>
     </div>
 </template>
@@ -20,12 +23,12 @@
                 $('.app').css({
                     height: $(window).height()
                 })
+                $('.router-view').height($(window).height() - $('.header').height())
             })
         },
         methods: {},
         computed: {
             transitionName() {
-                console.log(this.$store.state.routerFrom + '-' + this.$store.state.routerTo);
                 return this.$store.state.routerFrom + '-' + this.$store.state.routerTo
             }
         }
@@ -44,7 +47,7 @@
 
     .router-view {
         width: 100%;
-        height: 100%;
+        overflow: hidden;
         background-color: #fff;
     }
 

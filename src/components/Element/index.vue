@@ -1,16 +1,5 @@
 <template>
     <div class="element-page">
-        <rcm-header class="element-header">
-            <icon slot="back"
-                  @click="goback"
-                  :value="'&#xe600;'"
-                  class="font-size-20">
-            </icon>
-            <find-ctrl slot="right"
-                       color="#7D09FF">
-            </find-ctrl>
-            <find-body slot="find"></find-body>
-        </rcm-header>
         <div class="element-body">
             <element-header @openDetails="toggleDetails" :value="elementData"></element-header>
             <element-body :value="elementData.data"></element-body>

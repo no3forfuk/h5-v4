@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="tabs-div">
         <ul class="second-tabs">
             <li v-for="(item,index) in tabData"
                 ref="lis"
@@ -10,7 +10,9 @@
             <span class="__" :style="spanPosition"></span>
         </ul>
         <transition name="transitionName" mode="out-in">
-            <router-view></router-view>
+            <keep-alive>
+                <router-view class="second-view" :value="value"></router-view>
+            </keep-alive>
         </transition>
     </div>
 </template>
@@ -48,7 +50,7 @@
                 this.$router.replace({
                     name: this.tabData[i].routerName,
                     query: this.$route.query,
-                    params: {secondList: this.$props.value}
+                    params: {secondList: this.value}
                 })
             },
             setSpanPosition(i) {
@@ -87,6 +89,12 @@
 </script>
 
 <style scoped lang="less">
+    .tabs-div {
+        width: 100%;
+        height: 100%;
+        overflow-y: hidden;
+    }
+
     .second-tabs {
         width: 100%;
         border-bottom: 1px solid #CDCED4;

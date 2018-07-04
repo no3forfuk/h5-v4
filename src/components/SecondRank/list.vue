@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="second-list-root">
         <div class="list-head">
             <div class="add-element" @click="addElement">
                 <icon :value="'&#xe685;'" class="icon"></icon>
@@ -25,21 +25,32 @@
                 </transition>
             </div>
         </div>
-        <ul class="list-body">
-            <cell v-for="(item,index) in $parent.value.data"
-                  :value="item"
-                  :index="index"
-                  :key="index"></cell>
-        </ul>
+        <div class="second-list-body">
+            <mt-loadmore :bottom-method="loadBeforeDay"
+                         :bottom-all-loaded="allLoaded"
+                         :bottomDistance="pullHeight"
+                         :auto-fill="false"
+                         ref="loadmore">
+                <ul class="list-body">
+                    <cell v-for="(item,index) in value.data"
+                          :value="item"
+                          :index="index"
+                          :key="index"></cell>
+                </ul>
+            </mt-loadmore>
+        </div>
     </div>
 </template>
 
 <script>
     import cell from './listCell'
+    import {getRankList} from '../../api/api'
 
     export default {
         data() {
             return {
+                allLoaded: false,
+                pullHeight: 30,
                 selection: {
                     selectActive: false,
                     value: '最热',
@@ -54,12 +65,20 @@
                 },
             }
         },
+        mounted() {
+            this.$nextTick(() => {
+                $('.list-body').height($('.second-list-root').height() - $('.list-head').height() - 87)
+            })
+        },
         created() {
 
         },
         methods: {
             getList() {
 
+            },
+            loadBeforeDay() {
+                this.$refs.loadmore.onBottomLoaded();
             },
             addElement() {
                 this.$router.push({name: 'addElement'})
@@ -74,7 +93,8 @@
         },
         components: {
             cell
-        }
+        },
+        props: ['value']
     }
 
 </script>
@@ -126,6 +146,7 @@
                 height: 40px;
                 border: 1px solid rgba(0, 0, 0, 0.1);
                 position: absolute;
+                z-index: 10;
                 right: 0px;
                 top: 40px;
                 .sanjiao {
@@ -154,8 +175,19 @@
         }
     }
 
+    .second-list-body {
+        overflow-y: auto;
+    }
+
     .list-body {
         width: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .second-list-root {
+        width: 100%;
+        height: 100%;
     }
 
     .sort-select-enter-active {

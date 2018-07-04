@@ -12,11 +12,10 @@
             </ul>
         </mt-loadmore>
     </div>
-
 </template>
 
 <script>
-    import {getRankList} from '../../api/api'
+    import {getIndex} from '../../api/api'
 
     export default {
         data() {
@@ -26,21 +25,23 @@
                 list: []
             }
         },
+        mounted() {
+
+        },
         created() {
-            this.getFirstList()
+            this.getPushRank()
         },
         methods: {
             loadBeforeDay() {
                 this.$refs.loadmore.onBottomLoaded();
             },
-            getFirstList() {
+            getPushRank() {
                 let params = {}
-                params.level = 1;
-                params.id = this.$route.query.firstId
-                getRankList(params).then(res => {
+                params.time = '2018-07-03'
+                getIndex(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
-                            this.list = res.data.data.data.data
+                            this.list = res.data.data
                         } else {
 
                         }
@@ -51,18 +52,12 @@
                     throw err
                 })
             }
-        },
-        watch: {
-            '$route.query.firstId'(val) {
-                this.getFirstList()
-            }
         }
     }
 
 </script>
 
 <style scoped lang="less">
-
     .ranklist {
         height: 100%;
         width: 100%;

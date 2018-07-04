@@ -34,26 +34,18 @@
             this.getListInfo()
         },
         mounted() {
-            this.$nextTick(() => {
-                this.setCrtPosition(0);
-                this.initUlWidth()
-                this.judgeBoundary()
-            })
+
+        },
+        updated() {
+
         },
         methods: {
-
             toggleLi(i, item) {
                 this.crtIndex = i;
                 this.$emit('getRankIndex', {
                     index: i,
                     value: item
                 })
-            },
-            initCrtPosition() {
-
-                for (let i = 0; i < rankData.length; i++) {
-
-                }
             },
             getListInfo() {
                 getFirstRankList().then(res => {
@@ -85,7 +77,6 @@
                 let left = this.$refs.lis[i].offsetLeft;
                 let X = (width - 12) / 2;
                 this.crtPositon = left + X;
-                // console.log(this.navScrollPosition);
             },
             setSelectLiPosition(i) {
                 //TODO
@@ -124,7 +115,7 @@
             crtIndex(n, o) {
                 this.setCrtPosition(n);
                 this.setSelectLiPosition(n);
-                this.judgeBoundary(n);
+                // this.judgeBoundary(n);
             }
         }
     }

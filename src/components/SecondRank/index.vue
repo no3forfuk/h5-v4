@@ -1,18 +1,7 @@
 <template>
     <div class="second-page">
-        <rcm-header>
-            <icon slot="back"
-                  @click="goHome"
-                  :value="'&#xe600;'"
-                  class="font-size-20">
-            </icon>
-            <find-ctrl slot="right"
-                       color="#7D09FF">
-            </find-ctrl>
-            <find-body slot="find"></find-body>
-        </rcm-header>
-        <second-head :value="secondInfo"></second-head>
-        <tabs :value="secondInfo.data"></tabs>
+        <second-head :value="secondInfo" class="second-head"></second-head>
+        <tabs :value="secondInfo.data" class="second-tabs-box"></tabs>
     </div>
 </template>
 
@@ -26,12 +15,18 @@
     export default {
         data() {
             return {
-                backName: 'home',
                 secondInfo: {}
             }
         },
+        mounted() {
+            this.$nextTick(() => {
+                $('.second-page').height($(window).height() - 68)
+                $('.second-tabs-box').height($(window).height() - 68 - $('.second-head').height())
+            })
+
+        },
         created() {
-            this.getInfo()
+            this.getSecondRankInfo()
         },
         beforeRouteLeave(to, from, next) {
             this.$store.commit('SETROUTERFROM', from.name)
@@ -40,10 +35,7 @@
         },
         computed: {},
         methods: {
-            goHome() {
-                window.history.back()
-            },
-            getInfo() {
+            getSecondRankInfo() {
                 let params = {};
                 params.id = this.$route.query.secondId;
                 params.level = 2;
@@ -51,6 +43,8 @@
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
                             this.secondInfo = res.data.data;
+                        } else {
+
                         }
                     } else {
 
@@ -58,7 +52,7 @@
                 }).catch(err => {
                     throw err
                 })
-            }
+            },
         },
         components: {
             findCtrl,

@@ -1,8 +1,5 @@
 <template>
     <div class="post">
-        <rcm-header>
-            <span slot="text" class="font-size-16">排名</span>
-        </rcm-header>
         <div class="post-user">
             <user-card :value="$route.params.postDetails.user"></user-card>
         </div>

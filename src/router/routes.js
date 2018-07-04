@@ -11,10 +11,10 @@ function subPath(component) {
 
 module.exports = [
     {
-        path: '*', redirect: '/index'
+        path: '*', redirect: '/index/hot'
     },
     {
-        path: '/', redirect: '/index'
+        path: '/', redirect: '/index/hot'
     },
     {
         path: '/addPost',
@@ -27,11 +27,11 @@ module.exports = [
         query: {firstId: 'id'},
         component: _path('Home'),
         children: [
-            // {
-            //     path: '/index/hot',
-            //     name: 'hot',
-            //     component: subPath('First/index')
-            // },
+            {
+                path: '/index/hot',
+                name: 'hot',
+                component: subPath('HotRank/index')
+            },
             {
                 path: '/index/firstRank',
                 name: 'firstRank',
@@ -79,7 +79,6 @@ module.exports = [
                 path: '/secondRank/list',
                 name: 'secondRankList',
                 query: {secondId: 'id'},
-                params: {secondList: 'secondId'},
                 component: subPath('SecondRank/list')
             },
             {
