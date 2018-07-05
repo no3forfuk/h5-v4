@@ -1,7 +1,7 @@
 <template>
     <div class="second-page">
         <second-head :value="secondInfo" class="second-head"></second-head>
-        <tabs :value="secondInfo.data" class="second-tabs-box"></tabs>
+        <tabs :value="secondInfo.data" class="second-tabs-box" v-if="secondInfo.data"></tabs>
     </div>
 </template>
 
@@ -20,9 +20,11 @@
         },
         mounted() {
             this.$nextTick(() => {
-                $('.second-page').height($(window).height() - 68)
-                $('.second-tabs-box').height($(window).height() - 68 - $('.second-head').height())
+                 $('.second-page').height($(window).height() - 68)
             })
+
+        },
+        beforeCreate() {
 
         },
         created() {

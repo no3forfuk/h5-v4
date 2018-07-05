@@ -1,8 +1,8 @@
 <template>
-    <div class="user-card">
+    <div class="user-card" v-if="value">
         <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
         <div class="user-info">
-            <h6>{{value.name}}</h6>
+            <h6>{{value.name||value.area +'猎人'}}</h6>
             <p>
                 <span>#榜单</span>
                 <span></span>
@@ -19,8 +19,7 @@
             return {}
         },
         created() {
-            console.log(this.$route);
-            console.log(this.value);
+
         },
         props: ['value']
     }

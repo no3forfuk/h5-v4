@@ -1,6 +1,6 @@
 <template>
     <li class="cell">
-        <router-link :to="{name:'element',query:{elementId:value.id},params:{elementDetails:value}}">
+        <router-link :to="{name:'element',query:query,params:{elementDetails:value}}">
             <div class="left">
                 <span>{{index+1}}</span>
             </div>
@@ -21,7 +21,18 @@
 
     export default {
         data() {
-            return {}
+            return {
+                query: ''
+            }
+        },
+        created() {
+            this.setQuery()
+        },
+        methods: {
+            setQuery() {
+                this.query = this.$route.query;
+                this.$set(this.query, 'elementId', this.value.id)
+            },
         },
         props: ['value', 'index']
     }

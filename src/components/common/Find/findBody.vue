@@ -31,13 +31,19 @@
             }
         },
         created() {
-            this.getListInfo()
+            if (this.value) {
+                this.getListInfo()
+            } else {
+                return
+            }
         },
         mounted() {
 
         },
         updated() {
-
+            this.$nextTick(() => {
+                this.crtIndex = this.$route.query.idx;
+            })
         },
         methods: {
             toggleLi(i, item) {
@@ -52,7 +58,16 @@
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
                             this.rankData = res.data.data.data
-                            this.rankData.unshift({ranking_name: '热门榜单'})
+                            this.rankData.unshift({ranking_name: '热门榜单'});
+                            this.$nextTick(() => {
+                                if (!this.$route.query.idx || this.$route.query.idx == 0) {
+                                    this.$route.query.idx = 0
+                                    this.setCrtPosition(0)
+                                } else {
+                                    this.setCrtPosition(parseInt(this.$route.query.idx))
+                                }
+
+                            })
                         } else {
 
                         }
@@ -114,10 +129,9 @@
         watch: {
             crtIndex(n, o) {
                 this.setCrtPosition(n);
-                this.setSelectLiPosition(n);
-                // this.judgeBoundary(n);
             }
-        }
+        },
+        props: ['value']
     }
 
 </script>

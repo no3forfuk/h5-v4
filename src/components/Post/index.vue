@@ -1,27 +1,41 @@
 <template>
     <div class="post">
         <div class="post-user">
-            <user-card :value="$route.params.postDetails.user"></user-card>
+            <user-card :value="postDetails.user"></user-card>
         </div>
         <div class="post-content">
-            {{$route.params.postDetails.post_content}}
+            {{postDetails.post_content}}
         </div>
-        <h3 class="discuss-title">评论(<span>{{$route.params.postDetails.comment_num}}</span>)</h3>
+        <h3 class="discuss-title">评论(<span>{{postDetails.comment_num}}</span>)</h3>
         <ul class="discuss-list">
-            <discuss-card v-for="(item,index) in $route.params.postDetails" :key="index"></discuss-card>
+            <discuss-card v-for="(item,index) in postDetails" :key="index"></discuss-card>
         </ul>
     </div>
 </template>
 
 <script>
     import discussCard from '../common/DiscussCard/index'
+    import {getPostDetailsById} from '../../api/api'
 
     export default {
         data() {
-            return {}
+            return {
+                postDetails: {}
+            }
         },
         created() {
-            console.log(this.$route);
+            this.getPostDetails()
+        },
+        methods: {
+            getPostDetails() {
+                let params = {};
+                params.id = this.$route.query.postId
+                getPostDetailsById(params).then(res => {
+                    this.postDetails = res.data.data;
+                }).catch(err => {
+                    throw err
+                })
+            }
         },
         components: {
             discussCard
@@ -43,7 +57,6 @@
     .post-content {
         width: 100%;
         padding-left: 40px;
-        background-color: #ccc;
     }
 
     .discuss-title {

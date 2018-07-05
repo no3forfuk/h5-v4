@@ -6,23 +6,23 @@
                 <span>添加新的排名</span>
             </div>
             <div class="sort-element">
-                <div class="sort-ctrl" @click="toggleSort">
+                <div class="sort-ctrl" @click.stop="toggleSort">
                     <span><icon :value="'&#xe638;'"></icon></span>
                     <span v-text="selection.value"></span>
                 </div>
-                <transition name="sort-select" mode="in-out">
-                    <ul class="sort-select" v-if="selection.selectActive">
-                        <span class="sanjiao"></span>
-                        <li @click="toggleSelect(index)"
-                            :key="index"
-                            v-for="(item,index) in selection.selectItems">
-                            <span>{{item.text}}</span>
-                            <icon :value="'&#xe680;'"
-                                  v-if="selection.value == item.text">
-                            </icon>
-                        </li>
-                    </ul>
-                </transition>
+                <!--<transition name="sort-select" mode="out-in">-->
+                <ul class="sort-select" v-if="selection.selectActive">
+                    <span class="sanjiao"></span>
+                    <li @click.stop="toggleSelect(index)"
+                        :key="index"
+                        v-for="(item,index) in selection.selectItems">
+                        <span>{{item.text}}</span>
+                        <icon :value="'&#xe680;'"
+                              v-if="selection.value == item.text">
+                        </icon>
+                    </li>
+                </ul>
+                <!--</transition>-->
             </div>
         </div>
         <div class="second-list-body">
@@ -50,7 +50,7 @@
         data() {
             return {
                 allLoaded: false,
-                pullHeight: 30,
+                pullHeight: 20,
                 selection: {
                     selectActive: false,
                     value: '最热',
@@ -67,7 +67,8 @@
         },
         mounted() {
             this.$nextTick(() => {
-                $('.list-body').height($('.second-list-root').height() - $('.list-head').height() - 87)
+                let height = $(window).height() - $('.list-head').offset().top - $('.list-head').height() - 20
+                $('.second-list-body').height(height)
             })
         },
         created() {
@@ -81,7 +82,10 @@
                 this.$refs.loadmore.onBottomLoaded();
             },
             addElement() {
-                this.$router.push({name: 'addElement'})
+                this.$router.push({
+                    name: 'addElement',
+                    query: this.$route.query
+                })
             },
             toggleSort() {
                 this.selection.selectActive = !this.selection.selectActive;
@@ -191,12 +195,10 @@
     }
 
     .sort-select-enter-active {
-        animation: fadeIn 0.5s;
-        position: absolute;
+        animation: fadeIn 0.2s;
     }
 
     .sort-select-leave-active {
-        animation: fadeOut 0.5s;
-        position: absolute;
+        animation: fadeOut 0.2s;
     }
 </style>

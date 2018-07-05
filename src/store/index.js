@@ -2,12 +2,20 @@
 'use strict'
 
 const state = {
+    direction: 'forward',
+    openUserCenter: false,
     routerFrom: '',
     routerTo: '',
     routerDirection: 'forward',
     rankIndex: 0
 }
 const mutations = {
+    SETOPENUSERCENTER(state, val) {
+        state.openUserCenter = val
+    },
+    SETDIRECTION(state, direction) {
+        state.direction = direction
+    },
     SETROUTERFROM(state, direction) {
         state.routerFrom = direction
     },

@@ -34,6 +34,21 @@ module.exports = {
             params: params
         })
     },
+    //添加评论
+    addComment(data) {
+        return request({
+            url: '/comment/visitorAdd',
+            method: 'POST',
+            data: data
+        })
+    },//获取POST详情
+    getPostDetailsById(params) {
+        return request({
+            url: '/post/getPostDetails',
+            method: 'GET',
+            params: params
+        })
+    },
     getElementDetails(params) {
         return request({
             url: '/element/getElementDetails',

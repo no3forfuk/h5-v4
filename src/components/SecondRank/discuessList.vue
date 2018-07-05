@@ -1,41 +1,54 @@
 <template>
     <ul>
-        <li>
+        <li v-for="(item,index) in list" :key="index">
             <div class="left" @click="didGreat">
                 <icon :value="'&#xe647;'" class="font-size-20" :style="activeStyle"></icon>
-                <span :style="activeStyle">123</span>
+                <span :style="activeStyle">{{item.like}}</span>
             </div>
             <div class="center">
-                <div class="user">
-                    <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
-                    <div class="info">
-                        <p>名称</p>
-                        <p>
-                            <span>#榜单</span>
-                            <span></span>
-                            <span>签名</span>
-                        </p>
-                    </div>
-                </div>
-                <p class="content">
-                    内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容</p>
+                <user-card :value="item.visitor"></user-card>
+                <p class="content">{{item.content}}</p>
             </div>
-            <span class="right">3小时前</span>
+            <span class="right">{{item.created_at}}</span>
         </li>
     </ul>
 </template>
 
 <script>
+    import {getDiscussList} from '../../api/api'
 
     export default {
         data() {
             return {
-                greatActive: false
+                greatActive: false,
+                list: []
             }
+        },
+        created() {
+            this.getDiscuss()
         },
         methods: {
             didGreat() {
                 this.greatActive = true;
+            },
+            getDiscuss() {
+                let params = {};
+                params.level = 2;
+                params.id = this.$route.query.secondId;
+                getDiscussList(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.list = res.data.data.data
+                        } else {
+
+                        }
+
+                    } else {
+
+                    }
+                }).catch(err => {
+                    throw err
+                })
             }
         },
         computed: {

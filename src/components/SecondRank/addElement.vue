@@ -1,9 +1,5 @@
 <template>
     <div class="add-element">
-        <rcm-header>
-            <span slot="text">返回</span>
-            <span slot="right">下一步</span>
-        </rcm-header>
         <div class="add-body">
             <h3>#最适合带妹的桌游</h3>
             <div class="input-box">

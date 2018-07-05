@@ -9,11 +9,11 @@
             </li>
             <span class="__" :style="spanPosition"></span>
         </ul>
-        <transition name="transitionName" mode="out-in">
+        <!--<transition name="transitionName" mode="out-in">-->
             <keep-alive>
                 <router-view class="second-view" :value="value"></router-view>
             </keep-alive>
-        </transition>
+        <!--</transition>-->
     </div>
 </template>
 

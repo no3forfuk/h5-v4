@@ -4,7 +4,7 @@
             <span>A<sup>+</sup></span>
         </div>
         <div class="rank-info">
-            <router-link :to="{name:'secondRankList',query:{secondId:value.id}}">
+            <router-link :to="{name:'secondRankList',query:query}">
                 <h3>#{{value.ranking_name}}</h3>
             </router-link>
             <div class="info-body">
@@ -13,7 +13,8 @@
                 <ul class="info-ul" @scroll="judgeBoundary">
                     <li v-for="(item,index) in value.data" :key="index"
                         ref="lis">
-                        <router-link :to="{name:'element',query:{elementId:item.id}}">
+                        <router-link
+                                :to="{name:'element',query:{elementId:item.id,secondId:value.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
                             <i>No.{{index+1}}</i>
                             <span>{{item.element_name}}</span>
                         </router-link>
@@ -36,15 +37,21 @@
             return {
                 leftBoundary: false,
                 rightBoundary: true,
+                query: ''
             }
         },
         mounted() {
             this.$nextTick(() => {
+                this.init()
                 this.initUlWidth()
                 this.judgeBoundary()
             })
         },
         methods: {
+            init() {
+                this.query = this.$route.query;
+                this.$set(this.query, 'secondId', this.value.id)
+            },
             initUlWidth() {
                 $('.info-ul').width($(window).width() - 30)
             },

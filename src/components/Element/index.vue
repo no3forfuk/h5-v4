@@ -1,8 +1,8 @@
 <template>
     <div class="element-page">
         <div class="element-body">
-            <element-header @openDetails="toggleDetails" :value="elementData"></element-header>
-            <element-body :value="elementData.data"></element-body>
+            <element-header @openDetails="toggleDetails" :value="elementData" v-if="elementData"></element-header>
+            <element-body :value="elementData.data" v-if="elementData.data"></element-body>
             <element-footer></element-footer>
         </div>
         <transition name="openDetails">
@@ -60,9 +60,6 @@
             setScrollBoxHeight() {
                 let Height = $(window).height() - $('.element-header').height()
                 $('.element-body').height(Height + 27)
-            },
-            goback() {
-                window.history.back()
             },
             toggleDetails(e) {
                 this.detailsIsOpen = !this.detailsIsOpen

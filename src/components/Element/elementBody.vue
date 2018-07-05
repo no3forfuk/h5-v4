@@ -15,10 +15,10 @@
                 </router-link>
                 <div class="user">
                     <div>
-                        <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
-                        <span>名称</span>
+                        <img :src="item.user.avatar" alt="">
+                        <span>{{item.user.name}}</span>
                     </div>
-                    <span>时间</span>
+                    <span>{{item.updated_at}}</span>
                 </div>
             </div>
         </li>

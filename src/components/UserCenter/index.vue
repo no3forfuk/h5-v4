@@ -1,10 +1,5 @@
 <template>
     <div class="user-center">
-        <rcm-header>
-            <div slot="back" @click="goHome">
-                <i style="font-family: iconfont">&#xe600;</i><span>首页</span>
-            </div>
-        </rcm-header>
         <div class="user-body">
             <card></card>
             <opts></opts>
@@ -35,8 +30,8 @@
             })
         },
         beforeRouteLeave(to, from, next) {
-            this.$store.commit('SETROUTERFROM', from.name)
-            this.$store.commit('SETROUTERTO', to.name)
+            this.$store.commit('SETOPENUSERCENTER', false)
+            this.$store.commit('SETDIRECTION', 'forward')
             next()
         },
         methods: {

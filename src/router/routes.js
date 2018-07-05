@@ -30,13 +30,15 @@ module.exports = [
             {
                 path: '/index/hot',
                 name: 'hot',
-                component: subPath('HotRank/index')
+                component: subPath('HotRank/index'),
+                meta: {hasNav: true},
             },
             {
                 path: '/index/firstRank',
                 name: 'firstRank',
                 query: {firstId: 'id'},
-                component: subPath('FirstRank/index')
+                component: subPath('FirstRank/index'),
+                meta: {hasNav: true},
             }
         ]
     },
@@ -79,17 +81,20 @@ module.exports = [
                 path: '/secondRank/list',
                 name: 'secondRankList',
                 query: {secondId: 'id'},
-                component: subPath('SecondRank/list')
+                component: subPath('SecondRank/list'),
+                meta: {hasNav: true},
             },
             {
                 path: '/secondRank/discuss',
                 name: 'secondRankDiscuss',
-                component: subPath('SecondRank/discuss')
+                component: subPath('SecondRank/discuss'),
+                meta: {hasNav: true},
             },
             {
                 path: '/secondRank/activity',
                 name: 'secondRankActivity',
-                component: subPath('SecondRank/activity')
+                component: subPath('SecondRank/activity'),
+                meta: {hasNav: true},
             },
 
         ]
@@ -99,6 +104,7 @@ module.exports = [
         name: 'element',
         component: _path('Element'),
         params: {elementDetails: 'elementDetails'},
+        meta: {hasNav: true},
         children: []
     },
     {
@@ -110,6 +116,7 @@ module.exports = [
         path: '/post',
         name: 'post',
         component: _path('Post'),
+        meta: {hasNav: false},
     },
     {
         path: '/myself',

@@ -73,15 +73,19 @@ module.exports = merge(base, {
             app.get('/api/home/element/getElementDetails', (req, res) => {
                 go(req, res)
             })
-            //--------------------------------------------
             //获取评论
-            app.get('/api/Ranking/getComment', (req, res) => {
+            app.get('/api/home/Ranking/getComment', (req, res) => {
                 go(req, res)
             })
             //添加评论
-            app.post('/api/Comment/visitorAdd', (req, res) => {
+            app.post('/api/home/comment/visitorAdd', (req, res) => {
                 go(req, res)
             })
+            //获取POST详情
+            app.get('/api/home/post/getPostDetails', (req, res) => {
+                go(req, res)
+            })
+            //--------------------------------------------
             //获取微信签名
             app.post('/api/Wx/signature', (req, res) => {
                 go(req, res)

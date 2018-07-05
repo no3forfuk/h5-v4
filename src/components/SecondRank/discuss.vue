@@ -25,7 +25,7 @@
                 </transition>
             </div>
         </div>
-        <discuess-list></discuess-list>
+        <discuess-list ref="discuessList"></discuess-list>
         <transition name="discuss">
             <div class="add-discuss" v-show="discussIsOpen">
                 <rcm-header>
@@ -52,6 +52,7 @@
 
 <script>
     import discuessList from './discuessList'
+    import {addComment} from '../../api/api'
 
     export default {
         data() {
@@ -91,7 +92,24 @@
 
             },
             confirmDiscuss() {
-                this.discussIsOpen = false;
+                console.log('a');
+                let params = {};
+                params.content = this.discussText;
+                params.comment_type = 2;
+                params.ranking_id = parseInt(this.$route.query.secondId);
+                addComment(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.$refs.discuessList.getDiscuss();
+                            this.discussText = ''
+                            this.discussIsOpen = false;
+                        }
+                    } else {
+
+                    }
+                }).catch(err => {
+                    throw err
+                })
             }
 
         },
