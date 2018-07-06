@@ -85,6 +85,22 @@ module.exports = merge(base, {
             app.get('/api/home/post/getPostDetails', (req, res) => {
                 go(req, res)
             })
+            //获取7牛token
+            app.post('/api/home/qiniu/getUploadToken', (req, res) => {
+                go(req, res)
+            })
+            //发布post
+            app.post('/api/home/post/addPost', (req, res) => {
+                go(req, res)
+            })
+            //手机登陆
+            app.post('/api/home/login', (req, res) => {
+                go(req, res)
+            })
+            //首次获取资料
+            app.post('/api/home/user/firstUpdate', (req, res) => {
+                go(req, res)
+            })
             //--------------------------------------------
             //获取微信签名
             app.post('/api/Wx/signature', (req, res) => {

@@ -27,4 +27,14 @@ utils.getTouchType = function (vm, jqueryObj, index) {
 utils.getWindowHeight = function () {
     return $(window).height();
 }
+utils.uploadFile = function (file, filename, token, putExtra, config, observer) {
+    var file = file;
+    var key = filename;
+    var token = token;
+    var putExtra = putExtra;
+    var config = config;
+    var observer = observer;
+    var observable = qiniu.upload(file, key, token, putExtra, config);
+    var subscription = observable.subscribe(observer);
+}
 module.exports = utils;

@@ -6,7 +6,8 @@
                 <span>125</span>
             </div>
             <div class="right">
-                <router-link :to="{name:'post',query:{postId:item.id},params:{postDetails:item}}">
+                <router-link
+                        :to="{name:'post',query:{postId:item.id,secondId:$route.query.secondId,firstId:$route.query.firstId,idx:$route.query.idx,elementId:$route.query.elementId},params:{postDetails:item}}">
                     <text-post v-if="item.type == 1" :value="item"></text-post>
                     <img-text v-if="item.type == 2" :value="item"></img-text>
                     <img-post v-if="item.type == 3" :value="item"></img-post>

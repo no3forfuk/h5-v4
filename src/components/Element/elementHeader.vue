@@ -96,15 +96,14 @@
                 this.selection.value = this.selection.selectItems[i].text;
             },
             addPost() {
-                this.$router.push({name: 'addPost'})
+                this.$router.push({
+                    name: 'addPost', query: this.$route.query
+                })
             },
             vote() {
                 if (!sessionStorage.getItem('X-Auth-Token')) {
                     this.$router.push({name: 'login'})
                 }
-            },
-            goElementDetails() {
-                this.$router.push({name: 'elementDetails'})
             }
         },
         props: ['value']

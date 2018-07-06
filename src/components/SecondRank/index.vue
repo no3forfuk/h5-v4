@@ -19,10 +19,13 @@
             }
         },
         mounted() {
-            this.$nextTick(() => {
-                 $('.second-page').height($(window).height() - 68)
-            })
 
+
+        },
+        updated() {
+            this.$nextTick(() => {
+                $('.second-page').height($(window).height() - $('.second-page').offset().top)
+            })
         },
         beforeCreate() {
 
@@ -31,8 +34,6 @@
             this.getSecondRankInfo()
         },
         beforeRouteLeave(to, from, next) {
-            this.$store.commit('SETROUTERFROM', from.name)
-            this.$store.commit('SETROUTERTO', to.name)
             next()
         },
         computed: {},

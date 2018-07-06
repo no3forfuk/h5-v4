@@ -11,10 +11,6 @@
                style="width: 0px;height:0px;overflow: hidden;position: absolute;"
                id="inputVideo">
         <div class="top">
-            <rcm-header>
-                <span slot="back" @click="cancelPublic">取消</span>
-                <span slot="right" @click="confirmPublic">完成</span>
-            </rcm-header>
             <p>@元素名称</p>
         </div>
         <div class="center">
@@ -26,7 +22,6 @@
             </div>
             <div class="footer-placeholder"></div>
             <div class="footer">
-                <icon :value="'&#xe649;'" @click="insertText" class="font-size-28"></icon>
                 <icon :value="'&#xe615;'" @click="insertImg" class="font-size-28"></icon>
                 <icon :value="'&#xe603;'" @click="insertVideo" class="font-size-28"></icon>
                 <icon :value="'&#xe628;'" class="font-size-28"></icon>
@@ -37,44 +32,130 @@
 </template>
 
 <script>
+    import {publicPost, getQiniuToken} from '../../api/api'
+    import {uploadFile} from '../../utils/index'
 
     export default {
         data() {
             return {
                 lastEditRange: {},
+                qiniuToken: '',
                 postContent: '',
                 imgNum: 0,
                 imgOldHtml: '',
                 imgNewHtml: '',
+                imgFileArr: [],
                 videoNum: 0,
-                videoNewHtml: ''
+                videoNewHtml: '',
+                type: 1
             }
         },
         beforeRouteLeave(to, from, next) {
-            this.$store.commit('SETROUTERFROM', from.name)
-            this.$store.commit('SETROUTERTO', to.name)
             next()
         },
         mounted() {
             this.$nextTick(() => {
-                $('.public-post').height($(window).height())
-                let windowHeight = $(window).height();
-                let topHeight = $('.top').height();
-                let footerHeight = $('.footer').height();
-                let centerHeight = windowHeight - topHeight;
-                $('.center').height(centerHeight);
+                $('.center').height($(window).height() - $('.edit-box').offset().top)
+                $('.edit-box').height($('.center').height() - $('.footer-placeholder').height())
+                this.$parent.$refs.rcmHeaders.$refs.comfirm.onclick = () => {
+                    for (let i = 0; i < this.imgFileArr.length; i++) {
+                        this.uploadFile(this.imgFileArr[i], i)
+                    }
 
+                }
             })
         },
         methods: {
             cancelPublic() {
-                this.$router.replace({name: 'element'})
+
+            },
+            postType() {
+                if ($('img').length == 0 && $('video').length == 0) {
+                    this.type == 1
+                    return
+                }
+                if ($('video').length > 0) {
+                    this.type == 4
+                    return
+                }
+                if ($('img').length > 0) {
+                    this.type == 3
+                    return
+                }
+            },
+            dataURLtoBlob(dataurl) {
+                var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+                while (n--) {
+                    u8arr[n] = bstr.charCodeAt(n);
+                }
+                return new Blob([u8arr], {type: mime});
             },
             confirmPublic() {
+                this.postType()
+                let params = {};
+                console.log($('.edit-box').innerHTML);
+                params.post_content = $('.edit-box')[0].innerHTML;
+                params.element_id = this.$route.query.elementId;
+                params.type = this.type
+                publicPost(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            console.log(res.data);
+                        }
+
+                    } else {
+
+                    }
+                }).catch(err => {
+                    throw err
+                })
 
             },
             getRangePosition(element) {
 
+            },
+            uploadFile(file, i) {
+                getQiniuToken().then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.qiniuToken = res.data.data.qiniu_token;
+                            let token = res.data.data.qiniu_token;
+                            let strFileName = 'post/' + this.$route.query.elementId + '/' + file.name
+                            let putExtra = {
+                                fname: "",
+                                params: {},
+                                mimeType: [] || null
+                            };
+                            let config = {
+                                region: this.qiniu.region.z2
+                            };
+                            var self = this;
+                            let observer = {
+                                next(res) {
+
+                                },
+                                error(err) {
+                                    throw err;
+                                },
+                                complete(res) {
+                                    let urlStr = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
+                                    let imgDom = '#img' + (i + 1)
+                                    $(imgDom)[0].src = urlStr;
+                                    self.confirmPublic()
+                                }
+                            }
+                            let observable = this.qiniu.upload(file, strFileName, token, putExtra, config);
+                            let subscription = observable.subscribe(observer);
+                        } else {
+
+                        }
+                    } else {
+
+                    }
+                }).catch(err => {
+                    throw err
+                })
             },
             insertVideo() {
                 this.$refs.videoFile.click()
@@ -96,9 +177,6 @@
                     return
                 }
             },
-            insertText() {
-
-            },
             insertImg() {
                 this.$refs.imgFile.click()
             },
@@ -107,10 +185,12 @@
                 flies.onload = data => {
                     this.imgNum++
                     this.imgNewHtml = `
-                      <br>
-                      <img src="" alt="" style="max-width:300px;margin: 0 auto;border-radius: 4px;" id="img${this.imgNum}">
+                      <div style="width:100%;">
+                        <img src="" alt="" style="max-width:300px;margin-left: 50%;transform:translateX(-50%);border-radius: 4px;" id="img${this.imgNum}">
+                      </div>
                 `
                     $('.edit-box').append(this.imgNewHtml)
+                    this.imgFileArr.push(this.$refs.imgFile.files[0])
                     $(`#img${this.imgNum}`)[0].src = data.target.result
                     this.$refs.imgFile.value = ''
                 }
@@ -122,15 +202,17 @@
             },
             getEditBoxFocus() {
                 //获取屏幕宽度
-                let width = $(window).width()
                 $('.center').height(200)
-                // $('.edit-box').height(200 - $('.footer').height());
-
+                $('.edit-box').height(200 - $('.footer-placeholder').height())
+                setTimeout(() => {
+                    $('.edit-box')[0].scrollTop = $('.edit-box')[0].scrollHeight
+                    $('.app')[0].scrollTop = 0 + 'px'
+                }, 100)
             },
             lostEditBoxFocus() {
                 $('.edit-box').on('keyup', null)
-                $('.center').height($(window).height() - $('.top').height())
-                // $('.edit-box').height($(window).height() - $('.top').height() - $('.footer').height());
+                $('.center').height($(window).height() - $('.center').offset().top)
+                $('.edit-box').height($(window).height() - $('.footer-placeholder').height() - $('.center').offset().top)
             },
             saveFocusPosition() {
                 if (window.getSelection) {
@@ -138,6 +220,7 @@
                     selection = window.getSelection();
                     this.lastEditRange = selection.getRangeAt(0);
                     $('.edit-box').on('keyup', () => {
+                        // this.postContent = $('.edit-box').html()
                         this.lastEditRange = selection.getRangeAt(0);
                     })
                 }
@@ -151,20 +234,26 @@
 <style scoped lang="less">
     .public-post {
         width: 100%;
-        transition: all 0.8s;
+        height: 100%;
+        background-color: #fff;
+        .top {
+            padding: 5px 10px;
+            p {
+                font-size: 16px;
+            }
+        }
         .center {
             width: 100%;
             position: relative;
-            border: 1px solid #000;
+            border-top: 1px solid rgba(0, 0, 0, 0.2);
             transition: all 0.8s;
             .edit-box {
                 width: 100%;
-                min-height: 170px;
-                border-bottom: 1px solid #ccc;
                 text-align: left;
                 overflow-x: hidden;
                 overflow-y: auto;
                 transition: all 0.8s;
+                padding: 0 5px;
             }
         }
     }
@@ -181,6 +270,10 @@
         height: 40px;
         background-color: #ccc;
         position: absolute;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
         bottom: 0;
         left: 0;
         i {

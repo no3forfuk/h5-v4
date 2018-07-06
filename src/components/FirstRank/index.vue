@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="first-rank">
         <mt-loadmore :bottom-method="loadBeforeDay"
                      :bottom-all-loaded="allLoaded"
                      :bottomDistance="pullHeight"
@@ -22,12 +22,17 @@
         data() {
             return {
                 allLoaded: false,
-                pullHeight: 30,
+                pullHeight: 20,
                 list: []
             }
         },
         created() {
             this.getFirstList()
+        },
+        mounted() {
+            this.$nextTick(() => {
+                $('.first-rank').height($(window).height() - $('.first-rank').offset().top)
+            })
         },
         methods: {
             loadBeforeDay() {
@@ -62,6 +67,11 @@
 </script>
 
 <style scoped lang="less">
+    .first-rank {
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
     .ranklist {
         height: 100%;

@@ -2,14 +2,14 @@
     <div class="app">
         <rcm-headers :color="'#7D09FF'"
                      class="header"
+                     ref="rcmHeaders"
                      :back-target="backTarget"
                      :is-index="isIndex"
+                     :right-text="rightText"
                      :has-nav="$route.meta.hasNav"
                      :left-text="leftText"></rcm-headers>
         <transition :name="transitionName">
-            <keep-alive>
-                <router-view class="router-view"></router-view>
-            </keep-alive>
+            <router-view class="router-view"></router-view>
         </transition>
     </div>
 </template>
@@ -22,7 +22,8 @@
                 leftText: '',
                 isIndex: true,
                 backTarget: '',
-                hasNav: true
+                hasNav: true,
+                rightText: ''
             }
         },
         created() {
@@ -33,7 +34,6 @@
                 $('.app').css({
                     height: $(window).height()
                 })
-                $('.router-view').height($(window).height() - $('.header').height())
             })
         },
         updated() {
@@ -50,42 +50,55 @@
         },
         watch: {
             '$route'(val) {
-                console.log(val);
+
             },
             '$route.name'(val) {
                 switch (val) {
                     case 'hot':
                         this.leftText = ''
                         this.isIndex = true
+                        this.rightText = ''
                         break;
                     case 'firstRank':
                         this.leftText = ''
                         this.isIndex = true
+                        this.rightText = ''
                         break;
                     case 'secondRankList':
                         this.leftText = '首页'
                         this.isIndex = false
                         this.backTarget = 'hot'
+                        this.rightText = ''
                         break;
                     case 'secondRankDiscuss':
                         this.leftText = '首页'
                         this.isIndex = false
                         this.backTarget = 'hot'
+                        this.rightText = ''
                         break;
                     case 'secondRankActivity':
                         this.leftText = '首页'
                         this.isIndex = false
                         this.backTarget = 'hot'
+                        this.rightText = ''
                         break;
                     case 'element':
                         this.leftText = '榜单'
                         this.isIndex = false
+                        this.rightText = ''
                         this.backTarget = 'secondRankList'
+                        break;
+                    case 'addPost':
+                        this.leftText = ''
+                        this.isIndex = false
+                        this.backTarget = 'element'
+                        this.rightText = '完成'
                         break;
                     case 'post':
                         this.leftText = '排名'
                         this.isIndex = false
                         this.backTarget = 'element'
+                        this.rightText = ''
                         this.hasNav = false
                         break;
                     default :

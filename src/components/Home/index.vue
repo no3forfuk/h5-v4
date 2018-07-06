@@ -27,12 +27,11 @@
         },
 
         created() {
-            this.getIndexData()
+
         },
         mounted() {
             this.$nextTick(() => {
                 this.setScrollHeight()
-                $('.home-view').height($('.home').height() - $('.page-header').height() - 68);
             })
         },
         updated() {
@@ -43,8 +42,6 @@
         watch: {},
 
         beforeRouteLeave(to, from, next) {
-            this.$store.commit('SETROUTERFROM', from.name)
-            this.$store.commit('SETROUTERTO', to.name)
             next()
         },
         methods: {
@@ -82,9 +79,6 @@
                 let activeHeight = $('.find-body').height()
                 let bodyHeight = windowHeight - headerHeight + activeHeight;
                 $('.home-body').height(bodyHeight)
-            },
-            goUserCenter() {
-                this.$router.push({name: 'userCenter'})
             }
         },
         computed: {},
@@ -105,12 +99,6 @@
         .home-body {
             width: 100%;
             height: 100%;
-            .home-view {
-                width: 100%;
-                height: 100%;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-            }
         }
     }
 

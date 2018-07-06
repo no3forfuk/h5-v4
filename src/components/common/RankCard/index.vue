@@ -4,7 +4,8 @@
             <span>A<sup>+</sup></span>
         </div>
         <div class="rank-info">
-            <router-link :to="{name:'secondRankList',query:query}">
+            <router-link
+                    :to="{name:'secondRankList',query:{secondId:value.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
                 <h3>#{{value.ranking_name}}</h3>
             </router-link>
             <div class="info-body">
@@ -42,15 +43,13 @@
         },
         mounted() {
             this.$nextTick(() => {
-                this.init()
                 this.initUlWidth()
                 this.judgeBoundary()
             })
         },
         methods: {
             init() {
-                this.query = this.$route.query;
-                this.$set(this.query, 'secondId', this.value.id)
+
             },
             initUlWidth() {
                 $('.info-ul').width($(window).width() - 30)

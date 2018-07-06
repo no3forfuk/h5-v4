@@ -41,12 +41,45 @@ module.exports = {
             method: 'POST',
             data: data
         })
-    },//获取POST详情
+    },
+    //获取POST详情
     getPostDetailsById(params) {
         return request({
             url: '/post/getPostDetails',
             method: 'GET',
             params: params
+        })
+    },
+    //发布POST
+    publicPost(data) {
+        return request({
+            url: '/post/addPost',
+            method: 'POST',
+            data: data
+        })
+    },
+    //获取七牛token
+    getQiniuToken(data) {
+        return request({
+            url: '/qiniu/getUploadToken',
+            method: 'POST',
+            data: data
+        })
+    },
+    //登陆
+    loginByPhone(data) {
+        return request({
+            url: '/login',
+            method: 'POST',
+            data: data
+        })
+    },
+    //首次设置资料
+    setUserInfoAtFirst(data) {
+        return request({
+            url: '/user/firstUpdate',
+            method: 'POST',
+            data: data
         })
     },
     getElementDetails(params) {

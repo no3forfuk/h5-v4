@@ -1,17 +1,13 @@
 <template>
-
     <div class="login">
-        <rcm-header>
-            <span slot="left"></span>
-        </rcm-header>
         <p style="font-size: 22px;line-height: 24px;padding: 10px">欢迎来到RCM</p>
         <div class="login-body">
             <div class="login-form">
                 <div class="phone-number">
-                    <input type="number" placeholder="手机号">
+                    <input type="number" placeholder="手机号" v-model="mobile">
                 </div>
                 <div class="pass-word">
-                    <input type="password" placeholder="密码">
+                    <input type="password" placeholder="密码" v-model="password">
                 </div>
             </div>
             <div class="login-opts">
@@ -39,10 +35,14 @@
 </template>
 
 <script>
+    import {loginByPhone, setUserInfoAtFirst} from '../../api/api'
 
     export default {
         data() {
-            return {}
+            return {
+                mobile: '',
+                password: ''
+            }
         },
         mounted() {
             this.$nextTick(() => {
@@ -52,13 +52,36 @@
             })
         },
         beforeRouteLeave(to, from, next) {
-            this.$store.commit('SETROUTERFROM', from.name)
-            this.$store.commit('SETROUTERTO', to.name)
             next()
         },
         methods: {
             goIndex() {
-                this.$router.push({name: 'home'})
+                let params = {}
+                params.mobile = this.mobile
+                params.password = this.MD5(this.password)
+                loginByPhone(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.$router.replace({name: 'hot'})
+                        }
+                        if (res.data.status_code == 11) {
+                            sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
+                            this.$store.commit('LOGIN')
+                            let params = {}
+                            params.name = '贱贱'
+                            setUserInfoAtFirst(params).then(res => {
+                                console.log(res);
+                                this.$router.replace({name: 'hot'})
+                            }).catch(err => {
+                                throw err
+                            })
+                        }
+                    } else {
+
+                    }
+                }).catch(err => {
+                    throw err
+                })
             },
             goRegiser() {
                 this.$router.push({name: 'register'})

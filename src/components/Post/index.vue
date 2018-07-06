@@ -3,9 +3,7 @@
         <div class="post-user">
             <user-card :value="postDetails.user"></user-card>
         </div>
-        <div class="post-content">
-            {{postDetails.post_content}}
-        </div>
+        <div class="post-content" v-html="postDetails.post_content.split('\n')"></div>
         <h3 class="discuss-title">评论(<span>{{postDetails.comment_num}}</span>)</h3>
         <ul class="discuss-list">
             <discuss-card v-for="(item,index) in postDetails" :key="index"></discuss-card>
@@ -57,6 +55,7 @@
     .post-content {
         width: 100%;
         padding-left: 40px;
+        padding-right: 10px;
     }
 
     .discuss-title {

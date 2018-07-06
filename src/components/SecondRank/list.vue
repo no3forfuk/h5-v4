@@ -67,9 +67,12 @@
         },
         mounted() {
             this.$nextTick(() => {
-                let height = $(window).height() - $('.list-head').offset().top - $('.list-head').height() - 20
+                let height = $(window).height() - $('.list-head').offset().top - $('.list-head').height()
                 $('.second-list-body').height(height)
             })
+        },
+        updated(){
+
         },
         created() {
 

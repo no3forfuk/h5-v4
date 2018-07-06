@@ -14,6 +14,9 @@
                     <icon class="font-size-20" v-if="!findIsOpen" :value="'&#xe7e9;'"></icon>
                     <icon class="font-size-20" v-if="findIsOpen" :value="'&#xe952;'"></icon>
                 </div>
+                <div v-if="rightText" ref="comfirm">
+                    <span style="color: #FF2C09; font-size: 16px">{{rightText}}</span>
+                </div>
             </div>
         </div>
         <div class="header-bottom" v-if="hasNav" :style="openFind">
@@ -70,7 +73,6 @@
                     this.$store.commit('SETDIRECTION', 'back')
                     this.$router.back()
                 } else {
-                    console.log(this.backTarget);
                     this.$store.commit('SETDIRECTION', 'back')
                     this.$router.push({
                         name: this.backTarget,
@@ -99,7 +101,7 @@
         components: {
             finderBody
         },
-        props: ['color', 'leftText', 'isIndex', 'backTarget', 'hasNav']
+        props: ['color', 'leftText', 'isIndex', 'backTarget', 'hasNav', 'rightText']
     }
 
 </script>

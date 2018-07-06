@@ -10,6 +10,13 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 const storeConfig = require('./store/index');
 const store = new Vuex.Store(storeConfig);
+
+//七牛JS-SDK
+const qiniu = require('qiniu-js');
+Vue.prototype.qiniu = qiniu;
+//MD5
+const MD5 = require('js-md5')
+Vue.prototype.MD5 = MD5;
 //vue-router
 import VueRouter from 'vue-router';
 

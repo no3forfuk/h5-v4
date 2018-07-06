@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="hot-rank">
         <mt-loadmore :bottom-method="loadBeforeDay"
                      :bottom-all-loaded="allLoaded"
                      :bottomDistance="pullHeight"
@@ -21,12 +21,14 @@
         data() {
             return {
                 allLoaded: false,
-                pullHeight: 30,
+                pullHeight: 20,
                 list: []
             }
         },
         mounted() {
-
+            this.$nextTick(() => {
+                $('.hot-rank').height($(window).height() - $('.hot-rank').offset().top)
+            })
         },
         created() {
             this.getPushRank()
@@ -58,6 +60,12 @@
 </script>
 
 <style scoped lang="less">
+    .hot-rank {
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
     .ranklist {
         height: 100%;
         width: 100%;

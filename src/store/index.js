@@ -7,9 +7,13 @@ const state = {
     routerFrom: '',
     routerTo: '',
     routerDirection: 'forward',
-    rankIndex: 0
+    rankIndex: 0,
+    isLogin: false
 }
 const mutations = {
+    LOGIN(state) {
+        state.isLogin = true
+    },
     SETOPENUSERCENTER(state, val) {
         state.openUserCenter = val
     },
