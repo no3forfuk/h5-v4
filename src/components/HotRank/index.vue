@@ -27,7 +27,7 @@
         },
         mounted() {
             this.$nextTick(() => {
-                $('.hot-rank').height($(window).height() - $('.hot-rank').offset().top)
+                $('.hot-rank').height($(window).height() - $('.hot-rank')[0].offsetTop)
             })
         },
         created() {

@@ -3,7 +3,7 @@
         <div class="home-body">
             <p class="page-header">开荒神器RCM</p>
             <transition name="transitionName" mode="out-in">
-                <router-view class="home-view"></router-view>
+                <router-view></router-view>
             </transition>
         </div>
     </div>
@@ -31,12 +31,12 @@
         },
         mounted() {
             this.$nextTick(() => {
-                this.setScrollHeight()
+                // this.setScrollHeight()
             })
         },
         updated() {
             this.$nextTick(() => {
-                this.setScrollHeight()
+                // this.setScrollHeight()
             })
         },
         watch: {},
@@ -74,11 +74,11 @@
                 })
             },
             setScrollHeight() {
-                let windowHeight = $(window).height();
-                let headerHeight = $('.home-header').height()
-                let activeHeight = $('.find-body').height()
-                let bodyHeight = windowHeight - headerHeight + activeHeight;
-                $('.home-body').height(bodyHeight)
+                // let windowHeight = $(window).height();
+                // let headerHeight = $('.home-header').height()
+                // let activeHeight = $('.find-body').height()
+                // let bodyHeight = windowHeight - headerHeight + activeHeight;
+                // $('.home-body').height(bodyHeight)
             }
         },
         computed: {},

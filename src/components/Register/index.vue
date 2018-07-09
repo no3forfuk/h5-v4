@@ -3,19 +3,19 @@
         <div class="register-body">
             <div class="register-form">
                 <div class="phone-number">
-                    <input type="number" placeholder="手机号">
+                    <input type="number" placeholder="手机号" v-model="phoneNumber">
                 </div>
                 <div class="pass-word">
-                    <input type="password" placeholder="密码">
+                    <input type="password" placeholder="密码" v-model="password">
                 </div>
                 <div class="short-msg">
-                    <input type="nubmer" placeholder="短信验证码">
-                    <span>获取验证码</span>
+                    <input type="nubmer" placeholder="短信验证码" v-model="yzm">
+                    <span @click="getYZM">{{yzmText}}</span>
                 </div>
             </div>
             <div class="register-opts">
                 <div>
-                    <button>下一步</button>
+                    <button @click="submitRegister">下一步</button>
                 </div>
             </div>
         </div>
@@ -28,18 +28,129 @@
 </template>
 
 <script>
+    import {registerByPhone, getYZM} from '../../api/api'
 
     export default {
         data() {
-            return {}
+            return {
+                phoneNumber: '',
+                password: '',
+                yzm: '',
+                yzmText: '获取验证码',
+                time: 60,
+                timer: null
+            }
         },
         mounted() {
             this.$nextTick(() => {
                 $('.register').css({
-                    height: $(window).height()
+                    height: $(window).height() - 33
                 })
             })
         },
+        methods: {
+            getYZM() {
+                this.timer = setInterval(() => {
+                    this.time--;
+                    this.yzmText = this.time + 's后重新获取'
+                }, 1000)
+                if (this.phoneNumber == '') {
+                    this.$toast({
+                        message: '请输入正确的手机号码',
+                        position: 'middle',
+                        duration: 1000
+                    })
+                    return
+                }
+
+                let params = {};
+                params.mobile = this.phoneNumber
+                getYZM(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.$toast({
+                                message: '验证码已发送，请注意查收',
+                                position: 'middle',
+                                duration: 1000
+                            })
+                        } else {
+
+                        }
+                    } else {
+                        this.$toast({
+                            message: '系统异常',
+                            position: 'middle',
+                            duration: 1000
+                        })
+                    }
+                }).catch(err => {
+                    this.$toast({
+                        message: '系统异常',
+                        position: 'middle',
+                        duration: 1000
+                    })
+                })
+            },
+            submitRegister() {
+                if (this.phoneNumber == '') {
+                    this.$toast({
+                        message: '请输入正确的手机号码',
+                        position: 'middle',
+                        duration: 1000
+                    })
+                    return
+                }
+                if (this.password == '') {
+                    this.$toast({
+                        message: '请输入密码',
+                        position: 'middle',
+                        duration: 1000
+                    })
+                    return
+                }
+                let params = {}
+                params.mobile = this.phoneNumber
+                params.password = this.password
+                params.mobile_code = this.yzm
+                registerByPhone(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.$toast({
+                                message: '注册成功',
+                                position: 'middle',
+                                duration: 1000
+                            })
+                        } else {
+                            this.$toast({
+                                message: res.data.message,
+                                position: 'middle',
+                                duration: 1000
+                            })
+                        }
+                    } else {
+                        this.$toast({
+                            message: '系统异常',
+                            position: 'middle',
+                            duration: 1000
+                        })
+                    }
+                }).catch(err => {
+                    this.$toast({
+                        message: '系统异常',
+                        position: 'middle',
+                        duration: 1000
+                    })
+                })
+            }
+        },
+        watch: {
+            'time'(val) {
+                if (val < 0) {
+                    this.yzmText = '重新获取';
+                    this.timer = null
+                }
+            }
+        }
     }
 
 </script>

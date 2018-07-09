@@ -22,7 +22,7 @@
             </div>
             <div class="login-tpye">
                 <div class="wechat">
-                    <span><i>微信登录</i><i>微信登录</i></span>
+                    <span @click="loginByOther('weixin')"><i>微信登录</i><i>微信登录</i></span>
                 </div>
                 <span></span>
                 <div class="tx-qq">
@@ -35,13 +35,14 @@
 </template>
 
 <script>
-    import {loginByPhone, setUserInfoAtFirst} from '../../api/api'
+    import {loginByPhone, setUserInfoAtFirst, getLoginCode, loginByOther} from '../../api/api'
 
     export default {
         data() {
             return {
                 mobile: '',
-                password: ''
+                password: '',
+                code: ''
             }
         },
         mounted() {
@@ -55,6 +56,17 @@
             next()
         },
         methods: {
+            GetQueryString(url, name) {
+                let index = url.indexOf('?')
+                let str = url.substring(index + 1);
+                let arr = str.split('&');
+                let result = {};
+                arr.forEach((item) => {
+                    let a = item.split('=');
+                    result[a[0]] = a[1];
+                })
+                return result[name];
+            },
             goIndex() {
                 let params = {}
                 params.mobile = this.mobile
@@ -62,6 +74,8 @@
                 loginByPhone(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
+                            sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
+                            this.$store.commit('LOGIN')
                             this.$router.replace({name: 'hot'})
                         }
                         if (res.data.status_code == 11) {
@@ -88,6 +102,22 @@
             },
             resetPassword() {
                 this.$router.push({name: 'resetPassword'})
+            },
+            loginByOther(type) {
+                location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa32e016674b63fbb&redirect_uri=http://www.rcm.ink&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+            }
+        },
+        watch: {
+            'location.href'(n, o) {
+                this.code = this.GetQueryString(n, 'code');
+                let params = {}
+                params.type = 'weixin';
+                params.code = this.code
+                loginByOther(params).then(res => {
+
+                }).catch(err => {
+                    throw err
+                })
             }
         }
     }

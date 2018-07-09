@@ -32,7 +32,7 @@
                          :auto-fill="false"
                          ref="loadmore">
                 <ul class="list-body">
-                    <cell v-for="(item,index) in value.data"
+                    <cell v-for="(item,index) in value.data.data"
                           :value="item"
                           :index="index"
                           :key="index"></cell>
@@ -71,7 +71,7 @@
                 $('.second-list-body').height(height)
             })
         },
-        updated(){
+        updated() {
 
         },
         created() {
@@ -87,7 +87,8 @@
             addElement() {
                 this.$router.push({
                     name: 'addElement',
-                    query: this.$route.query
+                    query: this.$route.query,
+                    params: this.value
                 })
             },
             toggleSort() {

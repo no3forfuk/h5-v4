@@ -101,6 +101,13 @@
                         this.rightText = ''
                         this.hasNav = false
                         break;
+                    case 'addElement':
+                        this.leftText = ''
+                        this.isIndex = false
+                        this.backTarget = 'secondRankList'
+                        this.rightText = '下一步'
+                        this.hasNav = false
+                        break;
                     default :
                         this.leftText = ''
                         this.isIndex = false

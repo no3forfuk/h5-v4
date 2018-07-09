@@ -41,6 +41,9 @@
                 query: ''
             }
         },
+        created() {
+
+        },
         mounted() {
             this.$nextTick(() => {
                 this.initUlWidth()

@@ -47,7 +47,13 @@
                 imgFileArr: [],
                 videoNum: 0,
                 videoNewHtml: '',
-                type: 1
+                videoFileArr: [],
+                type: 1,
+                img: '',
+                video: '',
+                out_link: '',
+                link_title: '',
+                link_desc: ''
             }
         },
         beforeRouteLeave(to, from, next) {
@@ -58,8 +64,12 @@
                 $('.center').height($(window).height() - $('.edit-box').offset().top)
                 $('.edit-box').height($('.center').height() - $('.footer-placeholder').height())
                 this.$parent.$refs.rcmHeaders.$refs.comfirm.onclick = () => {
+                    console.log(this.videoFileArr);
                     for (let i = 0; i < this.imgFileArr.length; i++) {
                         this.uploadFile(this.imgFileArr[i], i)
+                    }
+                    for (let i = 0; i < this.videoFileArr.length; i++) {
+                        this.uploadFile(this.videoFileArr[i], i)
                     }
 
                 }
@@ -71,15 +81,16 @@
             },
             postType() {
                 if ($('img').length == 0 && $('video').length == 0) {
-                    this.type == 1
+                    this.type = 1
                     return
                 }
                 if ($('video').length > 0) {
-                    this.type == 4
+                    this.type = 4
                     return
                 }
                 if ($('img').length > 0) {
-                    this.type == 3
+                    this.img = $('img')[0].src
+                    this.type = 3
                     return
                 }
             },
@@ -92,16 +103,20 @@
                 return new Blob([u8arr], {type: mime});
             },
             confirmPublic() {
-                this.postType()
                 let params = {};
-                console.log($('.edit-box').innerHTML);
-                params.post_content = $('.edit-box')[0].innerHTML;
-                params.element_id = this.$route.query.elementId;
-                params.type = this.type
+                let newHtml = $('.edit-box').html().replace(/[\r\n]/g, '')
+                params.post_content = encodeURIComponent(newHtml);
+                params.element_id = parseInt(this.$route.query.elementId);
+                params.type = this.type;
+                params.img = this.img;
+                params.video = this.video;
+                params.out_link = this.out_link;
+                params.link_title = this.link_title;
+                params.link_desc = this.link_desc;
                 publicPost(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
-                            console.log(res.data);
+
                         }
 
                     } else {
@@ -125,9 +140,10 @@
                             let putExtra = {
                                 fname: "",
                                 params: {},
-                                mimeType: [] || null
+                                mimeType: null
                             };
                             let config = {
+                                useCdnDomain: true,
                                 region: this.qiniu.region.z2
                             };
                             var self = this;
@@ -139,9 +155,18 @@
                                     throw err;
                                 },
                                 complete(res) {
-                                    let urlStr = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
-                                    let imgDom = '#img' + (i + 1)
-                                    $(imgDom)[0].src = urlStr;
+                                    self.postType()
+                                    if (self.type == 3) {
+                                        let urlStr = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
+                                        let imgDom = '#img' + (i + 1)
+                                        $(imgDom)[0].src = urlStr;
+                                    }
+
+                                    if (self.type == 4) {
+                                        let urlStr = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
+                                        let videoDom = '#video' + (i + 1)
+                                        $(videoDom)[0].src = urlStr;
+                                    }
                                     self.confirmPublic()
                                 }
                             }
@@ -168,6 +193,7 @@
                       <video src="" id="video${this.videoNum}" controls="controls" style="max-width:300px;"></video>
                 `
                     $('.edit-box').append(this.videoNewHtml)
+                    this.videoFileArr.push(this.$refs.videoFile.files[0])
                     $(`#video${this.videoNum}`)[0].src = data.target.result
                     this.$refs.videoFile.value = ''
                 }
@@ -185,8 +211,8 @@
                 flies.onload = data => {
                     this.imgNum++
                     this.imgNewHtml = `
-                      <div style="width:100%;">
-                        <img src="" alt="" style="max-width:300px;margin-left: 50%;transform:translateX(-50%);border-radius: 4px;" id="img${this.imgNum}">
+                      <div>
+                        <img src="" alt="" style="max-width:300px;border-radius: 4px;" id="img${this.imgNum}">
                       </div>
                 `
                     $('.edit-box').append(this.imgNewHtml)

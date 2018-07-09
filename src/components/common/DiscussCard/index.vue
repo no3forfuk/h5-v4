@@ -2,24 +2,13 @@
     <li>
         <div class="left">
             <icon :value="'&#xe647;'" class="font-size-20"></icon>
-            <span>123</span>
+            <span>{{value.like}}</span>
         </div>
         <div class="center">
-            <div class="user">
-                <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
-                <div class="info">
-                    <p>名称</p>
-                    <p>
-                        <span>#榜单</span>
-                        <span></span>
-                        <span>签名</span>
-                    </p>
-                </div>
-            </div>
-            <p class="content">
-                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容</p>
+            <user-card :value="value.user||value.visitor"></user-card>
+            <p class="content">{{value.content}}</p>
         </div>
-        <span class="right">3小时前</span>
+        <span class="right">{{value.created_at|timeformat}}</span>
     </li>
 </template>
 
@@ -28,7 +17,11 @@
     export default {
         data() {
             return {}
-        }
+        },
+        created() {
+
+        },
+        props: ['value']
     }
 
 </script>

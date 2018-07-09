@@ -40,7 +40,10 @@ module.exports = merge(base, {
                         "method": method,
                         "qs": requset.query,
                         "json": true,
-                        "uri": baseUrl + requset.url
+                        "uri": baseUrl + requset.url,
+                        "headers": {
+                            "authorization": requset.headers.authorization
+                        }
                     }
                 }
                 if (method == 'POST') {
@@ -48,7 +51,10 @@ module.exports = merge(base, {
                         "method": method,
                         "body": requset.body,
                         "json": true,
-                        "uri": baseUrl + requset.url
+                        "uri": baseUrl + requset.url,
+                        "headers": {
+                            "authorization": requset.headers.authorization
+                        }
                     }
                 }
                 rp(options).then(data => {
@@ -74,7 +80,7 @@ module.exports = merge(base, {
                 go(req, res)
             })
             //获取评论
-            app.get('/api/home/Ranking/getComment', (req, res) => {
+            app.get('/api/home/ranking/getComment', (req, res) => {
                 go(req, res)
             })
             //添加评论
@@ -101,55 +107,56 @@ module.exports = merge(base, {
             app.post('/api/home/user/firstUpdate', (req, res) => {
                 go(req, res)
             })
-            //--------------------------------------------
-            //获取微信签名
-            app.post('/api/Wx/signature', (req, res) => {
+            //获取评论
+            app.get('/api/home/ranking/getComment', (req, res) => {
                 go(req, res)
             })
-            //统计
-
-            app.post('/api/Statistical/add', (req, res) => {
+            //第三方登陆
+            app.post('/api/home/login/thirdLogin', (req, res) => {
                 go(req, res)
             })
             //注册
-            app.post('/api/Login/reg', (req, res) => {
+            app.post('/api/home/login/reg', (req, res) => {
                 go(req, res)
             })
-            //获取验证码
-            app.post('/api/Login/sms', (req, res) => {
+            //发送验证码
+            app.post('/api/home/login/sms', (req, res) => {
                 go(req, res)
             })
-            //登陆
-            app.post('/api/Login/login', (req, res) => {
+            //添加元素
+            app.post('/api/home/element/addElement', (req, res) => {
                 go(req, res)
             })
-            //添加用户信息
-            app.post('/api/User/firstUpdate', (req, res) => {
-                go(req, res)
-            })
-            app.post('/api/Login/ThirdLogin', (req, resp) => {
-                go(req, res)
-                // let options = {
-                //     "method": 'GET',
-                //     // "qs": {
-                //     //     appid: 'wx9b154f4a099953b0',
-                //     //     redirect_uri: 'http://rcm.cc',
-                //     //     response_type: 'code',
-                //     //     scope: 'snsapi_userinfo',
-                //     //     state: 'STATE#wechat_redirect'
-                //     // },
-                //     "json": true,
-                //     "uri": 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9b154f4a099953b0&redirect_uri=http://rcm.cc&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
-                // }
-                // let data;
-                // rp(options).then(res => {
-                //     data = res
-                //     console.log(res);
-                //     resp.json(data)
-                // }).catch(err => {
-                //     throw err
-                // })
-            })
+
+            //--------------------------------------------
+            //获取微信签名
+            // app.post('/api/Wx/signature', (req, res) => {
+            //     go(req, res)
+            // })
+            // //统计
+            //
+            // app.post('/api/Statistical/add', (req, res) => {
+            //     go(req, res)
+            // })
+            // //注册
+            // app.post('/api/Login/reg', (req, res) => {
+            //     go(req, res)
+            // })
+            // //获取验证码
+            // app.post('/api/Login/sms', (req, res) => {
+            //     go(req, res)
+            // })
+            // //登陆
+            // app.post('/api/Login/login', (req, res) => {
+            //     go(req, res)
+            // })
+            // //添加用户信息
+            // app.post('/api/User/firstUpdate', (req, res) => {
+            //     go(req, res)
+            // })
+            // app.post('/api/Login/ThirdLogin', (req, resp) => {
+            //     go(req, res)
+            // })
 
         }
 

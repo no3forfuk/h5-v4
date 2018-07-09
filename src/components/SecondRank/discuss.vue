@@ -92,7 +92,6 @@
 
             },
             confirmDiscuss() {
-                console.log('a');
                 let params = {};
                 params.content = this.discussText;
                 params.comment_type = 2;

@@ -1,7 +1,7 @@
 <template>
     <div class="img-text">
-        <p>韩国门将疑化妆上场 皮肤好白发型纹丝不动原标题:韩国门将疑似化妆上场,世界级扑救力保球门不失!北京时间6月18日,中国队的死敌韩国队迎来了俄罗斯</p>
-        <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
+        <p>{{text}}</p>
+        <img :src="value.img" alt="">
     </div>
 </template>
 
@@ -9,8 +9,32 @@
 
     export default {
         data() {
-            return {}
-        }
+            return {
+                text: ''
+            }
+        },
+        created() {
+            this.getText();
+        },
+        methods: {
+            getText() {
+                let reg1 = /\</g;
+                let reg2 = /[\u4e00-\u9fa5]/g;
+                let str = '';
+                if (this.value.post_content.match(reg1)) {
+                    str = this.value.post_content.match(reg2)
+                    str = str.join("");
+                    this.text = str
+                } else {
+                    str = decodeURIComponent(this.value.post_content).match(reg2);
+                    if (str) {
+                        str = str.join("");
+                    }
+                    this.text = str
+                }
+            }
+        },
+        props: ['value']
     }
 
 </script>
