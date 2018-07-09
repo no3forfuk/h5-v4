@@ -38,7 +38,8 @@
                 yzm: '',
                 yzmText: '获取验证码',
                 time: 60,
-                timer: null
+                timer: null,
+                lock: false
             }
         },
         mounted() {
@@ -50,46 +51,51 @@
         },
         methods: {
             getYZM() {
-                this.timer = setInterval(() => {
-                    this.time--;
-                    this.yzmText = this.time + 's后重新获取'
-                }, 1000)
-                if (this.phoneNumber == '') {
-                    this.$toast({
-                        message: '请输入正确的手机号码',
-                        position: 'middle',
-                        duration: 1000
-                    })
-                    return
-                }
+                if (!this.lock) {
+                    this.timer = setInterval(() => {
+                        this.time--;
+                        this.yzmText = this.time + 's后重新获取'
+                    }, 1000)
+                    if (this.phoneNumber == '') {
+                        this.$toast({
+                            message: '请输入正确的手机号码',
+                            position: 'middle',
+                            duration: 1000
+                        })
+                        return
+                    }
 
-                let params = {};
-                params.mobile = this.phoneNumber
-                getYZM(params).then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
+                    let params = {};
+                    params.mobile = this.phoneNumber
+                    getYZM(params).then(res => {
+                        if (res.status == 200) {
+                            if (res.data.status_code == 1) {
+                                this.$toast({
+                                    message: '验证码已发送，请注意查收',
+                                    position: 'middle',
+                                    duration: 1000
+                                })
+                            } else {
+
+                            }
+                        } else {
                             this.$toast({
-                                message: '验证码已发送，请注意查收',
+                                message: '系统异常',
                                 position: 'middle',
                                 duration: 1000
                             })
-                        } else {
-
                         }
-                    } else {
+                    }).catch(err => {
                         this.$toast({
                             message: '系统异常',
                             position: 'middle',
                             duration: 1000
                         })
-                    }
-                }).catch(err => {
-                    this.$toast({
-                        message: '系统异常',
-                        position: 'middle',
-                        duration: 1000
                     })
-                })
+                } else {
+                    return
+                }
+
             },
             submitRegister() {
                 if (this.phoneNumber == '') {
@@ -145,6 +151,9 @@
         },
         watch: {
             'time'(val) {
+                if (0 < val < 60) {
+                    this.lock = true
+                }
                 if (val < 0) {
                     this.yzmText = '重新获取';
                     this.timer = null

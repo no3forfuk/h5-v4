@@ -1,7 +1,7 @@
 <template>
     <div class="rank-card">
         <div class="hot-level">
-            <span>A<sup>+</sup></span>
+            <span>{{value.rating[0]||'S'}}<sup v-if="value.rating[1]">{{value.rating[1]}}</sup></span>
         </div>
         <div class="rank-info">
             <router-link
@@ -42,7 +42,6 @@
             }
         },
         created() {
-
         },
         mounted() {
             this.$nextTick(() => {
@@ -94,11 +93,14 @@
             flex: 0 0 30px;
             span {
                 color: #FF2C09;
+                text-align: center;
                 font-size: 16px;
                 font-weight: bold;
                 background-color: #E4E4E4;
                 padding: 3px;
                 border-radius: 1px;
+                display: block;
+                width: 25px;
             }
         }
         .rank-info {

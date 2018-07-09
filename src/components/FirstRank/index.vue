@@ -39,6 +39,10 @@
                 this.$refs.loadmore.onBottomLoaded();
             },
             getFirstList() {
+                this.$indicator.open({
+                    text: '加载中',
+                    spinnerType: 'fading-circle'
+                })
                 let params = {}
                 params.level = 1;
                 params.id = this.$route.query.firstId
@@ -46,6 +50,7 @@
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
                             this.list = res.data.data.data.data
+                            this.$indicator.close()
                         } else {
 
                         }

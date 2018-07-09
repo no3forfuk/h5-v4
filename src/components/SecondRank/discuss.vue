@@ -207,7 +207,7 @@
         top: 0;
         left: 0;
         background-color: #fff;
-        z-index: 3;
+        z-index: 100;
         .discuss-body {
             padding: 10px;
             .discuss-user {

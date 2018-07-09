@@ -85,11 +85,17 @@
                 this.$refs.loadmore.onBottomLoaded();
             },
             addElement() {
-                this.$router.push({
-                    name: 'addElement',
-                    query: this.$route.query,
-                    params: this.value
-                })
+                if (this.$store.state.isLogin) {
+                    this.$router.push({
+                        name: 'addElement',
+                        query: this.$route.query,
+                        params: this.value
+                    })
+                } else {
+                    this.$router.push({
+                        name: 'login'
+                    })
+                }
             },
             toggleSort() {
                 this.selection.selectActive = !this.selection.selectActive;

@@ -39,6 +39,10 @@
         computed: {},
         methods: {
             getSecondRankInfo() {
+                this.$indicator.open({
+                    text: '加载中',
+                    spinnerType: 'fading-circle'
+                })
                 let params = {};
                 params.id = this.$route.query.secondId;
                 params.level = 2;
@@ -46,6 +50,7 @@
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
                             this.secondInfo = res.data.data;
+                            this.$indicator.close()
                         } else {
 
                         }

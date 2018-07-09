@@ -43,12 +43,17 @@
         computed: {},
         methods: {
             elementInfo() {
+                this.$indicator.open({
+                    text: '加载中...',
+                    spinnerType: 'fading-circle'
+                })
                 let params = {}
                 params.id = this.$route.query.elementId;
                 getElementDetails(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
                             this.elementData = res.data.data
+                            this.$indicator.close()
                         }
                     } else {
 

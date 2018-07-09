@@ -40,10 +40,15 @@
             getPushRank() {
                 let params = {}
                 params.time = '2018-07-03'
+                this.$indicator.open({
+                    text: '加载中',
+                    spinnerType: 'fading-circle'
+                })
                 getIndex(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
                             this.list = res.data.data
+                            this.$indicator.close()
                         } else {
 
                         }

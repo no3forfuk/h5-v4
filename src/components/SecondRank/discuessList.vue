@@ -9,7 +9,7 @@
                 <user-card :value="item.visitor"></user-card>
                 <p class="content">{{item.content}}</p>
             </div>
-            <span class="right">{{item.created_at}}</span>
+            <span class="right">{{item.created_at|timeformat}}</span>
         </li>
     </ul>
 </template>
@@ -32,6 +32,10 @@
                 this.greatActive = true;
             },
             getDiscuss() {
+                this.$indicator.open({
+                    text: '加载中',
+                    spinnerType: 'fading-circle'
+                })
                 let params = {};
                 params.level = 2;
                 params.id = this.$route.query.secondId;
@@ -39,6 +43,7 @@
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
                             this.list = res.data.data.data
+                            this.$indicator.close()
                         } else {
 
                         }

@@ -63,10 +63,16 @@
             goBack() {
                 if (this.isIndex) {
                     this.$store.commit('SETOPENUSERCENTER', true)
-                    this.$router.push({
-                        name: 'userCenter',
-                        query: this.$route.query
-                    })
+                    if (this.$store.state.isLogin) {
+                        this.$router.push({
+                            name: 'userCenter',
+                            query: this.$route.query
+                        })
+                    } else {
+                        this.$router.push({
+                            name: 'login'
+                        })
+                    }
                     return
                 }
                 if (!this.backTarget) {

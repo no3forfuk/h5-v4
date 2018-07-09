@@ -19,7 +19,7 @@
                         <img :src="item.user.avatar" alt="">
                         <span>{{item.user.name}}</span>
                     </div>
-                    <span>{{item.updated_at}}</span>
+                    <span>{{item.updated_at|timeformat}}</span>
                 </div>
             </div>
         </li>
