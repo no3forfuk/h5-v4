@@ -4,23 +4,23 @@
             <div class="left" @click="goBack">
                 <icon :value="'&#xe609;'"
                       class="font-size-28"
-                      v-if="isIndex"></icon>
-                <icon :value="'&#xe600;'" class="font-size-20" v-if="!isIndex"></icon>
-                <span v-if="leftText" class="font-size-16">{{leftText}}</span>
+                      v-if="val.index"></icon>
+                <icon :value="'&#xe600;'" class="font-size-20" v-if="!val.index"></icon>
+                <span v-if="val.left.text" class="font-size-16">{{val.left.text}}</span>
             </div>
-            <div class="right">
-                <div :style="findStyle" @click="toggleFind" v-if="hasNav">
+            <div class="right" :style="val.right.color">
+                <div :style="findStyle" @click="toggleFind" v-if="val.nav">
                     <span class="font-size-16">{{crtRank}}</span>
                     <icon class="font-size-20" v-if="!findIsOpen" :value="'&#xe7e9;'"></icon>
                     <icon class="font-size-20" v-if="findIsOpen" :value="'&#xe952;'"></icon>
                 </div>
-                <div v-if="rightText" ref="comfirm">
+                <div v-if="val.right.text" ref="comfirm">
                     <span style="color: #FF2C09; font-size: 16px">{{rightText}}</span>
                 </div>
             </div>
         </div>
-        <div class="header-bottom" v-if="hasNav" :style="openFind">
-            <finder-body @getRankIndex="getFirstList" :value="hasNav"></finder-body>
+        <div class="header-bottom" v-if="val.nav" :style="openFind">
+            <finder-body @getRankIndex="getFirstList" :value="val.nav"></finder-body>
         </div>
     </div>
 </template>
@@ -37,7 +37,7 @@
         },
         mounted() {
             this.$nextTick(() => {
-
+                console.log(this.val);
             })
         },
         computed: {
@@ -107,7 +107,7 @@
         components: {
             finderBody
         },
-        props: ['color', 'leftText', 'isIndex', 'backTarget', 'hasNav', 'rightText']
+        props: ['val']
     }
 
 </script>

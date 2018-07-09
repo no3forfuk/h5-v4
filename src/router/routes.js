@@ -31,14 +31,34 @@ module.exports = [
                 path: '/index/hot',
                 name: 'hot',
                 component: subPath('HotRank/index'),
-                meta: {hasNav: true},
+                meta: {
+                    index: true,
+                    nav: true,
+                    left: {text: ''},
+                    right: {
+                        text: '',
+                        color: {
+                            color: '#FF2C09'
+                        }
+                    }
+                },
             },
             {
                 path: '/index/firstRank',
                 name: 'firstRank',
                 query: {firstId: 'id'},
                 component: subPath('FirstRank/index'),
-                meta: {hasNav: true},
+                meta: {
+                    index: true,
+                    nav: true,
+                    left: {text: ''},
+                    right: {
+                        text: '',
+                        color: {
+                            color: '#FF2C09'
+                        }
+                    }
+                },
             }
         ]
     },
@@ -82,7 +102,17 @@ module.exports = [
                 name: 'secondRankList',
                 query: {secondId: 'id'},
                 component: subPath('SecondRank/list'),
-                meta: {hasNav: true},
+                meta: {
+                    index: false,
+                    nav: true,
+                    left: {text: '首页'},
+                    right: {
+                        text: '',
+                        color: {
+                            color: '#FF2C09'
+                        }
+                    }
+                },
             },
             {
                 path: '/secondRank/discuss',

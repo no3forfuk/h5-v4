@@ -1,13 +1,9 @@
 <template>
     <div class="app">
-        <rcm-headers :color="'#7D09FF'"
-                     class="header"
+        <rcm-headers class="header"
                      ref="rcmHeaders"
-                     :back-target="backTarget"
-                     :is-index="isIndex"
-                     :right-text="rightText"
-                     :has-nav="$route.meta.hasNav"
-                     :left-text="leftText"></rcm-headers>
+                     :val="$route.meta"
+        ></rcm-headers>
         <transition :name="transitionName">
             <router-view class="router-view"></router-view>
         </transition>
@@ -51,67 +47,6 @@
         watch: {
             '$route'(val) {
 
-            },
-            '$route.name'(val) {
-                switch (val) {
-                    case 'hot':
-                        this.leftText = ''
-                        this.isIndex = true
-                        this.rightText = ''
-                        break;
-                    case 'firstRank':
-                        this.leftText = ''
-                        this.isIndex = true
-                        this.rightText = ''
-                        break;
-                    case 'secondRankList':
-                        this.leftText = '首页'
-                        this.isIndex = false
-                        this.backTarget = 'hot'
-                        this.rightText = ''
-                        break;
-                    case 'secondRankDiscuss':
-                        this.leftText = '首页'
-                        this.isIndex = false
-                        this.backTarget = 'hot'
-                        this.rightText = ''
-                        break;
-                    case 'secondRankActivity':
-                        this.leftText = '首页'
-                        this.isIndex = false
-                        this.backTarget = 'hot'
-                        this.rightText = ''
-                        break;
-                    case 'element':
-                        this.leftText = '榜单'
-                        this.isIndex = false
-                        this.rightText = ''
-                        this.backTarget = 'secondRankList'
-                        break;
-                    case 'addPost':
-                        this.leftText = ''
-                        this.isIndex = false
-                        this.backTarget = 'element'
-                        this.rightText = '完成'
-                        break;
-                    case 'post':
-                        this.leftText = '排名'
-                        this.isIndex = false
-                        this.backTarget = 'element'
-                        this.rightText = ''
-                        this.hasNav = false
-                        break;
-                    case 'addElement':
-                        this.leftText = ''
-                        this.isIndex = false
-                        this.backTarget = 'secondRankList'
-                        this.rightText = '下一步'
-                        this.hasNav = false
-                        break;
-                    default :
-                        this.leftText = ''
-                        this.isIndex = false
-                }
             }
         }
     }
