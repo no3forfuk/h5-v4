@@ -33,7 +33,14 @@
             })
         },
         updated() {
-            this.$store.commit('SETDIRECTION', 'forward')
+            this.$nextTick(() => {
+                setTimeout(() => {
+                    this.$store.commit('SETDIRECTION', 'forward')
+                }, 1000)
+            })
+        },
+        beforeDestroy() {
+
         },
         methods: {},
         computed: {

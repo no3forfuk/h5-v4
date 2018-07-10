@@ -21,8 +21,8 @@ module.exports = merge(base, {
         new HtmlWebpackPlugin({template: './index.html', filename: 'index.html'}),
     ],
     devServer: {
-        // host: '192.168.0.122',
-        host: '192.168.199.101',
+        host: '192.168.0.122',
+        // host: '192.168.199.101',
         port: 3000,
         contentBase: './dist',
         before(app) {
@@ -127,7 +127,26 @@ module.exports = merge(base, {
             app.post('/api/home/element/addElement', (req, res) => {
                 go(req, res)
             })
-
+            //添加榜单
+            app.post('/api/home/ranking/addSecond', (req, res) => {
+                go(req, res)
+            })
+            //查找元素
+            app.post('/api/home/element/getElementName', (req, res) => {
+                go(req, res)
+            })
+            //获取用户信息
+            app.post('/api/home/user/userInfo', (req, res) => {
+                go(req, res)
+            })
+            //修改用户资料
+            app.post('/api/home/user/editUser', (req, res) => {
+                go(req, res)
+            })
+            //获取微信签名
+            app.post('/api/home/wx/signature', (req, res) => {
+                go(req, res)
+            })
             //--------------------------------------------
             //获取微信签名
             // app.post('/api/Wx/signature', (req, res) => {

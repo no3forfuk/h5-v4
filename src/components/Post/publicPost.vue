@@ -11,7 +11,7 @@
                style="width: 0px;height:0px;overflow: hidden;position: absolute;"
                id="inputVideo">
         <div class="top">
-            <p>@元素名称</p>
+            <p>@{{elementDetails.element_name}}</p>
         </div>
         <div class="center">
             <div contenteditable="true" class="edit-box"
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import {publicPost, getQiniuToken} from '../../api/api'
+    import {publicPost, getQiniuToken, getElementDetails} from '../../api/api'
     import {uploadFile} from '../../utils/index'
 
     export default {
@@ -53,8 +53,22 @@
                 video: '',
                 out_link: '',
                 link_title: '',
-                link_desc: ''
+                link_desc: '',
+                elementDetails: {}
             }
+        },
+        created() {
+            let params = {}
+            params.id = this.$route.query.elementId;
+            getElementDetails(params).then(res => {
+                if (res.status == 200) {
+                    if (res.data.status_code == 1) {
+                        this.elementDetails = res.data.data
+                    }
+                }
+            }).catch(err => {
+                throw err
+            })
         },
         beforeRouteLeave(to, from, next) {
             next()
@@ -64,7 +78,6 @@
                 $('.center').height($(window).height() - $('.edit-box').offset().top)
                 $('.edit-box').height($('.center').height() - $('.footer-placeholder').height())
                 this.$parent.$refs.rcmHeaders.$refs.comfirm.onclick = () => {
-                    console.log(this.videoFileArr);
                     for (let i = 0; i < this.imgFileArr.length; i++) {
                         this.uploadFile(this.imgFileArr[i], i)
                     }

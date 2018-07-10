@@ -1,19 +1,12 @@
 <template>
     <transition name="transitionName" mode="in-out">
         <div class="user-info">
-            <rcm-header :routerTo="'userCenter'">
-                <icon :value="'&#xe600;'"
-                      class="font-size-20"
-                      @click="goBack"
-                      slot="back"></icon>
-                <span slot="text">我的</span>
-            </rcm-header>
-            <edit-pic :value="userpic"></edit-pic>
-            <edit-username @click="editStart" :value="username"></edit-username>
-            <edit-userfav @click="editStart" :value="userfav"></edit-userfav>
-            <edit-usersign @click="editStart" :value="usersign"></edit-usersign>
+            <edit-pic :value="userpic" @savePic="uploadPic27Niu"></edit-pic>
+            <!--<edit-username @click="editStart" :value="userInfo.name"></edit-username>-->
+            <edit-userfav @click="editStart" :value="userInfo.get_expert.ranking_name"></edit-userfav>
+            <edit-usersign @click="editStart" :value="userInfo.signature"></edit-usersign>
             <div class="belt"></div>
-            <div class="confirm">完 成</div>
+            <div class="confirm">退出登陆</div>
             <div class="belt"></div>
             <div class="footer"><p>用爱喂食挚爱，那么TA将GO BIG</p></div>
             <transition name="editModal">
@@ -45,7 +38,7 @@
                                    placeholder="选择一个自己的擅长领域"
                                    v-show="editItem == 'userfav'">
                         </div>
-                        <scroll-select></scroll-select>
+                        <scroll-select v-if="editItem == 'userfav'" @change="selectFav"></scroll-select>
                     </div>
                 </div>
             </transition>
@@ -59,18 +52,26 @@
     import editUserfav from './editUserfav'
     import editUsersign from './editUsersign'
     import scrollSelect from './scrollSelect'
+    import {editUserInfo, getQiniuToken, getUserInfo} from '../../api/api'
 
     export default {
         data() {
             return {
                 editActive: false,
+                userInfo: {},
                 editItem: '',
                 username: '修改昵称',
                 usersign: '修改个性签名',
                 userpic: '修改头像',
                 userfav: '修改擅长领域',
-                temp: {}
+                temp: {},
+                expert: '',
+                avatar_key: '',
+                avatar: ''
             }
+        },
+        created() {
+            this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
         },
         beforeRouteLeave(to, from, next) {
             this.$store.commit('SETROUTERFROM', from.name)
@@ -78,6 +79,84 @@
             next()
         },
         methods: {
+            uploadPic27Niu(val) {
+                let file = val;
+                getQiniuToken().then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            let token = res.data.data.qiniu_token;
+                            let strFileName = 'user/' + file.name
+                            let putExtra = {
+                                fname: "",
+                                params: {},
+                                mimeType: null
+                            };
+                            let config = {
+                                useCdnDomain: true,
+                                region: this.qiniu.region.z2
+                            };
+                            var self = this;
+                            let observer = {
+                                next(res) {
+
+                                },
+                                error(err) {
+                                    throw err;
+                                },
+                                complete(res) {
+                                    self.avatar_key = res.key
+                                    self.avatar = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
+
+                                }
+                            }
+                            let observable = this.qiniu.upload(file, strFileName, token, putExtra, config);
+                            let subscription = observable.subscribe(observer);
+                        }
+                    }
+                }).catch(err => {
+                    throw err
+                })
+            },
+            selectFav(val) {
+                this.expert = val.id
+                this.userfav = val.ranking_name
+            },
+            submitEdit() {
+                let params = {}
+                let obj = JSON.parse(sessionStorage.getItem('userInfo'))
+                params.id = obj.id
+                if (this.usersign) {
+                    params.signature = this.usersign
+                }
+                if (this.avatar) {
+                    params.avatar = this.avatar
+                }
+                if (this.avatar_key) {
+                    params.avatar_key = this.avatar_key
+                }
+                if (this.expert) {
+                    params.expert = this.expert
+                }
+                editUserInfo(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.$toast({
+                                message: '修改成功',
+                                duration: 1000
+                            })
+                            getUserInfo().then(res => {
+                                this.userInfo = res.data.data
+                                let str = JSON.stringify(res.data.data)
+                                sessionStorage.setItem('userInfo', str)
+                            }).catch(err => {
+                                throw err
+                            })
+                        }
+                    }
+                }).catch(err => {
+                    throw err
+                })
+            },
             editStart(msg) {
                 this.editItem = msg;
                 this.editActive = true;
@@ -86,6 +165,7 @@
             },
             editComplete() {
                 this.editActive = false;
+                this.submitEdit()
             },
             editCancel() {
                 this.editActive = false;

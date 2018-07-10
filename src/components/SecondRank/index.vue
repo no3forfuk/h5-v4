@@ -11,20 +11,32 @@
     import secondHead from './secondHead'
     import tabs from './tabs'
     import {getRankList} from '../../api/api'
+    import {sharePage} from '../../utils/index'
 
     export default {
         data() {
             return {
-                secondInfo: {}
+                secondInfo: {},
+                share: {
+                    title: '',
+                    desc: ''
+                }
             }
         },
         mounted() {
+            this.$nextTick(() => {
 
+                $('.second-page').height($(window).height() - $('.second-page')[0].offsetTop)
+
+            })
 
         },
         updated() {
             this.$nextTick(() => {
-                $('.second-page').height($(window).height() - $('.second-page').offset().top)
+
+                $('.second-page').height($(window).height() - $('.second-page')[0].offsetTop)
+
+
             })
         },
         beforeCreate() {
@@ -38,6 +50,9 @@
         },
         computed: {},
         methods: {
+            sharePage() {
+                sharePage(this, location.href, this.share.title, this.share.desc, 'link')
+            },
             getSecondRankInfo() {
                 this.$indicator.open({
                     text: '加载中',
@@ -50,6 +65,10 @@
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
                             this.secondInfo = res.data.data;
+                            this.$set(this.share, 'title', res.data.data.ranking_name);
+                            this.$set(this.share, 'desc', res.data.data.ranking_desc);
+                            this.sharePage();
+                            $(document)[0].title = this.secondInfo.ranking_name;
                             this.$indicator.close()
                         } else {
 

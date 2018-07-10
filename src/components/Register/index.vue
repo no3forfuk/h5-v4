@@ -28,7 +28,7 @@
 </template>
 
 <script>
-    import {registerByPhone, getYZM} from '../../api/api'
+    import {registerByPhone, getYZM, firstUpdataUserInfo} from '../../api/api'
 
     export default {
         data() {
@@ -126,6 +126,18 @@
                                 position: 'middle',
                                 duration: 1000
                             })
+                            this.$router.push({
+                                name: 'login'
+                            })
+                            // let userParam = {};
+                            // userParam.name = '用户' + parseInt(new Date() / 1111)
+                            // firstUpdataUserInfo(userParam).then(res => {
+                            //     if (res.status == 200) {
+                            //
+                            //     }
+                            // }).catch(err => {
+                            //     throw err
+                            // })
                         } else {
                             this.$toast({
                                 message: res.data.message,

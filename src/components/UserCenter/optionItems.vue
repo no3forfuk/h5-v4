@@ -3,7 +3,7 @@
         <div v-if="opts" class="left">
             <slot name="before"></slot>
         </div>
-        <div v-if="btn">
+        <div v-if="btn" @click="publicRank">
             <span>{{optionsData.title}}</span>
         </div>
         <div v-if="opts" class="right" :class="{border:optionsData.borderLine}">
@@ -22,6 +22,9 @@
         methods: {
             goWhere(routerName) {
                 this.$router.push({name: routerName})
+            },
+            publicRank() {
+                this.$router.push({name: 'addRank'})
             }
         },
         props: ['optionsData'],

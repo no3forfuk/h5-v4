@@ -23,7 +23,7 @@
                         type: 'opts',
                         title: '我的消息',
                         icon: '&#xe64b;',
-                        routeName: 'myself'
+                        // routeName: 'myself'
                     },
                     {
                         type: 'blet'
@@ -32,7 +32,7 @@
                         type: 'opts',
                         title: '发布的榜单',
                         icon: '&#xe6c5;',
-                        routeName: 'myselfBuildRank'
+                        // routeName: 'myselfBuildRank'
                     },
                     {
                         type: 'opts',
@@ -69,7 +69,7 @@
                     },
                     {
                         type: 'btn',
-                        title: '退出登录'
+                        title: '发布榜单'
                     },
                     {
                         type: 'blet'

@@ -30,6 +30,11 @@
                 discussText: '',
                 wordLength: 0
             }
+        },
+        watch: {
+            discussText(n, o) {
+                this.wordLength = n.length;
+            }
         }
     }
 

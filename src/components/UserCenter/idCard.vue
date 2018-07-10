@@ -1,17 +1,17 @@
 <template>
     <div class="user-card">
         <div class="pic">
-            <img src="http://p9w69x04q.bkt.clouddn.com/20141214131233_YsRmd.png" alt="">
+            <img :src="value.avatar" alt="">
             <span @click="editUserInfo">
                 <icon :value="'&#xe602;'">编辑</icon>
             </span>
         </div>
         <p class="name">
-            <span>意大利万岁__昵称</span>
+            <span>{{value.name}}</span>
         </p>
         <div class="fav">
-            <span>#擅长榜单</span>
-            <span>个性asd签名个asd性签名个性签名名。。。</span>
+            <span v-if="value.get_expert.ranking_name">#{{value.get_expert.ranking_name}}</span>
+            <span>{{value.signature}}</span>
         </div>
         <div class="focus">
             <i>1200</i>
@@ -34,7 +34,8 @@
             editUserInfo() {
                 this.$router.push({name: 'userInfo'})
             }
-        }
+        },
+        props: ['value']
     }
 
 </script>

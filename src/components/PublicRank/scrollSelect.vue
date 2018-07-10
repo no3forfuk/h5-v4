@@ -1,7 +1,11 @@
 <template>
     <div class="scroll-select">
-        <p>修改擅长榜单</p>
-        <span class="icon"><icon :value="'&#xe790;'"></icon></span>
+        <p>选择所属大类</p>
+        <span style="color: rgb(255, 44, 9);position: absolute;right: 15px;top: 0px;"
+              @click="$emit('comfirm','')">完成</span>
+        <span class=" icon">
+        <icon :value="'&#xe790;'"></icon>
+        </span>
         <div class="select-box" @scroll="getPosition" ref="srcollUl">
             <ul>
                 <li v-for="(item,index) in scrollData"

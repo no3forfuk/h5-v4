@@ -67,8 +67,8 @@
         },
         mounted() {
             this.$nextTick(() => {
-                let height = $(window).height() - $('.list-head').offset().top - $('.list-head').height()
-                $('.second-list-body').height(height)
+                let height = $(window).height() - $('.list-head')[0].offsetTop - $('.list-head').height()
+                $('.second-list-body').height(height - 25)
             })
         },
         updated() {
@@ -83,9 +83,10 @@
             },
             loadBeforeDay() {
                 this.$refs.loadmore.onBottomLoaded();
+
             },
             addElement() {
-                if (this.$store.state.isLogin) {
+                if (sessionStorage.getItem('X-Auth-Token')) {
                     this.$router.push({
                         name: 'addElement',
                         query: this.$route.query,

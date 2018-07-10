@@ -18,6 +18,15 @@ module.exports = {
             params: params
         })
     },
+    //获取微信鉴权
+    getWXConfig(params) {
+        return request({
+            url: '/wx/signature',
+            method: 'POST',
+            data: params
+        })
+    },
+
     //【榜单】1级/2级---榜单详情以及子元素
     getRankList(params) {
         return request({
@@ -122,6 +131,38 @@ module.exports = {
             data: data
         })
     },
+    //添加榜单
+    addRank(data) {
+        return request({
+            url: '/ranking/addSecond',
+            method: 'POST',
+            data: data
+        })
+    },
+    //查找元素
+    searchElementByName(data) {
+        return request({
+            url: '/element/getElementName',
+            method: 'POST',
+            data: data
+        })
+    },
+    //获取用户信息
+    getUserInfo(data) {
+        return request({
+            url: '/user/userInfo',
+            method: 'POST',
+            data: data
+        })
+    },
+    //编辑用户资料
+    editUserInfo(data) {
+        return request({
+            url: '/user/editUser',
+            method: 'POST',
+            data: data
+        })
+    },
     getLoginCode(params) {
         if (params == 'weixin') {
             return request({
@@ -149,8 +190,17 @@ module.exports = {
             })
         }
 
-    }
-    ,
+    },
+    //首次更新用户资料、
+    firstUpdataUserInfo(data) {
+        return request({
+            url: '/user/firstUpdate',
+            method: 'POST',
+            data: data
+        })
+    },
+
+    //获取元素详情
     getElementDetails(params) {
         return request({
             url: '/element/getElementDetails',

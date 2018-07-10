@@ -6,7 +6,7 @@
                       class="font-size-28"
                       v-if="val.index"></icon>
                 <icon :value="'&#xe600;'" class="font-size-20" v-if="!val.index"></icon>
-                <span v-if="val.left.text" class="font-size-16">{{val.left.text}}</span>
+                <span  class="font-size-16">{{val.left.text}}</span>
             </div>
             <div class="right" :style="val.right.color">
                 <div :style="findStyle" @click="toggleFind" v-if="val.nav">
@@ -14,8 +14,8 @@
                     <icon class="font-size-20" v-if="!findIsOpen" :value="'&#xe7e9;'"></icon>
                     <icon class="font-size-20" v-if="findIsOpen" :value="'&#xe952;'"></icon>
                 </div>
-                <div v-if="val.right.text" ref="comfirm">
-                    <span style="color: #FF2C09; font-size: 16px">{{rightText}}</span>
+                <div v-if="val.right" ref="comfirm">
+                    <span style="color: #FF2C09; font-size: 16px" v-if="val.right.text">{{val.right.text}}</span>
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
         },
         mounted() {
             this.$nextTick(() => {
-                console.log(this.val);
+
             })
         },
         computed: {
@@ -61,9 +61,9 @@
         },
         methods: {
             goBack() {
-                if (this.isIndex) {
+                if (this.val.index) {
                     this.$store.commit('SETOPENUSERCENTER', true)
-                    if (this.$store.state.isLogin) {
+                    if (sessionStorage.getItem('X-Auth-Token')) {
                         this.$router.push({
                             name: 'userCenter',
                             query: this.$route.query
@@ -75,7 +75,7 @@
                     }
                     return
                 }
-                if (!this.backTarget) {
+                if (!this.val.backTarget) {
                     this.$store.commit('SETDIRECTION', 'back')
                     this.$router.back()
                 } else {

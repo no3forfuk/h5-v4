@@ -53,7 +53,9 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 const storeConfig = require('./store/index');
 const store = new Vuex.Store(storeConfig);
-
+//WX
+const wx = require('weixin-js-sdk')
+Vue.prototype.$wx = wx;
 //七牛JS-SDK
 const qiniu = require('qiniu-js');
 Vue.prototype.qiniu = qiniu;

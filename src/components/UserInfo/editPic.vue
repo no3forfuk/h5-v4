@@ -28,6 +28,7 @@
                 const flies = new FileReader();
                 flies.onload = data => {
                     this.$refs.viewBox.src = data.target.result
+                    this.$emit('savePic', this.$refs.pic.files[0])
                 }
                 flies.readAsDataURL(this.$refs.pic.files[0])
             }

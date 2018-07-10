@@ -96,9 +96,18 @@
                 this.selection.value = this.selection.selectItems[i].text;
             },
             addPost() {
-                this.$router.push({
-                    name: 'addPost', query: this.$route.query
-                })
+                if (sessionStorage.getItem('X-Auth-Token')) {
+                    this.$router.push({
+                        name: 'addPost',
+                        query: this.$route.query
+                    })
+                } else {
+                    this.$router.push({
+                        name: 'login',
+                        query: this.$route.query
+                    })
+                }
+
             },
             vote() {
                 if (!sessionStorage.getItem('X-Auth-Token')) {

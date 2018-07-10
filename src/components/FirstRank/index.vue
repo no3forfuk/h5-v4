@@ -1,6 +1,6 @@
 <template>
     <div class="first-rank">
-        <mt-loadmore :bottom-method="loadBeforeDay"
+        <mt-loadmore :bottom-method="loadNextPage"
                      :bottom-all-loaded="allLoaded"
                      :bottomDistance="pullHeight"
                      :auto-fill="false"
@@ -23,7 +23,9 @@
             return {
                 allLoaded: false,
                 pullHeight: 20,
-                list: []
+                list: [],
+                page: 1,
+                totalPage: 0
             }
         },
         created() {
@@ -31,12 +33,22 @@
         },
         mounted() {
             this.$nextTick(() => {
-                $('.first-rank').height($(window).height() - $('.first-rank').offset().top)
+                $('.first-rank').height($(window).height() - $('.first-rank')[0].offsetTop)
             })
         },
         methods: {
-            loadBeforeDay() {
-                this.$refs.loadmore.onBottomLoaded();
+            loadNextPage() {
+                this.page++;
+                if (this.page > this.totalPage) {
+                    setTimeout(() => {
+                        this.$refs.loadmore.onBottomLoaded();
+                    }, 500)
+                } else {
+                    this.getFirstList()
+                    setTimeout(() => {
+                        this.$refs.loadmore.onBottomLoaded();
+                    }, 500)
+                }
             },
             getFirstList() {
                 this.$indicator.open({
@@ -45,11 +57,13 @@
                 })
                 let params = {}
                 params.level = 1;
+                params.page = this.page
                 params.id = this.$route.query.firstId
                 getRankList(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
-                            this.list = res.data.data.data.data
+                            this.list = this.list.concat(res.data.data.data.data);
+                            this.totalPage = res.data.data.data.last_page
                             this.$indicator.close()
                         } else {
 
@@ -64,6 +78,8 @@
         },
         watch: {
             '$route.query.firstId'(val) {
+                this.page = 1
+                this.list = []
                 this.getFirstList()
             }
         }

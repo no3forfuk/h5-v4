@@ -28,6 +28,7 @@
     import discussCard from '../common/DiscussCard/index'
     import discussPage from './postDiscuss'
     import {getPostDetailsById, getDiscuss, addComment} from '../../api/api'
+    import {sharePage} from '../../utils'
 
     export default {
         data() {
@@ -38,7 +39,11 @@
                 footerText: '很难选 很无趣 你可能需要RCM',
                 discussContext: '',
                 user: {},
-                activeDiscuss: false
+                activeDiscuss: false,
+                share: {
+                    title: '',
+                    desc: ''
+                },
             }
         },
         mounted() {
@@ -52,6 +57,14 @@
             this.getPostDiscuss();
         },
         methods: {
+            sharePage() {
+                let vm = this;
+                let url = location.href;
+                let title = this.share.title;
+                let desc = this.share.desc;
+                let type = 'link';
+                sharePage(vm, url, title, desc, type)
+            },
             submitDisCuss() {
                 let params = {}
                 params.comment_type = 3;
@@ -96,6 +109,7 @@
                 params.id = this.$route.query.postId
                 getPostDetailsById(params).then(res => {
                     this.postDetails = res.data.data;
+                    console.log(this.postDetails);
                     this.user = res.data.data.user
                     this.getPostContent(this.postDetails.post_content)
                 }).catch(err => {

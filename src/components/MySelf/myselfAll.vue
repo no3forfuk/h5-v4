@@ -1,7 +1,6 @@
 <template>
     <div>
-        all
-        <button @click="ds">asdasdad</button>
+
     </div>
 </template>
 

@@ -6,7 +6,7 @@
             <element-footer></element-footer>
         </div>
         <transition name="openDetails">
-            <element-details v-show="detailsIsOpen" @openDetails="toggleDetails"></element-details>
+            <element-details v-show="detailsIsOpen" @openDetails="toggleDetails" :value="elementData"></element-details>
         </transition>
     </div>
 </template>
@@ -19,12 +19,17 @@
     import elementDetails from './elementDetails'
     import elementFooter from './elementFooter'
     import {getElementDetails} from '../../api/api'
+    import {sharePage} from '../../utils'
 
     export default {
         data() {
             return {
                 detailsIsOpen: false,
-                elementData: {}
+                elementData: {},
+                share: {
+                    title: '',
+                    desc: ''
+                },
             }
         },
         created() {
@@ -42,6 +47,14 @@
         },
         computed: {},
         methods: {
+            sharePage() {
+                let vm = this;
+                let url = location.href;
+                let title = this.share.title;
+                let desc = this.share.desc;
+                let type = 'link';
+                sharePage(vm, url, title, desc, type)
+            },
             elementInfo() {
                 this.$indicator.open({
                     text: '加载中...',
@@ -53,6 +66,9 @@
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
                             this.elementData = res.data.data
+                            this.$set(this.share, 'title', res.data.data.element_name);
+                            this.$set(this.share, 'desc', res.data.data.element_desc || '暂时没有描述信息');
+                            this.sharePage()
                             this.$indicator.close()
                         }
                     } else {

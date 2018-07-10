@@ -35,14 +35,22 @@
 </template>
 
 <script>
-    import {loginByPhone, setUserInfoAtFirst, getLoginCode, loginByOther} from '../../api/api'
+    import {
+        loginByPhone,
+        setUserInfoAtFirst,
+        getLoginCode,
+        loginByOther,
+        getUserInfo,
+        firstUpdataUserInfo
+    } from '../../api/api'
 
     export default {
         data() {
             return {
                 mobile: '',
                 password: '',
-                code: ''
+                code: '',
+                routerFrom: ''
             }
         },
         mounted() {
@@ -50,6 +58,11 @@
                 $('.login').css({
                     height: $(window).height()
                 })
+            })
+        },
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                vm.routerFrom = from.name
             })
         },
         beforeRouteLeave(to, from, next) {
@@ -76,19 +89,29 @@
                         if (res.data.status_code == 1) {
                             sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
                             this.$store.commit('LOGIN')
+                            if (this.routerFrom) {
+                                this.$router.replace({name: this.routerFrom, query: this.$route.query})
+                            }
                             this.$router.replace({name: 'hot'})
                         }
                         if (res.data.status_code == 11) {
                             sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
                             this.$store.commit('LOGIN')
-                            let params = {}
-                            params.name = '贱贱'
-                            setUserInfoAtFirst(params).then(res => {
-                                console.log(res);
-                                this.$router.replace({name: 'hot'})
+                            let userParam = {};
+                            userParam.name = '用户' + parseInt(new Date() / 1111)
+                            firstUpdataUserInfo(userParam).then(res => {
+                                if (res.status == 200) {
+                                    this.$router.replace({name: 'hot'})
+                                }
                             }).catch(err => {
                                 throw err
                             })
+                            // setUserInfoAtFirst(params).then(res => {
+                            //     console.log(res);
+                            //     this.$router.replace({name: 'hot'})
+                            // }).catch(err => {
+                            //     throw err
+                            // })
                         }
                     } else {
 
@@ -104,7 +127,7 @@
                 this.$router.push({name: 'resetPassword'})
             },
             loginByOther(type) {
-                location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa32e016674b63fbb&redirect_uri=http://www.rcm.ink&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+                location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa32e016674b63fbb&redirect_uri=http://test.bantangtv.com/#/login&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
             }
         },
         watch: {
