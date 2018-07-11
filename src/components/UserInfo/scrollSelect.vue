@@ -31,6 +31,12 @@
                 if (res.status == 200) {
                     if (res.data.status_code == 1) {
                         this.scrollData = res.data.data.data
+                        this.$nextTick(() => {
+                            $(this.$refs.lis[this.index]).css({
+                                transform: 'scale(1.5)'
+                            })
+                            this.$emit('change', this.scrollData[this.index])
+                        })
                     }
                 } else {
 
@@ -40,9 +46,7 @@
             })
         },
         mounted() {
-            this.$nextTick(() => {
 
-            })
         },
         computed: {},
         methods: {

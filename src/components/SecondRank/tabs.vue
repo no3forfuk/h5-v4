@@ -10,9 +10,9 @@
             <span class="__" :style="spanPosition"></span>
         </ul>
         <!--<transition name="transitionName" mode="out-in">-->
-            <keep-alive>
-                <router-view class="second-view" :value="value"></router-view>
-            </keep-alive>
+        <keep-alive>
+            <router-view class="second-view" :value="value" @loadNextPage="updataListPage"></router-view>
+        </keep-alive>
         <!--</transition>-->
     </div>
 </template>
@@ -41,6 +41,9 @@
             }
         },
         methods: {
+            updataListPage(val) {
+                this.$emit('nextListPage','')
+            },
             toggleTabs(i) {
                 this.tabIndex = i;
                 this.toggleRouter(i);

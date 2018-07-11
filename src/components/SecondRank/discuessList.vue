@@ -1,68 +1,86 @@
 <template>
-    <ul>
-        <li v-for="(item,index) in list" :key="index">
-            <div class="left" @click="didGreat">
-                <icon :value="'&#xe647;'" class="font-size-20" :style="activeStyle"></icon>
-                <span :style="activeStyle">{{item.like}}</span>
-            </div>
-            <div class="center">
-                <user-card :value="item.visitor"></user-card>
-                <p class="content">{{item.content}}</p>
-            </div>
-            <span class="right">{{item.created_at|timeformat}}</span>
-        </li>
-    </ul>
+    <div class="rank-discuss-list">
+        <mt-loadmore :bottom-method="loadNextPage"
+                     :bottom-all-loaded="allLoaded"
+                     :bottomDistance="pullHeight"
+                     :auto-fill="false"
+                     ref="loadmore">
+            <ul>
+                <li v-for="(item,index) in value" :key="index">
+                    <div class="left" @click="didGreat(index,item)" ref="likes">
+                        <icon :value="'&#xe647;'" class="font-size-20"></icon>
+                        <span>{{item.like}}</span>
+                    </div>
+                    <div class="center">
+                        <user-card :value="item.visitor"></user-card>
+                        <p class="content">{{item.content}}</p>
+                    </div>
+                    <span class="right">{{item.created_at|timeformat}}</span>
+                </li>
+            </ul>
+        </mt-loadmore>
+    </div>
 </template>
 
 <script>
-    import {getDiscussList} from '../../api/api'
+    import {doLikeDiscuss} from '../../api/api'
 
     export default {
+        name: 'discussList',
         data() {
             return {
-                greatActive: false,
-                list: []
+                list: [],
+                allLoaded: false,
+                pullHeight: 20
             }
         },
+        mounted() {
+            this.$nextTick(() => {
+                $('.rank-discuss-list').height($(window).height() - $('.rank-discuss-list')[0].offsetTop)
+            })
+        },
         created() {
-            this.getDiscuss()
+            console.log(this.value);
         },
         methods: {
-            didGreat() {
-                this.greatActive = true;
+            loadNextPage() {
+                this.$refs.loadmore.onBottomLoaded();
             },
-            getDiscuss() {
-                this.$indicator.open({
-                    text: '加载中',
-                    spinnerType: 'fading-circle'
-                })
-                let params = {};
-                params.level = 2;
-                params.id = this.$route.query.secondId;
-                getDiscussList(params).then(res => {
+            didGreat(index, item) {
+                this.$refs.likes[index].style.color = '#FF2C09'
+                let params = {
+                    comment_id: item.id,
+                    user_type: 1
+                }
+                doLikeDiscuss(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
-                            this.list = res.data.data.data
-                            this.$indicator.close()
+                            this.$toast({
+                                message: '点赞成功',
+                                duration: 1000,
+                                position: 'middle'
+                            })
                         } else {
-
+                            this.$toast({
+                                message: '操作太快，休息一会',
+                                duration: 1000,
+                                position: 'middle'
+                            })
                         }
-
                     } else {
-
+                        this.$toast({
+                            message: '网络异常',
+                            duration: 1000,
+                            position: 'middle'
+                        })
                     }
                 }).catch(err => {
                     throw err
                 })
             }
         },
-        computed: {
-            activeStyle() {
-                return this.greatActive ? {
-                    color: '#FF2C09'
-                } : {}
-            }
-        }
+        computed: {},
+        props: ['value']
     }
 
 </script>
@@ -72,8 +90,16 @@
         color: #FF2C09;
     }
 
+    .rank-discuss-list {
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
     ul {
         width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
         li {
             display: flex;
             padding: 10px 0;
@@ -84,12 +110,7 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                i {
-                    color: #000;
-                }
-                span {
-                    color: #8B8B8B;
-                }
+                color: #8B8B8B;
             }
             .center {
                 flex: 1;

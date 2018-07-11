@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="add-rank-page">
+
         <div class="input-rank-name">
             <span>#</span>
             <input type="text" placeholder="榜单好玩重要，名字帅更重要" v-model="rankName">
@@ -7,8 +8,14 @@
         <div class="input-rank-desc">
             <textarea v-model="rankDesc" placeholder="让大家快速GET到有趣的点"></textarea>
         </div>
-        <transition name="slideInDown">
+        <transition name="slide-select">
             <scroll-select @change="getFatherId" v-if="selectFather" @comfirm="confirmSelectFather"></scroll-select>
+        </transition>
+        <transition name="slide-element">
+            <add-element v-show="nextAddElemet"
+                         :value="{'ranking_name':rankName}"
+                         @confirmAddRank="submitAddRank"
+                         @cancle="cancleAddElement"></add-element>
         </transition>
     </div>
 </template>
@@ -16,6 +23,7 @@
 <script>
     import {addRank} from '../../api/api'
     import scrollSelect from './scrollSelect'
+    import addElement from './addRankElement'
 
     export default {
         data() {
@@ -24,16 +32,33 @@
                 rankName: '',
                 rankDesc: '',
                 fatherId: '',
-                selectFather: false
+                selectFather: false,
+                nextAddElemet: false
             }
         },
         mounted() {
             this.$nextTick(() => {
+                $('.add-rank-page').height($(window).height() - 33)
                 this.rightDom = this.$parent.$refs.rcmHeaders.$refs.comfirm;
                 $(this.rightDom).on('click', () => {
-
+                    if (this.rankName == '') {
+                        this.$toast({
+                            message: '榜单名不能为空',
+                            duration: 1000,
+                            position: 'middle'
+                        })
+                        return
+                    }
+                    if (this.rankDesc == '') {
+                        this.$toast({
+                            message: '请填写榜单描述',
+                            duration: 1000,
+                            position: 'middle'
+                        })
+                        return
+                    }
                     if (this.fatherId) {
-                        this.submitAdd()
+                        this.nextAddElemet = true
                     } else {
                         this.selectFather = true
                     }
@@ -41,34 +66,15 @@
             })
         },
         methods: {
-            confirmSelectFather() {
-                this.selectFather = false
-            },
-            nextStep() {
-
-            },
-            getFatherId(val) {
-                this.fatherId = val.id
-            },
-            submitAdd() {
-                if (this.rankName == '') {
-                    this.$toast({
-                        message: '榜单名不能为空',
-                        duration: 1000,
-                        position: 'middle'
-                    })
-                    return
+            submitAddRank(val) {
+                let arr = []
+                for (let i = 0; i < val.length; i++) {
+                    arr.push(val[i].id)
                 }
-                if (this.rankDesc == '') {
-                    this.$toast({
-                        message: '请填写榜单描述',
-                        duration: 1000,
-                        position: 'middle'
-                    })
-                    return
-                }
+                let str = arr.join(',')
                 let params = {};
                 params.ranking_name = this.rankName
+                params.list = str
                 params.ranking_desc = this.rankDesc
                 params.ranking_pid = this.fatherId
                 addRank(params).then(res => {
@@ -79,12 +85,9 @@
                                 duration: 1000,
                                 position: 'middle'
                             })
-                            this.$router.push({
-                                name: 'addElement',
-                                query: {secondId: res.data.data.ranking_id}
-                            })
+                            this.$router.back()
                         } else {
-                            console.log(res.data);
+
                         }
                     } else {
                         this.$toast({
@@ -100,16 +103,36 @@
                         position: 'middle'
                     })
                 })
+                this.nextAddElemet = false
+            },
+            cancleAddElement() {
+                this.nextAddElemet = false
+            },
+            confirmSelectFather() {
+                this.selectFather = false
+            },
+            nextStep() {
+
+            },
+            getFatherId(val) {
+                this.fatherId = val.id
+            },
+            submitAdd() {
+
+
             }
         },
         components: {
-            scrollSelect
+            scrollSelect,
+            addElement
         }
     }
 
 </script>
 
 <style scoped lang="less">
+
+
     .input-rank-name {
         width: 100%;
         padding: 10px 20px;
@@ -138,13 +161,23 @@
         }
     }
 
-    .slideInDown-enter-active {
+    .slide-select-enter-active {
         animation: slideInUp 0.4s;
         position: absolute;
     }
 
-    .slideInDown-leave-active {
+    .slide-select-leave-active {
         animation: slideOutDown 0.4s;
+        position: absolute;
+    }
+
+    .slide-element-enter-active {
+        animation: slideInRight 0.4s;
+        position: absolute;
+    }
+
+    .slide-element-leave-active {
+        animation: slideOutRight 0.4s;
         position: absolute;
     }
 </style>

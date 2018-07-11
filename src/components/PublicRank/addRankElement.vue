@@ -1,14 +1,19 @@
 <template>
     <div class="add-element">
+        <div class="add-header">
+            <div class="add-left" @click="$emit('cancle')">
+                <icon :value="'&#xe600;'" class="font-size-20"></icon>
+            </div>
+            <div class="add-right font-size-16" style="color: #FF2C09;" @click="$emit('confirmAddRank',selectList)">
+                完成
+            </div>
+        </div>
         <div class="add-body">
-            <h3>#{{title}}</h3>
+            <h3>#{{value.ranking_name}}</h3>
             <div class="input-box">
-                <input type="text" placeholder="为这个榜单添加新的成员" v-model="elemenName" ref="inputElement">
+                <input type="text" placeholder="为这个榜单添加新的成员" v-model="elemenName" @keyup="searchElement">
             </div>
-            <div class="element-desc" v-if="hasTitle">
-                <textarea v-model="elementDesc" placeholder="介绍一下啊这个新成员吧"></textarea>
-            </div>
-            <ul class="pick-element" v-if="routerFrom == 'addRank'">
+            <ul class="pick-element">
                 <div class="pick-element-buffer">
                     <span v-for="(v,i) in selectList" :key="i">{{v.element_name}}
                         <icon @click="deleteElement(i)"
@@ -48,44 +53,27 @@
                 routerFrom: ''
             }
         },
-        beforeRouteEnter(to, from, next) {
-            next(vm => {
-                vm.routerFrom = from.name
-            })
-
-        },
         created() {
             this.getRankInfo()
         },
         mounted() {
             this.$nextTick(() => {
-                this.nextStepDom = this.$parent.$refs.rcmHeaders.$refs.comfirm;
-                $(this.nextStepDom).on('click', () => {
-                    if (this.elemenName != '') {
-                        this.activeTextarea()
-                    } else {
-                        this.$toast({
-                            message: '请填写元素名称',
-                            position: 'middle',
-                            duration: 1000
-                        })
-                    }
-                })
-                $(this.$refs.inputElement).on('keyup', () => {
-                    let params = {}
-                    params.like = this.elemenName
-                    searchElementByName(params).then(res => {
-                        if (res.status == 200 && res.data.status_code == 1) {
-                            this.elementList = res.data.data.data
-                        }
-                    }).catch(err => {
-                        throw err
-                    })
-                })
+                $('.add-element').height($(window).height())
 
             })
         },
         methods: {
+            searchElement() {
+                let params = {}
+                params.like = this.elemenName
+                searchElementByName(params).then(res => {
+                    if (res.status == 200 && res.data.status_code == 1) {
+                        this.elementList = res.data.data.data
+                    }
+                }).catch(err => {
+                    throw err
+                })
+            },
             deleteElement(index) {
                 this.selectList.splice(index, 1)
                 delete  this.iconList[this.tempArr[index]]
@@ -99,60 +87,6 @@
                 }
                 this.selectList = [...new Set(this.selectList)];
             },
-            activeTextarea() {
-                this.hasTitle = true;
-                this.nextStepDom.children[0].innerText = '完成';
-                $(this.nextStepDom).unbind()
-                $(this.nextStepDom).on('click', () => {
-                    for (let i = 0; i < this.elementList.length; i++) {
-                        if (this.elemenName == this.elementList[i].element_name) {
-                            this.$toast({
-                                message: '该元素已存在',
-                                duration: 1000,
-                                position: 'middle'
-                            })
-                            return
-                        }
-                    }
-                    let params = {};
-                    params.element_name = this.elemenName
-                    params.element_desc = this.elementDesc
-                    params.ranking_id = this.$route.query.secondId
-                    addElement(params).then(res => {
-                        if (res.status == 200) {
-                            if (res.data.status_code == 1) {
-                                this.$toast({
-                                    message: '发布成功',
-                                    duration: 1000,
-                                    position: 'middle'
-                                })
-                                this.$router.replace({
-                                    name: 'secondRankList',
-                                    query: this.$route.query
-                                })
-                            } else {
-                                this.$toast({
-                                    message: res.data.message,
-                                    duration: 1000,
-                                    position: 'middle'
-                                })
-                            }
-                        } else {
-                            this.$toast({
-                                message: '系统异常',
-                                duration: 1000,
-                                position: 'middle'
-                            })
-                        }
-                    }).catch(err => {
-                        this.$toast({
-                            message: '系统异常',
-                            duration: 1000,
-                            position: 'middle'
-                        })
-                    })
-                })
-            },
             getRankInfo() {
                 let params = {};
                 params.id = this.$route.query.secondId
@@ -163,7 +97,8 @@
                     throw err
                 })
             }
-        }
+        },
+        props: ['value']
     }
 
 </script>
@@ -171,6 +106,17 @@
 <style scoped lang="less">
     .add-element {
         width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        background-color: #fff;
+        .add-header {
+            display: flex;
+            padding: 10px;
+            flex-direction: row;
+            justify-content: space-between;
+        }
         .add-body {
             width: 100%;
             h3 {

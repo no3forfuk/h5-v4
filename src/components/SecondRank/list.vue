@@ -32,7 +32,7 @@
                          :auto-fill="false"
                          ref="loadmore">
                 <ul class="list-body">
-                    <cell v-for="(item,index) in value.data.data"
+                    <cell v-for="(item,index) in value"
                           :value="item"
                           :index="index"
                           :key="index"></cell>
@@ -81,9 +81,27 @@
             getList() {
 
             },
+            sort(type) {
+                if (type == 0) {
+                    this.value = this.value.sort((a, b) => {
+                        return b.exponent - a.exponent
+                    })
+                    return
+                }
+                if (type == 1) {
+                    this.value = this.value.sort((a, b) => {
+                        let strA = a.updated_at.replace(/\-/g, '/');
+                        let strB = b.updated_at.replace(/\-/g, '/');
+                        let msA = new Date(strA).getTime()
+                        let msB = new Date(strB).getTime()
+                        return msB - msA
+                    })
+                    return
+                }
+            },
             loadBeforeDay() {
+                this.$emit('loadNextPage', 'a')
                 this.$refs.loadmore.onBottomLoaded();
-
             },
             addElement() {
                 if (sessionStorage.getItem('X-Auth-Token')) {
@@ -94,7 +112,8 @@
                     })
                 } else {
                     this.$router.push({
-                        name: 'login'
+                        name: 'login',
+                        query: this.$route.query
                     })
                 }
             },
@@ -104,6 +123,7 @@
             toggleSelect(i) {
                 this.selection.selectActive = false;
                 this.selection.value = this.selection.selectItems[i].text;
+                this.sort(i)
             }
         },
         components: {

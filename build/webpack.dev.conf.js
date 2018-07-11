@@ -147,6 +147,10 @@ module.exports = merge(base, {
             app.post('/api/home/wx/signature', (req, res) => {
                 go(req, res)
             })
+            //点赞
+            app.post('/api/home/praise/add', (req, res) => {
+                go(req, res)
+            })
             //--------------------------------------------
             //获取微信签名
             // app.post('/api/Wx/signature', (req, res) => {

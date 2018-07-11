@@ -10,15 +10,18 @@
                accept="image/jpg,image/png,image/gif"
                ref="pic">
         </span>
-        <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="" ref="viewBox">
+        <img :src="img" alt="" ref="viewBox">
     </div>
 </template>
 
 <script>
+    import {editUserInfo} from '../../api/api'
 
     export default {
         data() {
             return {}
+        },
+        created() {
         },
         methods: {
             changePic() {
@@ -33,7 +36,7 @@
                 flies.readAsDataURL(this.$refs.pic.files[0])
             }
         },
-        props: ['value']
+        props: ['value', 'img']
     }
 
 </script>

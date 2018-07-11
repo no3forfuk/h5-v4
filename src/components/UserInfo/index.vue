@@ -1,10 +1,10 @@
 <template>
     <transition name="transitionName" mode="in-out">
         <div class="user-info">
-            <edit-pic :value="userpic" @savePic="uploadPic27Niu"></edit-pic>
+            <edit-pic :value="userpic" :img="userInfo.avatar" @savePic="uploadPic27Niu"></edit-pic>
             <!--<edit-username @click="editStart" :value="userInfo.name"></edit-username>-->
-            <edit-userfav @click="editStart" :value="userInfo.get_expert.ranking_name"></edit-userfav>
-            <edit-usersign @click="editStart" :value="userInfo.signature"></edit-usersign>
+            <edit-userfav @click="editFav" :value="userInfo.get_expert.ranking_name"></edit-userfav>
+            <edit-usersign @click="editSign" :value="userInfo.signature"></edit-usersign>
             <div class="belt"></div>
             <div class="confirm">退出登陆</div>
             <div class="belt"></div>
@@ -30,10 +30,10 @@
                                    v-show="editItem == 'username'">
                             <input type="text"
                                    placeholder="输入自己的个性签名"
-                                   v-model="usersign"
+                                   v-model="userInfo.signature"
                                    v-show="editItem == 'usersign'">
                             <input type="text"
-                                   v-model="userfav"
+                                   v-model="userInfo.get_expert.ranking_name"
                                    disabled
                                    placeholder="选择一个自己的擅长领域"
                                    v-show="editItem == 'userfav'">
@@ -53,6 +53,7 @@
     import editUsersign from './editUsersign'
     import scrollSelect from './scrollSelect'
     import {editUserInfo, getQiniuToken, getUserInfo} from '../../api/api'
+    import {inheritObject, timeFormat} from '../../utils'
 
     export default {
         data() {
@@ -67,11 +68,23 @@
                 temp: {},
                 expert: '',
                 avatar_key: '',
-                avatar: ''
+                avatar: '',
+                defaultData: {
+                    avatar: 'http://p8rk87lub.bkt.clouddn.com/visitor.jpg',
+                    avatar_key: 'visitor.jpg',
+                    email: '',
+                    get_expert: {
+                        ranking_name: '暂无',
+                        id: NaN
+                    },
+                    name: '用户' + parseInt(new Date() / 123),
+                    signature: '该用户什么也不想说',
+                    updated_at: timeFormat('-')
+                }
             }
         },
         created() {
-            this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+            this.initData()
         },
         beforeRouteLeave(to, from, next) {
             this.$store.commit('SETROUTERFROM', from.name)
@@ -79,6 +92,20 @@
             next()
         },
         methods: {
+            initData() {
+                let obj = JSON.parse(sessionStorage.getItem('userInfo'));
+                this.userInfo = inheritObject(obj, this.defaultData)
+            },
+            editFav(msg) {
+                this.editItem = 'userfav';
+                this.editActive = true;
+                this.userInfo.get_expert.ranking_name = msg
+            },
+            editSign(msg) {
+                this.editItem = 'usersign';
+                this.editActive = true;
+                this.userInfo.signature = msg
+            },
             uploadPic27Niu(val) {
                 let file = val;
                 getQiniuToken().then(res => {
@@ -104,9 +131,9 @@
                                     throw err;
                                 },
                                 complete(res) {
-                                    self.avatar_key = res.key
-                                    self.avatar = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
-
+                                    self.userInfo.avatar = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
+                                    self.userInfo.avatar_key = 'http://p8rk87lub.bkt.clouddn.com/' + res.key
+                                    self.submitEdit()
                                 }
                             }
                             let observable = this.qiniu.upload(file, strFileName, token, putExtra, config);
@@ -118,24 +145,16 @@
                 })
             },
             selectFav(val) {
-                this.expert = val.id
-                this.userfav = val.ranking_name
+                this.userInfo.get_expert = val
             },
             submitEdit() {
-                let params = {}
-                let obj = JSON.parse(sessionStorage.getItem('userInfo'))
-                params.id = obj.id
-                if (this.usersign) {
-                    params.signature = this.usersign
-                }
-                if (this.avatar) {
-                    params.avatar = this.avatar
-                }
-                if (this.avatar_key) {
-                    params.avatar_key = this.avatar_key
-                }
-                if (this.expert) {
-                    params.expert = this.expert
+                let params = {
+                    id: this.userInfo.id,
+                    avatar: this.userInfo.avatar,
+                    avatar_key: this.userInfo.avatar_key,
+                    avatar_key: this.userInfo.avatar_key,
+                    signature: this.userInfo.signature,
+                    expert: this.userInfo.get_expert.id,
                 }
                 editUserInfo(params).then(res => {
                     if (res.status == 200) {
@@ -172,9 +191,6 @@
                 for (let k in this.temp) {
                     this[k] = this.temp[k]
                 }
-            },
-            goBack() {
-                this.$router.back()
             }
         },
         mounted() {

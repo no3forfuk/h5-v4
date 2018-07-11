@@ -58,7 +58,7 @@
                 let params = {}
                 params.level = 1;
                 params.page = this.page
-                params.id = this.$route.query.firstId
+                params.id = this.$route.query.firstId || 1
                 getRankList(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {

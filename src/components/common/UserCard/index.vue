@@ -4,22 +4,31 @@
         <div class="user-info">
             <h6>{{value.name||value.area +'猎人'}}</h6>
             <p>
-                <span>#榜单</span>
+                <span>暂无</span>
                 <span></span>
-                <span>签名</span>
+                <span>他什么也没说</span>
             </p>
         </div>
     </div>
 </template>
 
 <script>
+    import {inheritObject} from '../../../utils'
 
     export default {
         data() {
-            return {}
+            return {
+                renderData: {}
+            }
         },
         created() {
 
+        },
+        methods: {
+            getUserInfoFromLocal() {
+                let userData = JSON.parse(sessionStorage.getItem('userInfo'))
+                this.renderData = userData
+            }
         },
         props: ['value']
     }

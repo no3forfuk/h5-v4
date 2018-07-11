@@ -16,27 +16,27 @@
                     </div>
                 </div>
             </div>
-            <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
+            <!--<img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">-->
         </div>
         <div class="center">
             <div class="vote">
                 <p><span>289</span><i>票</i></p>
                 <span>245人投票</span>
             </div>
-            <div class="father-rank">
-                <ul>
-                    <li v-for="(item,index) in fatherData" :key="index">
-                        <router-link :to="{name:'secondRankList'}">
-                            <div>
-                                <span>#1</span>
-                                <span>289</span>
-                                <span>/1120</span>
-                            </div>
-                            <span>2017最最最最最最打脸对白</span>
-                        </router-link>
-                    </li>
-                </ul>
-            </div>
+            <!--<div class="father-rank">-->
+                <!--<ul>-->
+                    <!--<li v-for="(item,index) in fatherData" :key="index">-->
+                        <!--<router-link :to="{name:'secondRankList'}">-->
+                            <!--<div>-->
+                                <!--<span>#1</span>-->
+                                <!--<span>289</span>-->
+                                <!--<span>/1120</span>-->
+                            <!--</div>-->
+                            <!--<span>2017最最最最最最打脸对白</span>-->
+                        <!--</router-link>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
         </div>
         <div class="bottom">
             <div class="add-element">

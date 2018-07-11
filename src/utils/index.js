@@ -3,6 +3,18 @@
 const utils = {};
 import {getWXConfig} from '../api/api'
 
+utils.inheritObject = function (obj, def) {
+    let result = {}
+    if (!obj) return def
+    for (let k in obj) {
+        if (obj[k]) {
+            result[k] = obj[k]
+        } else {
+            result[k] = def[k]
+        }
+    }
+    return result
+}
 utils.timeFormat = function (type, ms) {
     var time;
     if (ms) {

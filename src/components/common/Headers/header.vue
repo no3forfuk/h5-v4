@@ -6,16 +6,16 @@
                       class="font-size-28"
                       v-if="val.index"></icon>
                 <icon :value="'&#xe600;'" class="font-size-20" v-if="!val.index"></icon>
-                <span  class="font-size-16">{{val.left.text}}</span>
+                <span class="font-size-16">{{val.leftText}}</span>
             </div>
-            <div class="right" :style="val.right.color">
-                <div :style="findStyle" @click="toggleFind" v-if="val.nav">
+            <div class="right">
+                <div @click="toggleFind" v-if="val.nav">
                     <span class="font-size-16">{{crtRank}}</span>
                     <icon class="font-size-20" v-if="!findIsOpen" :value="'&#xe7e9;'"></icon>
                     <icon class="font-size-20" v-if="findIsOpen" :value="'&#xe952;'"></icon>
                 </div>
-                <div v-if="val.right" ref="comfirm">
-                    <span style="color: #FF2C09; font-size: 16px" v-if="val.right.text">{{val.right.text}}</span>
+                <div ref="comfirm" v-if="val.rightText">
+                    <span style="color: #FF2C09; font-size: 16px">{{val.rightText}}</span>
                 </div>
             </div>
         </div>
@@ -27,12 +27,24 @@
 
 <script>
     import finderBody from '../Find/findBody'
+    import {inheritObject} from '../../../utils'
 
     export default {
         data() {
             return {
                 findIsOpen: false,
-                crtRank: '发现'
+                crtRank: '发现',
+                renderData: {},
+                defaultData: {
+                    index: false,
+                    nav: false,
+                    left: {
+                        text: ''
+                    },
+                    right: {
+                        text: ''
+                    }
+                }
             }
         },
         mounted() {
@@ -40,12 +52,10 @@
 
             })
         },
+        created() {
+            this.renderData = inheritObject(this.val, this.defaultData)
+        },
         computed: {
-            findStyle() {
-                return {
-                    color: this.color
-                }
-            },
             openFind() {
                 if (this.findIsOpen) {
                     return {
@@ -70,13 +80,17 @@
                         })
                     } else {
                         this.$router.push({
-                            name: 'login'
+                            name: 'login',
+                            query: this.$route.query
                         })
                     }
                     return
                 }
                 if (!this.val.backTarget) {
                     this.$store.commit('SETDIRECTION', 'back')
+                    if (this.$route.name == 'login') {
+                        this.$store.commit('SETDIRECTION', 'forward')
+                    }
                     this.$router.back()
                 } else {
                     this.$store.commit('SETDIRECTION', 'back')
@@ -85,6 +99,7 @@
                         query: this.$route.query
                     })
                 }
+
             },
             getFirstList(val) {
                 if (val.index == 0) {
@@ -141,6 +156,9 @@
             flex-direction: row;
             justify-content: left;
             align-items: center;
+        }
+        .right {
+            color: #FF2C09;
         }
     }
 </style>

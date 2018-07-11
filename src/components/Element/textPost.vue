@@ -1,5 +1,5 @@
 <template>
-    <p>{{value.post_content}}</p>
+    <p>{{decodeURIComponent(value.post_content)}}</p>
 </template>
 
 <script>

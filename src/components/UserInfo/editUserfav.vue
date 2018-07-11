@@ -1,5 +1,5 @@
 <template>
-    <div class="user-fav" @click="$emit('click','userfav')">
+    <div class="user-fav" @click="$emit('click',value)">
                 <span class="font-size-16">
                     <input type="text"
                            disabled

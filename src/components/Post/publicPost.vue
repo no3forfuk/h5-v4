@@ -24,10 +24,20 @@
             <div class="footer">
                 <icon :value="'&#xe615;'" @click="insertImg" class="font-size-28"></icon>
                 <icon :value="'&#xe603;'" @click="insertVideo" class="font-size-28"></icon>
-                <icon :value="'&#xe628;'" class="font-size-28"></icon>
+                <icon :value="'&#xe628;'" @click="insertOutLink" class="font-size-28"></icon>
             </div>
         </div>
-
+        <transition name="out-link">
+            <div class="outlink-mark" v-show="activeOutLink">
+                <div class="outlink-box">
+                    <input type="text" placeholder="请输入链接名称" v-model="outLinkName">
+                    <span></span>
+                    <input type="text" placeholder="请输入链接地址" v-model="outLinkAddress">
+                    <span></span>
+                    <button type="button" @click="confirmOutLink">完成</button>
+                </div>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -42,7 +52,6 @@
                 qiniuToken: '',
                 postContent: '',
                 imgNum: 0,
-                imgOldHtml: '',
                 imgNewHtml: '',
                 imgFileArr: [],
                 videoNum: 0,
@@ -54,7 +63,12 @@
                 out_link: '',
                 link_title: '',
                 link_desc: '',
-                elementDetails: {}
+                elementDetails: {},
+                activeOutLink: false,
+                outLinkName: '',
+                outLinkAddress: '',
+                outLinkNum: 0,
+                outLinkNewHtml: ''
             }
         },
         created() {
@@ -75,6 +89,7 @@
         },
         mounted() {
             this.$nextTick(() => {
+                $('.outlink-mark').height($(window).height())
                 $('.center').height($(window).height() - $('.edit-box').offset().top)
                 $('.edit-box').height($('.center').height() - $('.footer-placeholder').height())
                 this.$parent.$refs.rcmHeaders.$refs.comfirm.onclick = () => {
@@ -84,11 +99,26 @@
                     for (let i = 0; i < this.videoFileArr.length; i++) {
                         this.uploadFile(this.videoFileArr[i], i)
                     }
-
+                    if (this.imgFileArr.length == 0 && this.videoFileArr.length == 0) {
+                        this.type = 1
+                        this.confirmPublic()
+                    }
                 }
             })
         },
         methods: {
+            insertOutLink() {
+                this.activeOutLink = true
+            },
+            confirmOutLink() {
+                this.activeOutLink = false
+                this.outLinkNewHtml = `
+                    <div>
+                        <a href="${this.outLinkAddress}">${this.outLinkName}</a>
+                    </div>
+                `
+                $('.edit-box').append(this.outLinkNewHtml)
+            },
             cancelPublic() {
 
             },
@@ -119,6 +149,14 @@
                 let params = {};
                 let newHtml = $('.edit-box').html().replace(/[\r\n]/g, '')
                 params.post_content = encodeURIComponent(newHtml);
+                if (params.post_content.length == 0) {
+                    this.$toast({
+                        message: '您没有输入任何东西',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                    return
+                }
                 params.element_id = parseInt(this.$route.query.elementId);
                 params.type = this.type;
                 params.img = this.img;
@@ -129,11 +167,25 @@
                 publicPost(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
-
+                            this.$toast({
+                                message: '发布成功',
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                            this.$router.back()
+                        } else {
+                            this.$toast({
+                                message: res.data.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
                         }
-
                     } else {
-
+                        this.$toast({
+                            message: '网络异常',
+                            duration: 1000,
+                            position: 'middle'
+                        })
                     }
                 }).catch(err => {
                     throw err
@@ -144,6 +196,10 @@
 
             },
             uploadFile(file, i) {
+                this.$indicator.open({
+                    text: '请稍后...',
+                    spinnerType: 'fading-circle'
+                })
                 getQiniuToken().then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
@@ -168,6 +224,7 @@
                                     throw err;
                                 },
                                 complete(res) {
+                                    self.$indicator.close()
                                     self.postType()
                                     if (self.type == 3) {
                                         let urlStr = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
@@ -180,6 +237,7 @@
                                         let videoDom = '#video' + (i + 1)
                                         $(videoDom)[0].src = urlStr;
                                     }
+
                                     self.confirmPublic()
                                 }
                             }
@@ -199,6 +257,9 @@
                 this.$refs.videoFile.click()
             },
             viewVideo() {
+                this.$indicator.open({
+                    spinnerType: 'fading-circle'
+                })
                 const flies = new FileReader();
                 flies.onload = data => {
                     this.videoNum++
@@ -209,6 +270,7 @@
                     this.videoFileArr.push(this.$refs.videoFile.files[0])
                     $(`#video${this.videoNum}`)[0].src = data.target.result
                     this.$refs.videoFile.value = ''
+                    this.$indicator.close()
                 }
                 if (this.$refs.videoFile.files[0]) {
                     flies.readAsDataURL(this.$refs.videoFile.files[0])
@@ -220,6 +282,9 @@
                 this.$refs.imgFile.click()
             },
             viewImg() {
+                this.$indicator.open({
+                    spinnerType: 'fading-circle'
+                })
                 const flies = new FileReader();
                 flies.onload = data => {
                     this.imgNum++
@@ -232,6 +297,7 @@
                     this.imgFileArr.push(this.$refs.imgFile.files[0])
                     $(`#img${this.imgNum}`)[0].src = data.target.result
                     this.$refs.imgFile.value = ''
+                    this.$indicator.close()
                 }
                 if (this.$refs.imgFile.files[0]) {
                     flies.readAsDataURL(this.$refs.imgFile.files[0])
@@ -271,6 +337,51 @@
 </script>
 
 <style scoped lang="less">
+    .outlink-mark {
+        width: 100%;
+        position: fixed;
+        z-index: 10000;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .outlink-box {
+            width: 200px;
+            border-radius: 6px;
+            border: 1px solid #999;
+            background-color: #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+            span {
+                width: 96%;
+                height: 1px;
+                display: block;
+                background-color: #d3d3d3;
+            }
+            input {
+                width: 98%;
+                height: 38px;
+                border-radius: 6px;
+                background-color: #eee;
+                font-size: 16px;
+                line-height: 38px;
+                border: 0 none;
+                color: #000;
+            }
+            button {
+                border: 0 none;
+                width: 100%;
+                text-align: center;
+                height: 30px;
+            }
+        }
+    }
+
     .public-post {
         width: 100%;
         height: 100%;
@@ -307,7 +418,7 @@
         transition: all 0.8s;
         width: 100%;
         height: 40px;
-        background-color: #ccc;
+        background-color: rgba(0, 0, 0, .1);
         position: absolute;
         display: flex;
         flex-direction: row;
@@ -318,5 +429,15 @@
         i {
             padding: 0 5px;
         }
+    }
+
+    .out-link-enter-active {
+        animation: pulse 0.4s;
+        position: absolute;
+    }
+
+    .out-link-leave-active {
+        animation: slideOutDown 0.4s;
+        position: absolute;
     }
 </style>

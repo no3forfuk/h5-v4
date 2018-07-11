@@ -3,7 +3,7 @@
         <div class="register-body">
             <div class="register-form">
                 <div class="phone-number">
-                    <input type="number" placeholder="手机号" v-model="phoneNumber">
+                    <input type="tel" placeholder="手机号" v-model="phoneNumber">
                 </div>
                 <div class="pass-word">
                     <input type="password" placeholder="密码" v-model="password">
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-    import {registerByPhone, getYZM, firstUpdataUserInfo} from '../../api/api'
+    import {registerByPhone, getYZM, firstUpdataUserInfo, loginByPhone} from '../../api/api'
 
     export default {
         data() {
@@ -98,67 +98,123 @@
 
             },
             submitRegister() {
-                if (this.phoneNumber == '') {
+                if (this.phoneNumber.length !== 11) {
                     this.$toast({
-                        message: '请输入正确的手机号码',
+                        message: '请输入有效手机号码',
                         position: 'middle',
                         duration: 1000
                     })
-                    return
-                }
-                if (this.password == '') {
+
+                } else if (this.password.length < 6) {
                     this.$toast({
-                        message: '请输入密码',
+                        message: '密码长度不能少于6位',
                         position: 'middle',
                         duration: 1000
                     })
-                    return
-                }
-                let params = {}
-                params.mobile = this.phoneNumber
-                params.password = this.password
-                params.mobile_code = this.yzm
-                registerByPhone(params).then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
-                            this.$toast({
-                                message: '注册成功',
-                                position: 'middle',
-                                duration: 1000
-                            })
-                            this.$router.push({
-                                name: 'login'
-                            })
-                            // let userParam = {};
-                            // userParam.name = '用户' + parseInt(new Date() / 1111)
-                            // firstUpdataUserInfo(userParam).then(res => {
-                            //     if (res.status == 200) {
-                            //
-                            //     }
-                            // }).catch(err => {
-                            //     throw err
-                            // })
+                } else if (this.password.length > 18) {
+                    this.$toast({
+                        message: '密码长度不能超过18位',
+                        position: 'middle',
+                        duration: 1000
+                    })
+                } else if (this.yzm.length == 0) {
+                    this.$toast({
+                        message: '请输入验证码',
+                        position: 'middle',
+                        duration: 1000
+                    })
+                } else {
+                    let params = {}
+                    params.mobile = this.phoneNumber
+                    params.password = this.password
+                    params.mobile_code = this.yzm
+                    registerByPhone(params).then(res => {
+                        if (res.status == 200) {
+                            if (res.data.status_code == 1) {
+                                this.$toast({
+                                    message: '注册成功',
+                                    position: 'middle',
+                                    duration: 1000
+                                })
+                                loginByPhone({
+                                    mobile: this.phoneNumber,
+                                    password: this.MD5(this.password)
+                                }).then(res => {
+                                    if (res.status == 200) {
+                                        if (res.data.status_code == 1) {
+                                            sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
+                                            this.$store.commit('LOGIN')
+                                            if (this.routerFrom) {
+                                                this.$router.replace({name: this.routerFrom, query: this.$route.query})
+                                            } else {
+                                                this.$router.replace({name: 'hot'})
+                                            }
+                                            return
+                                        }
+                                        if (res.data.status_code == 11) {
+                                            sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
+                                            this.$store.commit('LOGIN')
+                                            firstUpdataUserInfo({
+                                                name: '用户' + parseInt(new Date() / 1111)
+                                            }).then(res => {
+                                                if (res.status == 200 && res.data.status_code == 1) {
+                                                    if (this.routerFrom) {
+                                                        this.$router.replace({
+                                                            name: this.routerFrom,
+                                                            query: this.$route.query
+                                                        })
+                                                    } else {
+                                                        this.$router.replace({name: 'hot'})
+                                                    }
+                                                }
+                                            }).catch(err => {
+                                                throw err
+                                            })
+                                            return
+                                        }
+                                        if (res.data.status_code == 0) {
+                                            this.$toast({
+                                                message: res.data.message,
+                                                duration: 1000,
+                                                position: 'middle'
+                                            })
+                                        }
+                                    } else {
+                                        this.$toast({
+                                            message: '网络异常',
+                                            duration: 1000,
+                                            position: 'middle'
+                                        })
+                                    }
+                                }).catch(err => {
+                                    this.$toast({
+                                        message: '网络异常',
+                                        position: 'middle',
+                                        duration: 1000
+                                    })
+                                })
+                            } else {
+                                this.$toast({
+                                    message: res.data.message,
+                                    position: 'middle',
+                                    duration: 1000
+                                })
+                            }
                         } else {
                             this.$toast({
-                                message: res.data.message,
+                                message: '系统异常',
                                 position: 'middle',
                                 duration: 1000
                             })
                         }
-                    } else {
+                    }).catch(err => {
                         this.$toast({
-                            message: '系统异常',
+                            message: '网络异常',
                             position: 'middle',
                             duration: 1000
                         })
-                    }
-                }).catch(err => {
-                    this.$toast({
-                        message: '系统异常',
-                        position: 'middle',
-                        duration: 1000
                     })
-                })
+                }
             }
         },
         watch: {

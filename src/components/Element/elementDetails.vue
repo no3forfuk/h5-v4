@@ -24,7 +24,6 @@
         },
         mounted() {
             $('.element-details').height($(window).height())
-            console.log(this.value);
         },
         methods: {
             closeDetails() {

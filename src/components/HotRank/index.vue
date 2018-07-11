@@ -59,6 +59,9 @@
             },
             getPushRank() {
                 let params = {}
+                let oneDay = this.dayNum * 3600 * 24 * 1000
+                let time = Date.now() - oneDay
+                this.time = timeFormat('-', time)
                 params.time = this.time
                 this.$indicator.open({
                     text: '加载中',
@@ -69,6 +72,8 @@
                         if (res.data.status_code == 1) {
                             if (res.data.data.length > 0) {
                                 this.list = this.list.concat(res.data.data)
+                            } else {
+                                this.dayNum++
                             }
                             this.$indicator.close()
                         } else {
@@ -80,6 +85,11 @@
                 }).catch(err => {
                     throw err
                 })
+            }
+        },
+        watch: {
+            'dayNum'() {
+                this.getPushRank()
             }
         }
     }

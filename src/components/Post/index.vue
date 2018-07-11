@@ -67,16 +67,33 @@
             },
             submitDisCuss() {
                 let params = {}
+                if (this.discussContext.length == 0) {
+                    this.$toast({
+                        message: '评论不能为空',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                    return
+                }
                 params.comment_type = 3;
                 params.post_id = this.$route.query.postId;
                 params.content = this.discussContext;
                 addComment(params).then(res => {
-                    if (res.stutas == 200) {
+                    if (res.status == 200) {
                         if (res.data.status_code == 1) {
                             this.discussContext = ''
                             this.getPostDiscuss()
+                            this.$toast({
+                                message: '评论成功',
+                                duration: 1000,
+                                position: 'middle'
+                            })
                         } else {
-
+                            this.$toast({
+                                message: res.data.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
                         }
                     } else {
 
@@ -88,7 +105,6 @@
             setText(val) {
                 this.activeDiscuss = false
                 this.discussContext = val;
-                this.submitDisCuss()
             },
             cancle() {
                 this.activeDiscuss = false

@@ -25,7 +25,7 @@
                 </transition>
             </div>
         </div>
-        <discuess-list ref="discuessList"></discuess-list>
+        <discuess-list ref="discuessList" :value="discussList"></discuess-list>
         <transition name="discuss">
             <div class="add-discuss" v-show="discussIsOpen">
                 <rcm-header>
@@ -52,7 +52,7 @@
 
 <script>
     import discuessList from './discuessList'
-    import {addComment} from '../../api/api'
+    import {addComment, getDiscussList} from '../../api/api'
 
     export default {
         data() {
@@ -71,16 +71,68 @@
                 },
                 discussIsOpen: false,
                 wordLength: 0,
-                discussText: ''
+                discussText: '',
+                page: 1,
+                crtPage: 1,
+                discussList: []
             }
         },
+        created() {
+            this.getRankDiscuss()
+        },
         methods: {
+            getRankDiscuss() {
+                this.$indicator.open({
+                    text: '加载中',
+                    spinnerType: 'fading-circle'
+                })
+                let params = {};
+                params.level = 2;
+                params.page = this.page;
+                params.id = this.$route.query.secondId;
+                getDiscussList(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.totalPage = res.data.data.last_page
+                            this.crtPage = res.data.data.current_page
+                            this.discussList = this.discussList.concat(res.data.data.data)
+                            this.$indicator.close()
+                        } else {
+
+                        }
+
+                    } else {
+
+                    }
+                }).catch(err => {
+                    throw err
+                })
+            },
+            sort(type) {
+                if (type == 0) {
+                    this.discussList = this.discussList.sort((a, b) => {
+                        return b.like - a.like
+                    })
+                    return
+                }
+                if (type == 1) {
+                    this.discussList = this.discussList.sort((a, b) => {
+                        let strA = a.updated_at.replace(/\-/g, '/');
+                        let strB = b.updated_at.replace(/\-/g, '/');
+                        let msA = new Date(strA).getTime()
+                        let msB = new Date(strB).getTime()
+                        return msB - msA
+                    })
+                    return
+                }
+            },
             toggleSort() {
                 this.selection.selectActive = !this.selection.selectActive;
             },
             toggleSelect(i) {
                 this.selection.selectActive = false;
                 this.selection.value = this.selection.selectItems[i].text;
+                this.sort(i)
             },
             activeDiscuss() {
                 this.discussIsOpen = true;
@@ -99,7 +151,7 @@
                 addComment(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
-                            this.$refs.discuessList.getDiscuss();
+                            this.getRankDiscuss()
                             this.discussText = ''
                             this.discussIsOpen = false;
                         }

@@ -4,7 +4,7 @@
         <div class="login-body">
             <div class="login-form">
                 <div class="phone-number">
-                    <input type="number" placeholder="手机号" v-model="mobile">
+                    <input type="tel" placeholder="手机号" v-model="mobile">
                 </div>
                 <div class="pass-word">
                     <input type="password" placeholder="密码" v-model="password">
@@ -12,7 +12,7 @@
             </div>
             <div class="login-opts">
                 <div>
-                    <button @click="goIndex">登入</button>
+                    <button @click="loginByMobile">登入</button>
                 </div>
                 <div>
                     <span @click="goRegiser">注册RCM</span>
@@ -58,6 +58,7 @@
                 $('.login').css({
                     height: $(window).height()
                 })
+                this.$store.commit('SETDIRECTION', 'forward')
             })
         },
         beforeRouteEnter(to, from, next) {
@@ -80,45 +81,78 @@
                 })
                 return result[name];
             },
-            goIndex() {
-                let params = {}
-                params.mobile = this.mobile
-                params.password = this.MD5(this.password)
-                loginByPhone(params).then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
-                            sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
-                            this.$store.commit('LOGIN')
-                            if (this.routerFrom) {
-                                this.$router.replace({name: this.routerFrom, query: this.$route.query})
-                            }
-                            this.$router.replace({name: 'hot'})
-                        }
-                        if (res.data.status_code == 11) {
-                            sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
-                            this.$store.commit('LOGIN')
-                            let userParam = {};
-                            userParam.name = '用户' + parseInt(new Date() / 1111)
-                            firstUpdataUserInfo(userParam).then(res => {
-                                if (res.status == 200) {
+            loginByMobile() {
+                if (this.mobile.length != 11) {
+                    this.$toast({
+                        message: '请输入有效的手机号码',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                    return
+                } else if (this.password.length < 6) {
+                    this.$toast({
+                        message: '请输入有效的密码',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                } else if (this.password.length > 18) {
+                    this.$toast({
+                        message: '请输入有效的密码',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                } else {
+                    let params = {}
+                    params.mobile = this.mobile
+                    params.password = this.MD5(this.password)
+                    loginByPhone(params).then(res => {
+                        if (res.status == 200) {
+                            if (res.data.status_code == 1) {
+                                sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
+                                this.$store.commit('LOGIN')
+                                if (this.routerFrom) {
+                                    this.$router.replace({name: this.routerFrom, query: this.$route.query})
+                                } else {
                                     this.$router.replace({name: 'hot'})
                                 }
-                            }).catch(err => {
-                                throw err
+                                return
+                            }
+                            if (res.data.status_code == 11) {
+                                sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
+                                this.$store.commit('LOGIN')
+                                firstUpdataUserInfo({
+                                    name: '用户' + parseInt(new Date() / 1111)
+                                }).then(res => {
+                                    if (res.status == 200 && res.data.status_code == 1) {
+                                        if (this.routerFrom) {
+                                            this.$router.replace({name: this.routerFrom, query: this.$route.query})
+                                        } else {
+                                            this.$router.replace({name: 'hot'})
+                                        }
+                                    }
+                                }).catch(err => {
+                                    throw err
+                                })
+                                return
+                            }
+                            if (res.data.status_code == 0) {
+                                this.$toast({
+                                    message: res.data.message,
+                                    duration: 1000,
+                                    position: 'middle'
+                                })
+                            }
+                        } else {
+                            this.$toast({
+                                message: '网络异常',
+                                duration: 1000,
+                                position: 'middle'
                             })
-                            // setUserInfoAtFirst(params).then(res => {
-                            //     console.log(res);
-                            //     this.$router.replace({name: 'hot'})
-                            // }).catch(err => {
-                            //     throw err
-                            // })
                         }
-                    } else {
-
-                    }
-                }).catch(err => {
-                    throw err
-                })
+                    }).catch(err => {
+                        throw err
+                    })
+                }
             },
             goRegiser() {
                 this.$router.push({name: 'register'})

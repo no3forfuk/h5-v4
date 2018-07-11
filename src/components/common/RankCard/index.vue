@@ -1,21 +1,21 @@
 <template>
     <div class="rank-card">
         <div class="hot-level">
-            <span>{{value.rating[0]||'S'}}<sup v-if="value.rating[1]">{{value.rating[1]}}</sup></span>
+            <span>{{renderData.rating[0]}}<sup>{{renderData.rating[1]}}</sup></span>
         </div>
         <div class="rank-info">
             <router-link
-                    :to="{name:'secondRankList',query:{secondId:value.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
-                <h3>#{{value.ranking_name}}</h3>
+                    :to="{name:'secondRankList',query:{secondId:renderData.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
+                <h3>#{{renderData.ranking_name}}</h3>
             </router-link>
             <div class="info-body">
                 <span class="prevmask" v-if="leftBoundary"></span>
                 <span class="nextmask" v-if="rightBoundary"></span>
                 <ul class="info-ul" @scroll="judgeBoundary">
-                    <li v-for="(item,index) in value.data" :key="index"
+                    <li v-for="(item,index) in renderData.data" :key="index"
                         ref="lis">
                         <router-link
-                                :to="{name:'element',query:{elementId:item.id,secondId:value.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
+                                :to="{name:'element',query:{elementId:item.id,secondId:renderData.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
                             <i>No.{{index+1}}</i>
                             <span>{{item.element_name}}</span>
                         </router-link>
@@ -32,16 +32,40 @@
 </template>
 
 <script>
+    import {timeFormat, inheritObject} from '../../../utils'
 
     export default {
         data() {
             return {
                 leftBoundary: false,
                 rightBoundary: true,
-                query: ''
+                query: '',
+                renderData: {},
+                defaultData: {
+                    asterisk: 0,
+                    created_at: timeFormat('-'),
+                    data: [],
+                    exponent: 0,
+                    id: NaN,
+                    img: '',
+                    is_check: 0,
+                    is_hide: 0,
+                    operate_type: 2,
+                    pivot: {
+                        ranking_id: 1,
+                        ranking_pid: 1
+                    },
+                    ranking_desc: '该榜单暂时没有描述',
+                    ranking_level: 2,
+                    ranking_name: '无名',
+                    rating: 'D+',
+                    updated_at: timeFormat('-')
+                },
+
             }
         },
         created() {
+            this.renderData = inheritObject(this.value, this.defaultData)
         },
         mounted() {
             this.$nextTick(() => {

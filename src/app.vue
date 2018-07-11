@@ -23,7 +23,7 @@
             }
         },
         created() {
-
+            this.$store.commit('SETDIRECTION', 'forward')
         },
         mounted() {
             this.$nextTick(() => {

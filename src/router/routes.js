@@ -23,15 +23,8 @@ module.exports = [
         meta: {
             index: false,
             nav: false,
-            left: {
-                text: '榜单'
-            },
-            right: {
-                text: '完成',
-                color: {
-                    color: '#FF2C09'
-                }
-            }
+            leftText: '榜单',
+            rightText: '完成'
         }
     },
     {
@@ -47,15 +40,8 @@ module.exports = [
                 meta: {
                     index: true,
                     nav: true,
-                    left: {
-                        text: ''
-                    },
-                    right: {
-                        text: '',
-                        color: {
-                            color: '#FF2C09'
-                        }
-                    }
+                    leftText: '',
+                    rightText: ''
                 },
             },
             {
@@ -66,15 +52,8 @@ module.exports = [
                 meta: {
                     index: true,
                     nav: true,
-                    left: {
-                        text: ''
-                    },
-                    right: {
-                        text: '',
-                        color: {
-                            color: '#FF2C09'
-                        }
-                    }
+                    leftText: '',
+                    rightText: ''
                 },
             }
         ]
@@ -86,15 +65,8 @@ module.exports = [
         meta: {
             index: false,
             nav: false,
-            left: {
-                text: ''
-            },
-            right: {
-                text: '',
-                color: {
-                    color: '#FF2C09'
-                }
-            }
+            leftText: '',
+            rightText: ''
         }
     },
     {
@@ -119,15 +91,8 @@ module.exports = [
         meta: {
             index: false,
             nav: false,
-            left: {
-                text: '首页'
-            },
-            right: {
-                text: '',
-                color: {
-                    color: '#FF2C09'
-                }
-            }
+            leftText: '首页',
+            rightText: ''
         }
     },
     {
@@ -137,15 +102,8 @@ module.exports = [
         meta: {
             index: false,
             nav: false,
-            left: {
-                text: '我的'
-            },
-            right: {
-                text: '',
-                color: {
-                    color: '#FF2C09'
-                }
-            }
+            leftText: '我的',
+            rightText: ''
         }
     },
     {
@@ -155,15 +113,8 @@ module.exports = [
         meta: {
             index: false,
             nav: false,
-            left: {
-                text: ''
-            },
-            right: {
-                text: '下一步',
-                color: {
-                    color: '#FF2C09'
-                }
-            }
+            leftText: '',
+            rightText: '下一步'
         }
     },
     {
@@ -179,15 +130,8 @@ module.exports = [
                 meta: {
                     index: false,
                     nav: true,
-                    left: {
-                        text: '首页'
-                    },
-                    right: {
-                        text: '',
-                        color: {
-                            color: '#FF2C09'
-                        }
-                    }
+                    leftText: '首页',
+                    rightText: ''
                 },
             },
             {
@@ -197,15 +141,8 @@ module.exports = [
                 meta: {
                     index: false,
                     nav: true,
-                    left: {
-                        text: '首页'
-                    },
-                    right: {
-                        text: '',
-                        color: {
-                            color: '#FF2C09'
-                        }
-                    }
+                    leftText: '首页',
+                    rightText: ''
                 },
             },
             {
@@ -215,15 +152,8 @@ module.exports = [
                 meta: {
                     index: false,
                     nav: true,
-                    left: {
-                        text: '首页'
-                    },
-                    right: {
-                        text: '',
-                        color: {
-                            color: '#FF2C09'
-                        }
-                    }
+                    leftText: '首页',
+                    rightText: ''
                 },
             },
 
@@ -237,15 +167,8 @@ module.exports = [
         meta: {
             index: false,
             nav: true,
-            left: {
-                text: '榜单'
-            },
-            right: {
-                text: '',
-                color: {
-                    color: '#FF2C09'
-                }
-            }
+            leftText: '榜单',
+            rightText: ''
         },
         children: []
     },
@@ -256,15 +179,8 @@ module.exports = [
         meta: {
             index: false,
             nav: false,
-            left: {
-                text: '榜单'
-            },
-            right: {
-                text: '下一步',
-                color: {
-                    color: '#FF2C09'
-                }
-            }
+            leftText: '榜单',
+            rightText: '下一步'
         }
     },
     {
@@ -274,15 +190,8 @@ module.exports = [
         meta: {
             index: false,
             nav: false,
-            left: {
-                text: '榜单'
-            },
-            right: {
-                text: '',
-                color: {
-                    color: '#FF2C09'
-                }
-            }
+            leftText: '榜单',
+            rightText: ''
         },
     },
     {

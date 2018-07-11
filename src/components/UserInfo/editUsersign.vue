@@ -1,5 +1,5 @@
 <template>
-    <div class="user-sign" @click="$emit('click','usersign')">
+    <div class="user-sign" @click="$emit('click',value)">
                 <span class="font-size-16">
                     <input type="text"
                            disabled

@@ -83,7 +83,7 @@
                 $('.element-body').height(Height + 27)
             },
             toggleDetails(e) {
-                this.detailsIsOpen = !this.detailsIsOpen
+                // this.detailsIsOpen = !this.detailsIsOpen
             }
         },
         components: {

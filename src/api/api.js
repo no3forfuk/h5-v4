@@ -207,6 +207,13 @@ module.exports = {
             method: 'GET',
             params: params
         })
+    },
+    //点赞
+    doLikeDiscuss(data) {
+        return request({
+            url: '/praise/add',
+            method: 'POST',
+            data: data
+        })
     }
-
 }
