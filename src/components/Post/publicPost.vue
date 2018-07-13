@@ -68,7 +68,9 @@
                 outLinkName: '',
                 outLinkAddress: '',
                 outLinkNum: 0,
-                outLinkNewHtml: ''
+                outLinkNewHtml: '',
+                outLinkArr: [],
+                comfirmBtnDom: ''
             }
         },
         created() {
@@ -87,21 +89,45 @@
         beforeRouteLeave(to, from, next) {
             next()
         },
+        beforeDestroy() {
+            this.comfirmBtnDom.onclick = null
+        },
         mounted() {
             this.$nextTick(() => {
                 $('.outlink-mark').height($(window).height())
                 $('.center').height($(window).height() - $('.edit-box').offset().top)
                 $('.edit-box').height($('.center').height() - $('.footer-placeholder').height())
-                this.$parent.$refs.rcmHeaders.$refs.comfirm.onclick = () => {
-                    for (let i = 0; i < this.imgFileArr.length; i++) {
-                        this.uploadFile(this.imgFileArr[i], i)
-                    }
+                this.comfirmBtnDom = this.$parent.$refs.rcmHeaders.$refs.comfirm;
+                this.comfirmBtnDom.onclick = () => {
                     for (let i = 0; i < this.videoFileArr.length; i++) {
+                        this.type = 4
                         this.uploadFile(this.videoFileArr[i], i)
+                        return
+                    }
+                    for (let i = 0; i < this.imgFileArr.length; i++) {
+                        this.type = 3
+                        this.uploadFile(this.imgFileArr[i], i)
+                        return
+                    }
+                    if (this.outLinkArr.length > 0) {
+                        this.type = 5
+                        this.confirmPublic({
+                            post_content: $('.edit-box').html().replace(/[\r\n]/g, ''),
+                            element_id: parseInt(this.$route.query.elementId),
+                            type: 5,
+                            out_link: this.outLinkAddress,
+                            link_title: this.outLinkName
+                        })
+                        return
                     }
                     if (this.imgFileArr.length == 0 && this.videoFileArr.length == 0) {
                         this.type = 1
-                        this.confirmPublic()
+                        this.confirmPublic({
+                            post_content: $('.edit-box').html().replace(/[\r\n]/g, ''),
+                            element_id: parseInt(this.$route.query.elementId),
+                            type: 1
+                        })
+                        return
                     }
                 }
             })
@@ -118,6 +144,7 @@
                     </div>
                 `
                 $('.edit-box').append(this.outLinkNewHtml)
+                this.outLinkArr.push(this.outLinkNewHtml)
             },
             cancelPublic() {
 
@@ -145,11 +172,8 @@
                 }
                 return new Blob([u8arr], {type: mime});
             },
-            confirmPublic() {
-                let params = {};
-                let newHtml = $('.edit-box').html().replace(/[\r\n]/g, '')
-                params.post_content = encodeURIComponent(newHtml);
-                if (params.post_content.length == 0) {
+            confirmPublic(data) {
+                if (data.post_content.length == 0) {
                     this.$toast({
                         message: '您没有输入任何东西',
                         duration: 1000,
@@ -157,14 +181,7 @@
                     })
                     return
                 }
-                params.element_id = parseInt(this.$route.query.elementId);
-                params.type = this.type;
-                params.img = this.img;
-                params.video = this.video;
-                params.out_link = this.out_link;
-                params.link_title = this.link_title;
-                params.link_desc = this.link_desc;
-                publicPost(params).then(res => {
+                publicPost(data).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
                             this.$toast({
@@ -225,20 +242,29 @@
                                 },
                                 complete(res) {
                                     self.$indicator.close()
-                                    self.postType()
                                     if (self.type == 3) {
                                         let urlStr = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
                                         let imgDom = '#img' + (i + 1)
                                         $(imgDom)[0].src = urlStr;
+                                        self.confirmPublic({
+                                            post_content: $('.edit-box').html().replace(/[\r\n]/g, ''),
+                                            element_id: parseInt(self.$route.query.elementId),
+                                            type: 3,
+                                            img: urlStr
+                                        })
                                     }
-
                                     if (self.type == 4) {
                                         let urlStr = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
                                         let videoDom = '#video' + (i + 1)
                                         $(videoDom)[0].src = urlStr;
+                                        self.confirmPublic({
+                                            post_content: $('.edit-box').html().replace(/[\r\n]/g, ''),
+                                            element_id: parseInt(self.$route.query.elementId),
+                                            type: 4,
+                                            video: urlStr
+                                        })
                                     }
 
-                                    self.confirmPublic()
                                 }
                             }
                             let observable = this.qiniu.upload(file, strFileName, token, putExtra, config);

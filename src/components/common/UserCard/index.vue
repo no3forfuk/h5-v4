@@ -4,32 +4,48 @@
         <div class="user-info">
             <h6>{{value.name||value.area +'猎人'}}</h6>
             <p>
-                <span>暂无</span>
+                <span>{{rankName||'暂无'}}</span>
                 <span></span>
-                <span>他什么也没说</span>
+                <span>{{value.signature||'暂无'}}</span>
             </p>
         </div>
     </div>
 </template>
 
 <script>
-    import {inheritObject} from '../../../utils'
+    import {inheritObject, timeFormat} from '../../../utils'
 
     export default {
         data() {
             return {
-                renderData: {}
+                renderData: {},
+                rankName: '',
+                type: 2,
+                defaultData: {
+                    avatar: 'http://p8rk87lub.bkt.clouddn.com/visitor.jpg',
+                    avatar_key: 'visitor.jpg',
+                    email: '',
+                    get_expert: {
+                        ranking_name: '暂无',
+                        id: NaN
+                    },
+                    name: '用户' + parseInt(new Date() / 123),
+                    signature: '该用户什么也不想说',
+                    updated_at: timeFormat('-')
+                }
             }
         },
         created() {
 
         },
-        methods: {
-            getUserInfoFromLocal() {
-                let userData = JSON.parse(sessionStorage.getItem('userInfo'))
-                this.renderData = userData
-            }
+        mounted() {
+            this.$nextTick(() => {
+                if (this.value.get_expert) {
+                    this.rankName = this.value.get_expert.ranking_name
+                }
+            })
         },
+        methods: {},
         props: ['value']
     }
 

@@ -1,8 +1,8 @@
 <template>
     <div>
-        <video width="70%" src="https://pic.ibaotu.com/00/63/22/31Q888piC7wM.mp4" controls="controls"
+        <video width="70%" :src="value.video" controls="controls"
                class="video-post">
-            <source src="https://pic.ibaotu.com/00/63/22/31Q888piC7wM.mp4" type="video/mp4">
+            <source :src="value.video" type="video/mp4">
         </video>
     </div>
 </template>
@@ -12,7 +12,8 @@
     export default {
         data() {
             return {}
-        }
+        },
+        props: ['value']
     }
 
 </script>

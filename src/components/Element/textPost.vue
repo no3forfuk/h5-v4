@@ -1,5 +1,5 @@
 <template>
-    <p>{{decodeURIComponent(value.post_content)}}</p>
+    <p v-html="value.post_content"></p>
 </template>
 
 <script>
@@ -19,5 +19,7 @@
 <style scoped lang="less">
     p {
         width: 100%;
+        max-height: 94px;
+        overflow: hidden;
     }
 </style>

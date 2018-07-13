@@ -36,6 +36,9 @@
                 nextAddElemet: false
             }
         },
+        beforeDestroy() {
+            $(this.rightDom).unbind()
+        },
         mounted() {
             this.$nextTick(() => {
                 $('.add-rank-page').height($(window).height() - 33)
@@ -74,7 +77,9 @@
                 let str = arr.join(',')
                 let params = {};
                 params.ranking_name = this.rankName
-                params.list = str
+                if (str.length > 0) {
+                    params.list = str
+                }
                 params.ranking_desc = this.rankDesc
                 params.ranking_pid = this.fatherId
                 addRank(params).then(res => {
@@ -85,20 +90,26 @@
                                 duration: 1000,
                                 position: 'middle'
                             })
-                            this.$router.back()
+                            this.$router.push({
+                                name: 'secondRankList',
+                                query: {
+                                    secondId: res.data.data.ranking_id,
+                                    firstId: this.fatherId
+                                }
+                            })
                         } else {
 
                         }
                     } else {
                         this.$toast({
-                            message: '系统异常',
+                            message: '网络异常',
                             duration: 1000,
                             position: 'middle'
                         })
                     }
                 }).catch(err => {
                     this.$toast({
-                        message: '系统异常',
+                        message: '网络异常',
                         duration: 1000,
                         position: 'middle'
                     })

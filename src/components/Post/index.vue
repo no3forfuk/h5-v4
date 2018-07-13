@@ -2,7 +2,7 @@
     <div class="post">
         <div class="post-scroll-box">
             <div class="post-user">
-                <user-card :value="postDetails.user"></user-card>
+                <user-card :value="user" v-if="user"></user-card>
             </div>
             <pre class="post-content" v-html="content"></pre>
             <h3 class="discuss-title">评论(<span>{{postDetails.comment_num}}</span>)</h3>
@@ -75,6 +75,11 @@
                     })
                     return
                 }
+                if (sessionStorage.getItem('X-Auth-Token')) {
+                    params.type = 1
+                } else {
+                    params.type = 2
+                }
                 params.comment_type = 3;
                 params.post_id = this.$route.query.postId;
                 params.content = this.discussContext;
@@ -103,8 +108,9 @@
                 })
             },
             setText(val) {
-                this.activeDiscuss = false
                 this.discussContext = val;
+                this.submitDisCuss()
+                this.activeDiscuss = false
             },
             cancle() {
                 this.activeDiscuss = false
@@ -125,7 +131,6 @@
                 params.id = this.$route.query.postId
                 getPostDetailsById(params).then(res => {
                     this.postDetails = res.data.data;
-                    console.log(this.postDetails);
                     this.user = res.data.data.user
                     this.getPostContent(this.postDetails.post_content)
                 }).catch(err => {

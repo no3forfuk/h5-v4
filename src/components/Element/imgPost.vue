@@ -1,5 +1,5 @@
 <template>
-    <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
+    <img :src="value.img" alt="">
 </template>
 
 <script>
@@ -7,7 +7,8 @@
     export default {
         data() {
             return {}
-        }
+        },
+        props:['value']
     }
 
 </script>

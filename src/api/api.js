@@ -46,7 +46,7 @@ module.exports = {
     //游客添加评论
     addComment(data) {
         return request({
-            url: '/comment/visitorAdd',
+            url: '/comment/addComment',
             method: 'POST',
             data: data
         })
@@ -215,5 +215,30 @@ module.exports = {
             method: 'POST',
             data: data
         })
+    },
+    //榜单收藏
+    rankCollect(data) {
+        return request({
+            url: '/ranking/secondCollect',
+            method: 'Post',
+            data: data
+        })
+    },
+    //元素收藏
+    elementCollect(data) {
+        return request({
+            url: '/element/elementCollect',
+            method: 'Post',
+            data: data
+        })
+    },
+    //元素投票
+    elementVote(data) {
+        return request({
+            url: '/vote/addVote',
+            method: 'Post',
+            data: data
+        })
     }
+
 }

@@ -6,9 +6,9 @@
                 <p>{{value.ranking_desc}}</p>
             </div>
             <div class="more-options">
-                <div class="collect">
-                    <icon :value="'&#xe62b;'" class="font-size-16"></icon>
-                    <span>收藏</span>
+                <div class="collect" @click="doCollectRank">
+                    <icon :value="'&#xe62b;'" class="font-size-16" :class="{'collected':isCollect}"></icon>
+                    <span :class="{'collected':isCollect}">收藏</span>
                 </div>
                 <div class="more">
                     <icon :value="'&#xe62f;'" class="font-size-16"></icon>
@@ -26,10 +26,16 @@
 </template>
 
 <script>
+    import {rankCollect} from '../../api/api'
 
     export default {
         data() {
-            return {}
+            return {
+                isCollect: false
+            }
+        },
+        created() {
+
         },
         mounted() {
             this.$nextTick(() => {
@@ -38,13 +44,58 @@
                 })
             })
         },
-        props: ['value']
+        methods: {
+            initIsCollect(val) {
+                if (val) {
+                    this.isCollect = true
+                } else {
+                    this.isCollect = false
+                }
+            },
+            doCollectRank() {
+                if (sessionStorage.getItem('userInfo')) {
+                    rankCollect({
+                        ranking_id: this.$route.query.secondId
+                    }).then(res => {
+                        if (res.status == 200) {
+                            if (res.data.status_code == 1) {
+                                this.$toast({
+                                    message: res.data.message,
+                                    duration: 1000,
+                                    position: 'middle'
+                                })
+                                this.isCollect = !this.isCollect
+                            } else {
+                                this.$toast({
+                                    message: res.data.message,
+                                    duration: 1000,
+                                    position: 'middle'
+                                })
+                            }
+                        } else {
+                            return
+                        }
+                    }).catch(err => {
+                        throw err
+                    })
+                } else {
+                    this.$router.push({
+                        name: 'login',
+                        query: this.$route.query
+                    })
+                }
+            }
+        },
+        props: ['value'],
+        watch: {}
     }
 
 </script>
 
 <style scoped lang="less">
-
+    .collected {
+        color: #FF2C09;
+    }
 
     .second-head {
         width: 100%;
@@ -70,6 +121,7 @@
             }
             .more-options {
                 position: absolute;
+                z-index: 100;
                 right: 10px;
                 bottom: 0px;
                 display: inline-flex;

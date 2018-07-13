@@ -1,30 +1,39 @@
 <template>
-    <ul class="post-list">
-        <li v-for="(item,index) in value.data" :key="index">
-            <div class="left">
-                <icon :value="'&#xe64b;'" class="font-size-20"></icon>
-                <span>{{item.comment_num}}</span>
-            </div>
-            <div class="right">
-                <router-link
-                        :to="{name:'post',query:{postId:item.id,secondId:$route.query.secondId,firstId:$route.query.firstId,idx:$route.query.idx,elementId:$route.query.elementId},params:{postDetails:item}}">
-                    <text-post v-if="item.type == 1" :value="item"></text-post>
-                    <img-post v-if="item.type == 2" :value="item"></img-post>
-                    <img-text v-if="item.type == 3" :value="item"></img-text>
-                    <ext-web v-if="item.type == 4" :value="item"></ext-web>
-                    <video-post v-if="item.type == 5" :value="item"></video-post>
-                </router-link>
-                <div class="user">
-                    <div>
-                        <img :src="item.user.avatar" alt="">
-                        <span>{{item.user.name}}</span>
+    <div class="post-list-loadmore">
+        <mt-loadmore :bottom-method="loadNextPagePost"
+                     :bottom-all-loaded="allLoaded"
+                     :bottomDistance="pullHeight"
+                     :auto-fill="false"
+                     ref="loadmore">
+            <ul class="post-list">
+                <li v-for="(item,index) in value" :key="index">
+                    <div class="left">
+                        <icon :value="'&#xe64b;'" class="font-size-20"></icon>
+                        <span>{{item.comment_num}}</span>
                     </div>
-                    <span>{{item.updated_at|timeformat}}</span>
-                </div>
-            </div>
-        </li>
-        <div class="elementpage-footer">支持优秀的就是在拒绝粗糙的</div>
-    </ul>
+                    <div class="right">
+                        <router-link
+                                :to="{name:'post',query:{postId:item.id,secondId:$route.query.secondId,firstId:$route.query.firstId,idx:$route.query.idx,elementId:$route.query.elementId},params:{postDetails:item}}">
+                            <text-post v-if="item.type == 1" :value="item"></text-post>
+                            <img-post v-if="item.type == 2" :value="item"></img-post>
+                            <img-text v-if="item.type == 3" :value="item"></img-text>
+                            <video-post v-if="item.type == 4" :value="item"></video-post>
+                            <ext-web v-if="item.type == 5" :value="item"></ext-web>
+                        </router-link>
+                        <div class="user">
+                            <div>
+                                <img :src="item.user.avatar" alt="">
+                                <span>{{item.user.name}}</span>
+                            </div>
+                            <span>{{item.updated_at|timeformat}}</span>
+                        </div>
+                    </div>
+                </li>
+                <div class="elementpage-footer">支持优秀的就是在拒绝粗糙的</div>
+            </ul>
+        </mt-loadmore>
+    </div>
+
 </template>
 
 <script>
@@ -36,13 +45,24 @@
 
     export default {
         data() {
-            return {}
+            return {
+                allLoaded: false,
+                pullHeight: 20
+            }
+        },
+        created() {
         },
         mounted() {
             this.$nextTick(() => {
-                $('.post-list').height($(window).height() - $('.post-list')[0].offsetTop )
+                $('.post-list-loadmore').height($(window).height() - $('.post-list')[0].offsetTop)
 
             })
+        },
+        methods: {
+            loadNextPagePost() {
+                this.$emit('loadmorePost', '')
+                this.$refs.loadmore.onBottomLoaded();
+            }
         },
         updated() {
 
@@ -60,7 +80,13 @@
 </script>
 
 <style scoped lang="less">
-    ul {
+    .post-list-loadmore {
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .post-list {
         width: 100%;
         overflow-y: auto;
         li {
@@ -123,5 +149,6 @@
         height: 40px;
         font-size: 12px;
         color: #D9D9D9;
+        margin-bottom: 20px;
     }
 </style>

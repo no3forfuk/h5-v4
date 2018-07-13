@@ -181,7 +181,7 @@
                 height: 40px;
                 border: 1px solid rgba(0, 0, 0, 0.1);
                 position: absolute;
-                z-index: 10;
+                z-index: 100;
                 right: 0px;
                 top: 40px;
                 .sanjiao {

@@ -12,7 +12,8 @@
             </div>
             <div class="login-opts">
                 <div>
-                    <button @click="loginByMobile">登入</button>
+                    <button @click="loginByMobile()">登入
+                    </button>
                 </div>
                 <div>
                     <span @click="goRegiser">注册RCM</span>
@@ -26,7 +27,7 @@
                 </div>
                 <span></span>
                 <div class="tx-qq">
-                    <span><i>QQ登录</i><i>QQ登录</i></span>
+                    <span @click="loginByOther('qq')"><i>QQ登录</i><i>QQ登录</i></span>
                 </div>
             </div>
         </div>
@@ -59,6 +60,10 @@
                     height: $(window).height()
                 })
                 this.$store.commit('SETDIRECTION', 'forward')
+                if (localStorage.getItem('userLogin')) {
+                    let params = JSON.parse(localStorage.getItem('userLogin'))
+                    this.login(params)
+                }
             })
         },
         beforeRouteEnter(to, from, next) {
@@ -70,46 +75,86 @@
             next()
         },
         methods: {
-            GetQueryString(url, name) {
-                let index = url.indexOf('?')
-                let str = url.substring(index + 1);
-                let arr = str.split('&');
-                let result = {};
-                arr.forEach((item) => {
-                    let a = item.split('=');
-                    result[a[0]] = a[1];
-                })
-                return result[name];
-            },
-            loginByMobile() {
-                if (this.mobile.length != 11) {
-                    this.$toast({
-                        message: '请输入有效的手机号码',
-                        duration: 1000,
-                        position: 'middle'
-                    })
-                    return
-                } else if (this.password.length < 6) {
-                    this.$toast({
-                        message: '请输入有效的密码',
-                        duration: 1000,
-                        position: 'middle'
-                    })
-                } else if (this.password.length > 18) {
-                    this.$toast({
-                        message: '请输入有效的密码',
-                        duration: 1000,
-                        position: 'middle'
-                    })
-                } else {
-                    let params = {}
-                    params.mobile = this.mobile
-                    params.password = this.MD5(this.password)
+            login(params) {
+                if (!localStorage.getItem('userLogin')) {
+                    localStorage.setItem('userLogin', JSON.stringify(params))
                     loginByPhone(params).then(res => {
                         if (res.status == 200) {
                             if (res.data.status_code == 1) {
                                 sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
                                 this.$store.commit('LOGIN')
+                                getUserInfo().then(res => {
+                                    if (res.status == 200) {
+                                        if (res.data.status_code == 1) {
+                                            let str = JSON.stringify(res.data.data)
+                                            sessionStorage.setItem('userInfo', str)
+                                        }
+                                    } else {
+
+                                    }
+                                }).catch(err => {
+                                    throw err
+                                })
+                                if (this.routerFrom) {
+                                    this.$router.replace({name: this.routerFrom, query: this.$route.query})
+                                } else {
+                                    this.$router.replace({name: 'hot'})
+                                }
+                                return
+                            }
+                            if (res.data.status_code == 11) {
+                                sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
+                                this.$store.commit('LOGIN')
+                                firstUpdataUserInfo({
+                                    name: '用户' + parseInt(new Date() / 1111)
+                                }).then(res => {
+                                    if (res.status == 200 && res.data.status_code == 1) {
+                                        if (this.routerFrom) {
+                                            this.$router.replace({name: this.routerFrom, query: this.$route.query})
+                                        } else {
+                                            this.$router.replace({name: 'hot'})
+                                        }
+                                    }
+                                }).catch(err => {
+                                    throw err
+                                })
+                                return
+                            }
+                            if (res.data.status_code == 0) {
+                                this.$toast({
+                                    message: res.data.message,
+                                    duration: 1000,
+                                    position: 'middle'
+                                })
+                            }
+                        } else {
+                            this.$toast({
+                                message: '网络异常',
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                        }
+                    }).catch(err => {
+                        throw err
+                    })
+                } else {
+                    loginByPhone(params).then(res => {
+                        if (res.status == 200) {
+                            if (res.data.status_code == 1) {
+                                sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
+                                this.$store.commit('LOGIN')
+                                getUserInfo().then(res => {
+                                    if (res.status == 200) {
+                                        if (res.data.status_code == 1) {
+                                            let str = JSON.stringify(res.data.data)
+                                            sessionStorage.setItem('userInfo', str)
+                                        }
+                                    } else {
+
+                                    }
+                                }).catch(err => {
+                                    throw err
+                                })
                                 if (this.routerFrom) {
                                     this.$router.replace({name: this.routerFrom, query: this.$route.query})
                                 } else {
@@ -154,6 +199,44 @@
                     })
                 }
             },
+            GetQueryString(url, name) {
+                let index = url.indexOf('?')
+                let str = url.substring(index + 1);
+                let arr = str.split('&');
+                let result = {};
+                arr.forEach((item) => {
+                    let a = item.split('=');
+                    result[a[0]] = a[1];
+                })
+                return result[name];
+            },
+            loginByMobile() {
+                if (this.mobile.length != 11) {
+                    this.$toast({
+                        message: '请输入有效的手机号码',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                    return
+                } else if (this.password.length < 6) {
+                    this.$toast({
+                        message: '请输入有效的密码',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                } else if (this.password.length > 18) {
+                    this.$toast({
+                        message: '请输入有效的密码',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                } else {
+                    this.login({
+                        mobile: this.mobile,
+                        password: this.MD5(this.password)
+                    })
+                }
+            },
             goRegiser() {
                 this.$router.push({name: 'register'})
             },
@@ -161,7 +244,13 @@
                 this.$router.push({name: 'resetPassword'})
             },
             loginByOther(type) {
-                location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa32e016674b63fbb&redirect_uri=http://test.bantangtv.com/#/login&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+                if (type == 'weixin') {
+                    location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa32e016674b63fbb&redirect_uri=${encodeURI('http://test.bantangtv.com')}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+                }
+                if (type == 'qq') {
+                    location.href = `https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101476497&redirect_uri=${encodeURI('http://test.bantangtv.com')}&state=111`
+                }
+
             }
         },
         watch: {

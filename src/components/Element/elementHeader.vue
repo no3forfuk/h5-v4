@@ -6,9 +6,9 @@
                 <p @click="$emit('openDetails','')">{{value.element_desc}}</p>
                 <p @click="vote">投一票</p>
                 <div class="more-options">
-                    <div class="collect">
-                        <icon :value="'&#xe62b;'" class="font-size-16"></icon>
-                        <span>收藏</span>
+                    <div class="collect" @click="doCollectElement">
+                        <icon :value="'&#xe62b;'" class="font-size-16" :class="{'collected':isCollect}"></icon>
+                        <span :class="{'collected':isCollect}">收藏</span>
                     </div>
                     <div class="more">
                         <icon :value="'&#xe62f;'" class="font-size-16"></icon>
@@ -20,22 +20,22 @@
         </div>
         <div class="center">
             <div class="vote">
-                <p><span>289</span><i>票</i></p>
-                <span>245人投票</span>
+                <p><span>{{value.vote}}</span><i>票</i></p>
+                <span>{{value.vote_user}}人投票</span>
             </div>
             <!--<div class="father-rank">-->
-                <!--<ul>-->
-                    <!--<li v-for="(item,index) in fatherData" :key="index">-->
-                        <!--<router-link :to="{name:'secondRankList'}">-->
-                            <!--<div>-->
-                                <!--<span>#1</span>-->
-                                <!--<span>289</span>-->
-                                <!--<span>/1120</span>-->
-                            <!--</div>-->
-                            <!--<span>2017最最最最最最打脸对白</span>-->
-                        <!--</router-link>-->
-                    <!--</li>-->
-                <!--</ul>-->
+            <!--<ul>-->
+            <!--<li v-for="(item,index) in fatherData" :key="index">-->
+            <!--<router-link :to="{name:'secondRankList'}">-->
+            <!--<div>-->
+            <!--<span>#1</span>-->
+            <!--<span>289</span>-->
+            <!--<span>/1120</span>-->
+            <!--</div>-->
+            <!--<span>2017最最最最最最打脸对白</span>-->
+            <!--</router-link>-->
+            <!--</li>-->
+            <!--</ul>-->
             <!--</div>-->
         </div>
         <div class="bottom">
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+    import {elementCollect, elementVote} from '../../api/api'
 
     export default {
         data() {
@@ -85,15 +86,57 @@
                         }
                     ]
                 },
+                isCollect: false
             }
         },
         methods: {
+            initCollectState(val) {
+                if (val) {
+                    this.isCollect = true
+                } else {
+                    this.isCollect = false
+                }
+            },
+            doCollectElement() {
+                if (sessionStorage.getItem('userInfo')) {
+                    elementCollect({
+                        element_id: this.$route.query.elementId
+                    }).then(res => {
+                        if (res.status == 200) {
+                            if (res.data.status_code == 1) {
+                                this.$toast({
+                                    message: res.data.message,
+                                    duration: 1000,
+                                    position: 'middle'
+                                })
+                                this.isCollect = !this.isCollect
+                            } else {
+                                this.$toast({
+                                    message: res.data.message,
+                                    duration: 1000,
+                                    position: 'middle'
+                                })
+                            }
+                        } else {
+                            return
+                        }
+                    }).catch(err => {
+                        throw err
+                    })
+                } else {
+                    this.$router.push({
+                        name: 'login',
+                        query: this.$route.query
+                    })
+                }
+            },
             toggleSort() {
                 this.selection.selectActive = !this.selection.selectActive;
             },
             toggleSelect(i) {
                 this.selection.selectActive = false;
                 this.selection.value = this.selection.selectItems[i].text;
+                this.$emit('sortPost', i)
             },
             addPost() {
                 if (sessionStorage.getItem('X-Auth-Token')) {
@@ -111,7 +154,31 @@
             },
             vote() {
                 if (!sessionStorage.getItem('X-Auth-Token')) {
-                    this.$router.push({name: 'login'})
+                    this.$router.push({name: 'login', query: this.$route.query})
+                } else {
+                    elementVote({
+                        element_id: this.$route.query.elementId
+                    }).then(res => {
+                        if (res.status == 200) {
+                            if (res.data.status_code == 1) {
+                                this.$toast({
+                                    message: '投票成功',
+                                    duration: 1000,
+                                    position: 'middle'
+                                })
+                            } else {
+                                this.$toast({
+                                    message: res.data.message,
+                                    duration: 1000,
+                                    position: 'middle'
+                                })
+                            }
+                        } else {
+                            return
+                        }
+                    }).catch(err => {
+                        throw err
+                    })
                 }
             }
         },
@@ -121,6 +188,10 @@
 </script>
 
 <style scoped lang="less">
+    .collected {
+        color: #FF2C09;
+    }
+
     .ele-header {
         width: 100%;
         .top {
@@ -292,6 +363,7 @@
                     right: 0px;
                     top: 40px;
                     background-color: #fff;
+                    z-index: 100;
                     .sanjiao {
                         display: block;
                         width: 10px;

@@ -31,6 +31,7 @@
             }
         },
         created() {
+
             if (this.value) {
                 this.getListInfo()
             } else {
@@ -42,7 +43,16 @@
         },
         updated() {
             this.$nextTick(() => {
-                this.crtIndex = this.$route.query.idx;
+                if (this.rankData.length > 0) {
+                    for (let i = 0; i < this.rankData.length; i++) {
+                        if (this.$route.query.firstId == this.rankData[i].id) {
+                            this.crtIndex = i;
+                            this.$emit('setName', this.rankData[i].ranking_name)
+                        }
+                    }
+                } else {
+                    this.crtIndex = this.$route.query.idx;
+                }
             })
         },
         methods: {
@@ -58,7 +68,7 @@
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
                             this.rankData = res.data.data.data
-                            this.rankData.unshift({ranking_name: '热门榜单'});
+                            this.rankData.unshift({ranking_name: '热门榜单', id: -1});
                             this.$nextTick(() => {
                                 if (!this.$route.query.idx || this.$route.query.idx == 0) {
                                     this.$route.query.idx = 0

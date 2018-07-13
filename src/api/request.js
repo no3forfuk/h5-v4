@@ -2,12 +2,13 @@
 'use strict'
 import axios from 'axios'
 import store from '../store/index'
+
 const service = axios.create({
     baseURL: '/api/home'
 })
 
 service.interceptors.request.use(config => {
-    if (store.state) {
+    if (sessionStorage.getItem('X-Auth-Token')) {
         config.headers['Authorization'] = 'Bearer ' + sessionStorage.getItem('X-Auth-Token')
     }
 

@@ -3,10 +3,10 @@
         <div class="register-body">
             <div class="register-form">
                 <div class="phone-number">
-                    <input type="tel" placeholder="手机号" v-model="phoneNumber">
+                    <input type="tel" placeholder="请输入手机号" v-model="phoneNumber">
                 </div>
                 <div class="pass-word">
-                    <input type="password" placeholder="密码" v-model="password">
+                    <input type="password" placeholder="创建一个登录密码" v-model="password">
                 </div>
                 <div class="short-msg">
                     <input type="nubmer" placeholder="短信验证码" v-model="yzm">
@@ -52,59 +52,82 @@
         methods: {
             getYZM() {
                 if (!this.lock) {
-                    this.timer = setInterval(() => {
-                        this.time--;
-                        this.yzmText = this.time + 's后重新获取'
-                    }, 1000)
-                    if (this.phoneNumber == '') {
+                    this.time = 60
+                    if (this.phoneNumber.length !== 11) {
                         this.$toast({
-                            message: '请输入正确的手机号码',
+                            message: '请输入有效手机号码',
                             position: 'middle',
                             duration: 1000
                         })
-                        return
-                    }
 
-                    let params = {};
-                    params.mobile = this.phoneNumber
-                    getYZM(params).then(res => {
-                        if (res.status == 200) {
-                            if (res.data.status_code == 1) {
+                    } else if (this.password.length < 6) {
+                        this.$toast({
+                            message: '密码长度不能少于6位',
+                            position: 'middle',
+                            duration: 1000
+                        })
+                    } else if (this.password.length > 18) {
+                        this.$toast({
+                            message: '密码长度不能超过18位',
+                            position: 'middle',
+                            duration: 1000
+                        })
+                    } else {
+                        this.timer = setInterval(() => {
+                            this.time--;
+                            this.yzmText = this.time + 's后重新获取'
+                        }, 1000)
+                        let params = {};
+                        params.mobile = this.phoneNumber
+                        getYZM(params).then(res => {
+                            if (res.status == 200) {
+                                if (res.data.status_code == 1) {
+                                    this.$toast({
+                                        message: '验证码已发送，请注意查收',
+                                        position: 'middle',
+                                        duration: 1000
+                                    })
+                                } else {
+                                    this.$toast({
+                                        message: res.data.message,
+                                        position: 'middle',
+                                        duration: 1000
+                                    })
+                                }
+                            } else {
                                 this.$toast({
-                                    message: '验证码已发送，请注意查收',
+                                    message: '网络异常',
                                     position: 'middle',
                                     duration: 1000
                                 })
-                            } else {
-
                             }
-                        } else {
+                        }).catch(err => {
                             this.$toast({
-                                message: '系统异常',
+                                message: '网络异常',
                                 position: 'middle',
                                 duration: 1000
                             })
-                        }
-                    }).catch(err => {
-                        this.$toast({
-                            message: '系统异常',
-                            position: 'middle',
-                            duration: 1000
                         })
-                    })
+                    }
                 } else {
                     return
                 }
 
             },
             submitRegister() {
+                let reg = /^[1][3,4,5,7,8][0-9]{9}$/;
                 if (this.phoneNumber.length !== 11) {
                     this.$toast({
                         message: '请输入有效手机号码',
                         position: 'middle',
                         duration: 1000
                     })
-
+                } else if (!reg.test(this.phoneNumber)) {
+                    this.$toast({
+                        message: '请输入有效手机号码',
+                        position: 'middle',
+                        duration: 1000
+                    })
                 } else if (this.password.length < 6) {
                     this.$toast({
                         message: '密码长度不能少于6位',
@@ -202,7 +225,7 @@
                             }
                         } else {
                             this.$toast({
-                                message: '系统异常',
+                                message: '网络异常',
                                 position: 'middle',
                                 duration: 1000
                             })
@@ -222,8 +245,10 @@
                 if (0 < val < 60) {
                     this.lock = true
                 }
-                if (val < 0) {
+                if (0 > val) {
                     this.yzmText = '重新获取';
+                    this.lock = false
+                    window.clearInterval(this.timer)
                     this.timer = null
                 }
             }

@@ -1,6 +1,6 @@
 <template>
     <div class="second-page">
-        <second-head :value="secondInfo" class="second-head"></second-head>
+        <second-head :value="secondInfo" class="second-head" ref="secondHead"></second-head>
         <tabs :value="listInfo" class="second-tabs-box" v-if="secondInfo.data" @nextListPage="loadNextList"></tabs>
     </div>
 </template>
@@ -36,10 +36,7 @@
         },
         updated() {
             this.$nextTick(() => {
-
                 $('.second-page').height($(window).height() - $('.second-page')[0].offsetTop)
-
-
             })
         },
         beforeCreate() {
@@ -78,6 +75,7 @@
                             this.secondInfo = res.data.data;
                             this.listTotalPage = res.data.data.data.last_page
                             this.listInfo = this.listInfo.concat(res.data.data.data.data)
+                            this.$refs.secondHead.initIsCollect(this.secondInfo.collect)
                             this.$set(this.share, 'title', res.data.data.ranking_name);
                             this.$set(this.share, 'desc', res.data.data.ranking_desc);
                             this.sharePage();

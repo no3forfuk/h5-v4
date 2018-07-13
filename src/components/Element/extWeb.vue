@@ -1,10 +1,10 @@
 <template>
     <div class="ext-web">
         <div class="info">
-            <p>关于新版本的一些小建议，已经标注到蓝湖，大家有空可以瞅瞅</p>
+            <p>{{value.link_title}}</p>
             <span>-- 外站</span>
         </div>
-        <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
+        <!--<img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">-->
     </div>
 </template>
 
@@ -12,8 +12,21 @@
 
     export default {
         data() {
-            return {}
-        }
+            return {
+                imgSrc: '',
+                linkSrc: '',
+                linkName: ''
+            }
+        },
+        created() {
+            this.setData()
+        },
+        methods: {
+            setData() {
+
+            }
+        },
+        props: ['value']
     }
 
 </script>

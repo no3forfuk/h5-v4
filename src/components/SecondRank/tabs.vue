@@ -3,6 +3,7 @@
         <ul class="second-tabs">
             <li v-for="(item,index) in tabData"
                 ref="lis"
+                :class="{'scale':index == tabIndex}"
                 @click="toggleTabs(index)"
                 :key="index">
                 {{item.title}}
@@ -10,9 +11,7 @@
             <span class="__" :style="spanPosition"></span>
         </ul>
         <!--<transition name="transitionName" mode="out-in">-->
-        <keep-alive>
-            <router-view class="second-view" :value="value" @loadNextPage="updataListPage"></router-view>
-        </keep-alive>
+        <router-view class="second-view" :value="value" @loadNextPage="updataListPage"></router-view>
         <!--</transition>-->
     </div>
 </template>
@@ -42,7 +41,7 @@
         },
         methods: {
             updataListPage(val) {
-                this.$emit('nextListPage','')
+                this.$emit('nextListPage', '')
             },
             toggleTabs(i) {
                 this.tabIndex = i;
@@ -66,6 +65,7 @@
                 for (let i = 0; i < this.tabData.length; i++) {
                     if (this.$route.name == this.tabData[i].routerName) {
                         this.setSpanPosition(i)
+                        this.tabIndex = i
                     }
                 }
             }
@@ -98,6 +98,10 @@
         overflow-y: hidden;
     }
 
+    .scale {
+        transform: scale(1.2);
+    }
+
     .second-tabs {
         width: 100%;
         border-bottom: 1px solid #CDCED4;
@@ -110,6 +114,7 @@
         position: relative;
         li {
             padding: 0 10px;
+            transition: all 0.5s;
         }
         .__ {
             width: 12px;

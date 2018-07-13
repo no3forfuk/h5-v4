@@ -84,7 +84,7 @@ module.exports = merge(base, {
                 go(req, res)
             })
             //添加评论
-            app.post('/api/home/comment/visitorAdd', (req, res) => {
+            app.post('/api/home/comment/addComment', (req, res) => {
                 go(req, res)
             })
             //获取POST详情
@@ -149,6 +149,18 @@ module.exports = merge(base, {
             })
             //点赞
             app.post('/api/home/praise/add', (req, res) => {
+                go(req, res)
+            })
+            //收藏榜单
+            app.post('/api/home/ranking/secondCollect', (req, res) => {
+                go(req, res)
+            })
+            //收藏元素
+            app.post('/api/home/element/elementCollect', (req, res) => {
+                go(req, res)
+            })
+            //投票元素
+            app.post('/api/home/vote/addVote', (req, res) => {
                 go(req, res)
             })
             //--------------------------------------------

@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="header-bottom" v-if="val.nav" :style="openFind">
-            <finder-body @getRankIndex="getFirstList" :value="val.nav"></finder-body>
+            <finder-body @getRankIndex="getFirstList" :value="val.nav" @setName="setRightText"></finder-body>
         </div>
     </div>
 </template>
@@ -85,13 +85,14 @@
                         })
                     }
                     return
+                } else {
+                    this.$store.commit('SETOPENUSERCENTER', false)
                 }
                 if (!this.val.backTarget) {
-                    this.$store.commit('SETDIRECTION', 'back')
-                    if (this.$route.name == 'login') {
-                        this.$store.commit('SETDIRECTION', 'forward')
-                    }
-                    this.$router.back()
+                    this.$store.commit('SETDIRECTION', 'forward')
+                    this.$nextTick(() => {
+                        this.$router.back()
+                    })
                 } else {
                     this.$store.commit('SETDIRECTION', 'back')
                     this.$router.push({
@@ -100,6 +101,9 @@
                     })
                 }
 
+            },
+            setRightText(val) {
+                this.crtRank = val
             },
             getFirstList(val) {
                 if (val.index == 0) {

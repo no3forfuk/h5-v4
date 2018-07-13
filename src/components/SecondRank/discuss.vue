@@ -38,7 +38,7 @@
                             <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
                             <span>广东猎人</span>
                         </div>
-                        <span class="right">注册并享受更多好礼</span>
+                        <span class="right" v-if="isVisitor" @click="goRegister">注册并享受更多好礼</span>
                     </div>
                     <div class="discuss-content">
                         <textarea v-model="discussText" ref="discussTextarea" id="discussTextarea"></textarea>
@@ -74,13 +74,28 @@
                 discussText: '',
                 page: 1,
                 crtPage: 1,
-                discussList: []
+                discussList: [],
+                isVisitor: false,
+                type: ''
             }
         },
         created() {
             this.getRankDiscuss()
+            if (sessionStorage.getItem('X-Auth-Token')) {
+                this.isVisitor = false
+                this.type = 1
+            } else {
+                this.isVisitor = true
+                this.type = 2
+            }
         },
         methods: {
+            goRegister() {
+                this.$router.push({
+                    name: 'register',
+                    query: this.$route.query
+                })
+            },
             getRankDiscuss() {
                 this.$indicator.open({
                     text: '加载中',
@@ -144,10 +159,19 @@
 
             },
             confirmDiscuss() {
+                if (this.discussText.length == 0) {
+                    this.$toast({
+                        message: '评论不能为空',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                    return
+                }
                 let params = {};
                 params.content = this.discussText;
                 params.comment_type = 2;
                 params.ranking_id = parseInt(this.$route.query.secondId);
+                params.type = this.type;
                 addComment(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
@@ -226,6 +250,7 @@
                 position: absolute;
                 right: 0px;
                 top: 40px;
+                z-index: 100;
                 .sanjiao {
                     display: block;
                     width: 10px;

@@ -11,7 +11,7 @@
                         <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
                         <span>广东猎人</span>
                     </div>
-                    <span class="right">注册并享受更多好礼</span>
+                    <span class="right" v-if="isVisitor" @click="goRegister">注册并享受更多好礼</span>
                 </div>
                 <div class="discuss-content">
                     <textarea v-model="discussText" ref="discussTextarea" id="discussTextarea"></textarea>
@@ -29,6 +29,21 @@
             return {
                 discussText: '',
                 wordLength: 0
+            }
+        },
+        created() {
+            if (sessionStorage.getItem('userInfo')) {
+                this.isVisitor = false
+            } else {
+                this.isVisitor = true
+            }
+        },
+        methods: {
+            goRegister() {
+                this.$router.push({
+                    name: 'register',
+                    query: this.$route.query
+                })
             }
         },
         watch: {

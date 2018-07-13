@@ -11,6 +11,7 @@
 </template>
 
 <script>
+    import {SNIPPET_LOGIN} from './Snippet'
 
     export default {
         data() {
@@ -19,11 +20,18 @@
                 isIndex: true,
                 backTarget: '',
                 hasNav: true,
-                rightText: ''
+                rightText: '',
+                direction: ''
             }
         },
         created() {
             this.$store.commit('SETDIRECTION', 'forward')
+            //是否登录过
+            if (localStorage.getItem('userLogin')) {
+                const loginParams = JSON.parse(localStorage.getItem('userLogin'))
+                SNIPPET_LOGIN(loginParams)
+            }
+
         },
         mounted() {
             this.$nextTick(() => {
@@ -34,6 +42,7 @@
         },
         updated() {
             this.$nextTick(() => {
+                // this.$store.commit('SETDIRECTION', 'forward')
                 setTimeout(() => {
                     this.$store.commit('SETDIRECTION', 'forward')
                 }, 1000)
@@ -47,15 +56,12 @@
             transitionName() {
                 if (this.$store.state.openUserCenter) {
                     return 'openuser'
+                } else {
+                    return this.$store.state.direction
                 }
-                return this.$store.state.direction
             }
         },
-        watch: {
-            '$route'(val) {
-
-            }
-        }
+        watch: {}
     }
 
 </script>
@@ -78,14 +84,14 @@
     /*前进进入*/
     .forward-enter-active,
     .userCenter-home-enter-active {
-        animation: slideInRight 0.4s;
+        animation: slideInRight 0.5s;
         position: absolute;
     }
 
     /*前进离开*/
     .forward-leave-active,
     .userCenter-home-leave-active {
-        animation: slideOutLeft 0.4s;
+        animation: slideOutLeft 0.5s;
         position: absolute;
     }
 
@@ -93,7 +99,7 @@
     .back-enter-active,
     .openuser-enter-active,
     .home-userCenter-enter-active {
-        animation: slideInLeft 0.4s;
+        animation: slideInLeft 0.5s;
         position: absolute;
     }
 
@@ -101,7 +107,7 @@
     .back-leave-active,
     .openuser-leave-active,
     .home-userCenter-leave-active {
-        animation: slideOutRight 0.4s;
+        animation: slideOutRight 0.5s;
         position: absolute;
     }
 

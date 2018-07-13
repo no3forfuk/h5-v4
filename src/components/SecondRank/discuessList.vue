@@ -12,10 +12,10 @@
                         <span>{{item.like}}</span>
                     </div>
                     <div class="center">
-                        <user-card :value="item.visitor"></user-card>
+                        <user-card :value="item.visitor || item.user"></user-card>
                         <p class="content">{{item.content}}</p>
                     </div>
-                    <span class="right">{{item.created_at|timeformat}}</span>
+                    <span class="right">{{item.updated_at|timeformat}}</span>
                 </li>
             </ul>
         </mt-loadmore>
@@ -40,7 +40,7 @@
             })
         },
         created() {
-            console.log(this.value);
+
         },
         methods: {
             loadNextPage() {

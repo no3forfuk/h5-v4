@@ -10,7 +10,8 @@
     export default {
         data() {
             return {
-                text: ''
+                text: '',
+                imgSrc: ''
             }
         },
         created() {
@@ -18,20 +19,14 @@
         },
         methods: {
             getText() {
-                let reg1 = /\</g;
-                let reg2 = /[\u4e00-\u9fa5]/g;
-                let str = '';
-                if (this.value.post_content.match(reg1)) {
-                    str = this.value.post_content.match(reg2)
-                    str = str.join("");
-                    this.text = str
+                this.text = this.value.post_content.split('<div>')[0]
+                let reg = /(([A-Za-z]*)\:\/\/(([A-Za-z0-9]*)\.)*com\/([A-Za-z]*|[0-9]*|[_]*|[-]*|[\.]*\/)*.([A-Za-z])*)/
+                if (reg.test(this.value.post_content)) {
+                    this.imgSrc = reg.exec(this.value.post_content)[0]
                 } else {
-                    str = decodeURIComponent(this.value.post_content).match(reg2);
-                    if (str) {
-                        str = str.join("");
-                    }
-                    this.text = str
+                    this.imgSrc = ''
                 }
+
             }
         },
         props: ['value']
