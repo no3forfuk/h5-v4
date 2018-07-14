@@ -8,7 +8,7 @@
             <div class="element-desc" v-if="hasTitle">
                 <textarea v-model="elementDesc" placeholder="介绍一下啊这个新成员吧"></textarea>
             </div>
-            <ul class="pick-element" v-if="routerFrom == 'addRank'">
+            <ul class="pick-element">
                 <div class="pick-element-buffer">
                     <span v-for="(v,i) in selectList" :key="i">{{v.element_name}}
                         <icon @click="deleteElement(i)"

@@ -1,13 +1,13 @@
 <template>
     <div class="set-info-root">
         <div class="user-photo">
-            <img src="http://p8rk87lub.bkt.clouddn.com/uploadImg.png" alt="" @click="selectPhoto">
+            <img src="http://p8rk87lub.bkt.clouddn.com/uploadImg.png" ref="viewBox" alt="" @click="selectPhoto">
         </div>
         <div class="user-name">
             <input type="text" placeholder="起个响亮的昵称吧" v-model="userName">
         </div>
         <div class="set-info-opts">
-            <button @click="submitRegister">下一步</button>
+            <button @click="uploadPic27Niu">下一步</button>
         </div>
         <transition name="select-photo">
             <div class="selectPhotoType" v-if="activeSelectPhoto">
@@ -21,6 +21,7 @@
                 </div>
                 <div @click="selectFromAlbum">从手机相册选择
                     <input type="file"
+                           @change="viewPicture('album')"
                            ref="album"
                            style="width: 0;height: 0;opacity: 0;position: absolute;top: 0;left: -9999px;"
                            name="file"
@@ -34,19 +35,67 @@
 </template>
 
 <script>
-    import {firstUpdataUserInfo, loginByPhone} from '../../api/api'
+    import {firstUpdataUserInfo, loginByPhone, getQiniuToken} from '../../api/api'
 
     export default {
         data() {
             return {
                 activeSelectPhoto: false,
+                avatar: '',
                 userName: ''
             }
         },
         methods: {
+            uploadPic27Niu(val) {
+                let file = this.$refs.album.files[0];
+                getQiniuToken().then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            let token = res.data.data.qiniu_token;
+                            let strFileName = 'user/' + file.name
+                            let putExtra = {
+                                fname: "",
+                                params: {},
+                                mimeType: null
+                            };
+                            let config = {
+                                useCdnDomain: true,
+                                region: this.qiniu.region.z2
+                            };
+                            var self = this;
+                            let observer = {
+                                next(res) {
+
+                                },
+                                error(err) {
+                                    throw err;
+                                },
+                                complete(res) {
+                                    self.avatar = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
+                                    self.submitRegister()
+                                }
+                            }
+                            let observable = this.qiniu.upload(file, strFileName, token, putExtra, config);
+                            let subscription = observable.subscribe(observer);
+                        }
+                    }
+                }).catch(err => {
+                    throw err
+                })
+            },
+            viewPicture(val) {
+                const flies = new FileReader();
+                flies.onload = data => {
+                    this.$refs.viewBox.src = data.target.result
+                }
+                if (val == 'album') {
+                    flies.readAsDataURL(this.$refs.album.files[0])
+                }
+            },
             submitRegister() {
                 let params = {
-                    name: this.userName
+                    name: this.userName,
+                    avatar: this.avatar
                 }
                 if (this.userName.length == 0) {
                     this.$toast({
@@ -100,6 +149,11 @@
         position: relative;
         .user-photo {
             padding: 20px 40px;
+            img {
+                width: 112px;
+                height: 112px;
+                border-radius: 50%;
+            }
         }
         .user-name {
             width: 100%;
