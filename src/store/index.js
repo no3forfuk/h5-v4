@@ -4,27 +4,27 @@
 const state = {
     direction: 'forward',
     openUserCenter: false,
-    routerFrom: '',
-    routerTo: '',
     routerDirection: 'forward',
     rankIndex: 0,
-    isLogin: false
+    isLogin: false,
+    goLogin: false,
+    topNavShow: false
 }
 const mutations = {
-    LOGIN(state) {
-        state.isLogin = true
+    TOGGLENAVSHOW(state, val) {
+        this.state.topNavShow = val
+    },
+    LOGIN(state, login) {
+        state.isLogin = login
+    },
+    GOLOGIN(state, val) {
+        state.goLogin = val
     },
     SETOPENUSERCENTER(state, val) {
         state.openUserCenter = val
     },
     SETDIRECTION(state, direction) {
         state.direction = direction
-    },
-    SETROUTERFROM(state, direction) {
-        state.routerFrom = direction
-    },
-    SETROUTERTO(state, direction) {
-        state.routerTo = direction
     },
     SETROUTERDIRECTION(state, direction) {
         state.routerDirection = direction
@@ -33,7 +33,16 @@ const mutations = {
         state.rankIndex = index
     }
 };
+const getters = {
+    GOLOGIN: state => {
+        return state.goLogin
+    },
+    TOPNAVSTATE: state => {
+        return state.topNavShow
+    }
+}
 module.exports = {
     state,
-    mutations
+    mutations,
+    getters
 }

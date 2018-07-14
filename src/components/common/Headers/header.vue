@@ -79,10 +79,7 @@
                             query: this.$route.query
                         })
                     } else {
-                        this.$router.push({
-                            name: 'login',
-                            query: this.$route.query
-                        })
+                        this.$store.commit('GOLOGIN', true)
                     }
                     return
                 } else {
@@ -121,6 +118,7 @@
             },
             toggleFind() {
                 this.findIsOpen = !this.findIsOpen;
+                this.$store.commit('TOGGLENAVSHOW', this.findIsOpen)
             }
         },
         components: {

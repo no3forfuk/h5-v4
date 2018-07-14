@@ -1,5 +1,5 @@
 <template>
-    <div class="tabs-div">
+    <div class="tabs-div" :style="heightSTyle">
         <ul class="second-tabs">
             <li v-for="(item,index) in tabData"
                 ref="lis"
@@ -10,9 +10,11 @@
             </li>
             <span class="__" :style="spanPosition"></span>
         </ul>
-        <!--<transition name="transitionName" mode="out-in">-->
-        <router-view class="second-view" :value="value" @loadNextPage="updataListPage"></router-view>
-        <!--</transition>-->
+        <div class="second-tabs-body">
+            <transition name="transitionName" mode="out-in">
+                <router-view class="second-view" :value="value" @loadNextPage="updataListPage"></router-view>
+            </transition>
+        </div>
     </div>
 </template>
 
@@ -62,12 +64,17 @@
                 this.liOffsetX = left + X;
             },
             init() {
+                //初始化tabIndex
                 for (let i = 0; i < this.tabData.length; i++) {
                     if (this.$route.name == this.tabData[i].routerName) {
                         this.setSpanPosition(i)
                         this.tabIndex = i
                     }
                 }
+                //初始化srcoll区域高度
+                console.log($('.second-tabs-body')[0].offsetTop);
+                console.log($('.tabs-div')[0].offsetTop);
+                $('.second-tabs-body').height()
             }
         },
         computed: {
@@ -75,6 +82,10 @@
                 return {
                     transform: 'translateX(' + this.liOffsetX + 'px)'
                 }
+            },
+            heightSTyle() {
+
+                return {}
             }
         },
         created() {

@@ -239,6 +239,15 @@ module.exports = {
             method: 'Post',
             data: data
         })
+    },
+    //重置密码
+    resetPwd(data) {
+        return request({
+            url: '/login/forgot',
+            method: 'Post',
+            data: data
+        })
     }
+
 
 }

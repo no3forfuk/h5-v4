@@ -53,7 +53,7 @@
                 }
             },
             doCollectRank() {
-                if (sessionStorage.getItem('userInfo')) {
+                if (sessionStorage.getItem('X-Auth-Token')) {
                     rankCollect({
                         ranking_id: this.$route.query.secondId
                     }).then(res => {
@@ -79,10 +79,7 @@
                         throw err
                     })
                 } else {
-                    this.$router.push({
-                        name: 'login',
-                        query: this.$route.query
-                    })
+                    this.$store.commit('GOLOGIN', true)
                 }
             }
         },
@@ -121,7 +118,7 @@
             }
             .more-options {
                 position: absolute;
-                z-index: 100;
+                z-index: 9;
                 right: 10px;
                 bottom: 0px;
                 display: inline-flex;

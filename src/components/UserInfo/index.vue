@@ -87,8 +87,6 @@
             this.initData()
         },
         beforeRouteLeave(to, from, next) {
-            this.$store.commit('SETROUTERFROM', from.name)
-            this.$store.commit('SETROUTERTO', to.name)
             next()
         },
         methods: {

@@ -1,5 +1,5 @@
 <template>
-    <i style="font-family: iconfont" v-html="value" @click="$emit('click','')"></i>
+    <i v-html="value" @click="$emit('click','')"></i>
 </template>
 
 <script>
@@ -15,5 +15,7 @@
 </script>
 
 <style scoped lang="less">
-
+    i {
+        font-family: iconfont;
+    }
 </style>

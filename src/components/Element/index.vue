@@ -50,11 +50,11 @@
             })
         },
         beforeRouteLeave(to, from, next) {
-            this.$store.commit('SETROUTERFROM', from.name)
-            this.$store.commit('SETROUTERTO', to.name)
             next()
         },
-        computed: {},
+        computed: {
+
+        },
         methods: {
             loadPostNextPage() {
                 this.page++

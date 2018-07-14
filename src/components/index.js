@@ -14,3 +14,7 @@ Vue.component('rcm-headers', Header)
 Vue.component('icon', Icon)
 Vue.component('user-card', UserCard)
 Vue.component('rank-card', RankCard)
+
+import LOGIN from '../modules/LOGIN/index'
+
+Vue.component('rcm-login', LOGIN)

@@ -124,10 +124,7 @@
                         throw err
                     })
                 } else {
-                    this.$router.push({
-                        name: 'login',
-                        query: this.$route.query
-                    })
+                    this.$store.commit('GOLOGIN', true)
                 }
             },
             toggleSort() {
@@ -145,16 +142,13 @@
                         query: this.$route.query
                     })
                 } else {
-                    this.$router.push({
-                        name: 'login',
-                        query: this.$route.query
-                    })
+                    this.$store.commit('GOLOGIN', true)
                 }
 
             },
             vote() {
                 if (!sessionStorage.getItem('X-Auth-Token')) {
-                    this.$router.push({name: 'login', query: this.$route.query})
+                    this.$store.commit('GOLOGIN', true)
                 } else {
                     elementVote({
                         element_id: this.$route.query.elementId

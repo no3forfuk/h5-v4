@@ -111,10 +111,7 @@
                         params: this.value
                     })
                 } else {
-                    this.$router.push({
-                        name: 'login',
-                        query: this.$route.query
-                    })
+                    this.$store.commit('GOLOGIN', true)
                 }
             },
             toggleSort() {

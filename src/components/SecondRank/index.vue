@@ -1,5 +1,5 @@
 <template>
-    <div class="second-page">
+    <div class="second-page" :style="heightStyle">
         <second-head :value="secondInfo" class="second-head" ref="secondHead"></second-head>
         <tabs :value="listInfo" class="second-tabs-box" v-if="secondInfo.data" @nextListPage="loadNextList"></tabs>
     </div>
@@ -27,17 +27,9 @@
             }
         },
         mounted() {
-            this.$nextTick(() => {
-
-                $('.second-page').height($(window).height() - $('.second-page')[0].offsetTop)
-
-            })
-
         },
         updated() {
-            this.$nextTick(() => {
-                $('.second-page').height($(window).height() - $('.second-page')[0].offsetTop)
-            })
+
         },
         beforeCreate() {
 
@@ -48,7 +40,20 @@
         beforeRouteLeave(to, from, next) {
             next()
         },
-        computed: {},
+        computed: {
+
+            heightStyle() {
+                if (!this.$store.getters.TOPNAVSTATE) {
+                    return {
+                        height: $(window).height() - 33 + 'px'
+                    }
+                } else {
+                    return {
+                        height: $(window).height() - 59 + 'px'
+                    }
+                }
+            }
+        },
         methods: {
             loadNextList() {
                 this.listPage++
@@ -97,7 +102,8 @@
             findBody,
             secondHead,
             tabs
-        }
+        },
+        watch: {}
     }
 
 </script>
@@ -106,6 +112,8 @@
     .second-page {
         background-color: #fff;
         width: 100%;
+        position: relative;
+        transition: all 0.5s;
     }
 
 

@@ -7,6 +7,7 @@
         <transition :name="transitionName">
             <router-view class="router-view"></router-view>
         </transition>
+        <rcm-login v-if="isLogin"></rcm-login>
     </div>
 </template>
 
@@ -31,6 +32,7 @@
                 const loginParams = JSON.parse(localStorage.getItem('userLogin'))
                 SNIPPET_LOGIN(loginParams)
             }
+            //是否登陆
 
         },
         mounted() {
@@ -53,6 +55,9 @@
         },
         methods: {},
         computed: {
+            isLogin() {
+                return this.$store.getters.GOLOGIN
+            },
             transitionName() {
                 if (this.$store.state.openUserCenter) {
                     return 'openuser'
