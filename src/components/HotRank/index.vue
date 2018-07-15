@@ -6,9 +6,13 @@
                      :auto-fill="false"
                      ref="loadmore">
             <ul class="ranklist">
+                <p class="page-header">开荒神器RCM</p>
                 <rank-card v-for="(item,index) in list"
                            :value="item"
                            :key="index"></rank-card>
+                <div class="index-footer">
+                    <p>没找到感兴趣的？点开发现探索一下</p>
+                </div>
             </ul>
         </mt-loadmore>
     </div>
@@ -30,7 +34,6 @@
         },
         mounted() {
             this.$nextTick(() => {
-                $('.hot-rank').height($(window).height() - $('.hot-rank')[0].offsetTop)
                 $(document)[0].title = '首页';
             })
         },
@@ -100,7 +103,24 @@
     .hot-rank {
         width: 100%;
         overflow-x: hidden;
-        overflow-y: auto;
+        .page-header {
+            width: 100%;
+            padding: 0 10px;
+            padding-bottom: 5px;
+            font-size: 30px;
+            border-bottom: 1px solid #C8C7CD;
+        }
+        .index-footer {
+            width: 100%;
+            height: 80px;
+            margin-top: 10px;
+            p {
+                width: 100%;
+                color: #C8C7CD;
+                text-align: center;
+                font-size: 12px;
+            }
+        }
     }
 
     .ranklist {

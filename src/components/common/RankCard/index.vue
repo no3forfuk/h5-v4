@@ -120,7 +120,7 @@
                 text-align: center;
                 font-size: 16px;
                 font-weight: bold;
-                background-color: #E4E4E4;
+                background-color: #FFCECE;
                 padding: 3px;
                 border-radius: 1px;
                 display: block;

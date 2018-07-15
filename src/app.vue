@@ -4,9 +4,12 @@
                      ref="rcmHeaders"
                      :val="$route.meta"
         ></rcm-headers>
-        <transition :name="transitionName">
-            <router-view class="router-view"></router-view>
-        </transition>
+        <!--<div class="app-mask"></div>-->
+        <div class="app-body" :style="computerHeight">
+            <transition :name="transitionName">
+                <router-view class="router-view"></router-view>
+            </transition>
+        </div>
         <rcm-login v-if="isLogin"></rcm-login>
     </div>
 </template>
@@ -26,12 +29,12 @@
             }
         },
         created() {
-            this.$store.commit('SETDIRECTION', 'forward')
-            //是否登录过
-            if (localStorage.getItem('userLogin')) {
-                const loginParams = JSON.parse(localStorage.getItem('userLogin'))
-                SNIPPET_LOGIN(loginParams)
-            }
+            // this.$store.commit('SETDIRECTION', 'forward')
+            // //是否登录过
+            // if (localStorage.getItem('userLogin')) {
+            //     const loginParams = JSON.parse(localStorage.getItem('userLogin'))
+            //     SNIPPET_LOGIN(loginParams)
+            // }
             //是否登陆
 
         },
@@ -53,8 +56,23 @@
         beforeDestroy() {
 
         },
-        methods: {},
+        methods: {
+            pageScroll() {
+                console.log('a');
+            }
+        },
         computed: {
+            computerHeight() {
+                if (!this.$store.getters.TOPNAVSTATE) {
+                    return {
+                        height: $(window).height() - 42 + 'px'
+                    }
+                } else {
+                    return {
+                        height: $(window).height() - 68 + 'px'
+                    }
+                }
+            },
             isLogin() {
                 return this.$store.getters.GOLOGIN
             },
@@ -78,12 +96,19 @@
         overflow: hidden;
         position: relative;
         background-color: #fff;
-    }
-
-    .router-view {
-        width: 100%;
-        overflow: hidden;
-        background-color: #fff;
+        .app-body {
+            width: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            transition: all 0.3s;
+        }
+        .app-mask {
+            width: 100%;
+            height: 20px;
+            position: absolute;
+            left: 0;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+        }
     }
 
     /*前进进入*/

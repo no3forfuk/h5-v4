@@ -202,6 +202,7 @@
                     position: absolute;
                     right: 10px;
                     bottom: 0px;
+                    z-index: 2;
                     display: inline-flex;
                     flex-direction: row;
                     flex-wrap: nowrap;
@@ -213,7 +214,6 @@
                         justify-content: center;
                         align-items: center;
                     }
-
                     .more {
                         width: 30px;
                         display: flex;

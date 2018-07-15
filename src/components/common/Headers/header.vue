@@ -137,6 +137,7 @@
         flex-direction: column;
         flex-wrap: nowrap;
         background-color: #fff;
+        padding: 0 10px;
         justify-content: space-between;
         .header-top {
             width: 100%;

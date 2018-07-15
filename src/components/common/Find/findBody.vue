@@ -198,7 +198,7 @@
                     height: 1px;
                     background-color: #7D09FF;
                     position: absolute;
-                    bottom: 9px;
+                    bottom: 6px;
                     transition: all 0.5s;
                     z-index: 2;
                 }

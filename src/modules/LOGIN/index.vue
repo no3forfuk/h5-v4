@@ -1,24 +1,27 @@
 <template>
-    <transition name="login" :css="true">
-        <div class="login-module">
-            <div class="login-header">
-                <icon :value="'&#xe6b5;'"
-                      @click="close"
-                      style="color:#ABABAB;font-size:16px;font-weight: 700"></icon>
-            </div>
-            <div class="login-title">
-                <p v-text="loginTitle"></p>
-            </div>
-            <div class="login-module-body">
-                <transition name="active-body">
-                    <login v-if="step == 1"
-                           @goRegister="goRegister"
-                           @goResetPwd="goReset"
-                           @goSetInfo="goSetInfo"></login>
-                    <register v-if="step == 2" @goSetUserInfo="goSetInfo"></register>
-                    <set-info v-if="step == 3" :value="loginInfo"></set-info>
-                    <reset-pwd v-if="step == 4"></reset-pwd>
-                </transition>
+    <transition name="login">
+        <div class="login-mark">
+            <div class="login-mark-back" @click="close"></div>
+            <div class="login-module">
+                <div class="login-header">
+                    <icon :value="'&#xe6b5;'"
+                          @click="close"
+                          style="color:#ABABAB;font-size:16px;font-weight: 700"></icon>
+                </div>
+                <div class="login-title">
+                    <p v-text="loginTitle"></p>
+                </div>
+                <div class="login-module-body">
+                    <transition name="active-body">
+                        <login v-if="step == 1"
+                               @goRegister="goRegister"
+                               @goResetPwd="goReset"
+                               @goSetInfo="goSetInfo"></login>
+                        <register v-if="step == 2" @goSetUserInfo="goSetInfo"></register>
+                        <set-info v-if="step == 3" :value="loginInfo"></set-info>
+                        <reset-pwd v-if="step == 4"></reset-pwd>
+                    </transition>
+                </div>
             </div>
         </div>
     </transition>
@@ -39,6 +42,7 @@
         },
         mounted() {
             this.$nextTick(() => {
+                $('.login-mark').height($(window).height())
                 $('.login-module-body').height(($('.login-module').height() - $('.login-module-body')[0].offsetTop));
             })
         },
@@ -84,35 +88,49 @@
 </script>
 
 <style scoped lang="less">
-    .login-module {
-        display: flex;
-        flex-direction: column;
+    .login-mark {
         width: 100%;
         position: absolute;
+        top: 0;
         left: 0;
-        bottom: 0;
-        height: 90%;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        box-shadow: 0 -1px 1px 1px rgba(0, 0, 0, .2);
-        background-color: #fff;
-        z-index: 10;
-        .login-header {
-            padding: 14px;
+        .login-mark-back {
             width: 100%;
-            height: 46px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 9;
+        }
+        .login-module {
             display: flex;
-            flex-direction: row;
-            justify-content: left;
-        }
-        .login-title {
-            height: 40px;
-            padding: 0 20px;
-            font-weight: 400;
-            font-size: 30px;
-        }
-        .login-module-body {
+            flex-direction: column;
             width: 100%;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 90%;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            box-shadow: 0 -1px 1px 1px rgba(0, 0, 0, .2);
+            background-color: #fff;
+            z-index: 10;
+            .login-header {
+                padding: 14px;
+                width: 100%;
+                height: 46px;
+                display: flex;
+                flex-direction: row;
+                justify-content: left;
+            }
+            .login-title {
+                height: 40px;
+                padding: 0 20px;
+                font-weight: 400;
+                font-size: 30px;
+            }
+            .login-module-body {
+                width: 100%;
+            }
         }
     }
 

@@ -14,7 +14,18 @@ module.exports = [
         path: '*', redirect: '/index/hot'
     },
     {
-        path: '/', redirect: '/index/hot'
+        path: '/', redirect: '/hot'
+    },
+    {
+        path: '/index/hot',
+        name: 'hot',
+        component: subPath('HotRank/index'),
+        meta: {
+            index: true,
+            nav: true,
+            leftText: '',
+            rightText: ''
+        },
     },
     {
         path: '/addPost',
@@ -33,17 +44,6 @@ module.exports = [
         query: {firstId: 'id'},
         component: _path('Home'),
         children: [
-            {
-                path: '/index/hot',
-                name: 'hot',
-                component: subPath('HotRank/index'),
-                meta: {
-                    index: true,
-                    nav: true,
-                    leftText: '',
-                    rightText: ''
-                },
-            },
             {
                 path: '/index/firstRank',
                 name: 'firstRank',

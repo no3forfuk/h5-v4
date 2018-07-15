@@ -11,21 +11,13 @@
         </div>
         <transition name="select-photo">
             <div class="selectPhotoType" v-if="activeSelectPhoto">
-                <div @click="takePhpto">
-                    拍照
+                <div @click="takePhoto">
+                    从手机相册选择
                     <input type="file"
-                           ref="takePhoto"
+                           ref="takePhotos"
                            name="file"
-                           capture="camera"
+                           @change="viewPicture"
                            style="width: 0;height: 0;opacity: 0;position: absolute;top: 0;left: -9999px;">
-                </div>
-                <div @click="selectFromAlbum">从手机相册选择
-                    <input type="file"
-                           @change="viewPicture('album')"
-                           ref="album"
-                           style="width: 0;height: 0;opacity: 0;position: absolute;top: 0;left: -9999px;"
-                           name="file"
-                           accept="image/*">
                 </div>
                 <div>随机一个</div>
                 <div @click="cancelSelect">取消</div>
@@ -42,15 +34,16 @@
             return {
                 activeSelectPhoto: false,
                 avatar: '',
-                userName: ''
+                userName: '',
+                imgFile: ''
             }
         },
         methods: {
-            uploadPic27Niu(val) {
-                let file = this.$refs.album.files[0];
+            uploadPic27Niu() {
                 getQiniuToken().then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
+                            let file = this.imgFile
                             let token = res.data.data.qiniu_token;
                             let strFileName = 'user/' + file.name
                             let putExtra = {
@@ -83,14 +76,17 @@
                     throw err
                 })
             },
-            viewPicture(val) {
+            viewPicture() {
                 const flies = new FileReader();
                 flies.onload = data => {
                     this.$refs.viewBox.src = data.target.result
+                    this.activeSelectPhoto = false
                 }
-                if (val == 'album') {
-                    flies.readAsDataURL(this.$refs.album.files[0])
+                if (this.$refs.takePhotos.files[0]) {
+                    this.imgFile = this.$refs.takePhotos.files[0]
+                    flies.readAsDataURL(this.$refs.takePhotos.files[0])
                 }
+
             },
             submitRegister() {
                 let params = {
@@ -130,11 +126,8 @@
             cancelSelect() {
                 this.activeSelectPhoto = false
             },
-            takePhpto() {
-                this.$refs.takePhoto.click()
-            },
-            selectFromAlbum() {
-                this.$refs.album.click()
+            takePhoto() {
+                this.$refs.takePhotos.click()
             }
         },
         props: ['value']
@@ -191,7 +184,7 @@
         }
         .selectPhotoType {
             width: 100%;
-            height: 193px;
+            height: 150px;
             position: absolute;
             left: 0;
             bottom: 0;
@@ -210,36 +203,28 @@
                 width: 100%;
                 text-align: center;
                 font-size: 16px;
-                line-height: 50px;
                 border-bottom: 1px solid #DEDEDE;
-                height: 50px;
+                line-height: 50px;
+                height: 33.333333333333%;
             }
             div:nth-child(2) {
                 color: #FF2C09;
                 width: 100%;
                 text-align: center;
                 font-size: 16px;
-                line-height: 50px;
                 border-bottom: 1px solid #DEDEDE;
+                line-height: 50px;
                 position: relative;
-                height: 50px;
+                height: 33.333333333333%;
             }
             div:nth-child(3) {
                 color: #FF2C09;
-                line-height: 50px;
                 width: 100%;
                 text-align: center;
-                font-size: 16px;
-                border-bottom: 1px solid #DEDEDE;
-                height: 50px;
-            }
-            div:nth-child(4) {
-                color: #FF2C09;
+                vertical-align: middle;
                 line-height: 50px;
-                width: 100%;
-                text-align: center;
                 font-size: 16px;
-                height: 50px;
+                height: 33.333333333333%;
             }
         }
 

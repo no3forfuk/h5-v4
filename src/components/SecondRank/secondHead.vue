@@ -118,7 +118,6 @@
             }
             .more-options {
                 position: absolute;
-                z-index: 9;
                 right: 10px;
                 bottom: 0px;
                 display: inline-flex;
