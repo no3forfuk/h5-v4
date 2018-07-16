@@ -1,7 +1,7 @@
 <template>
     <div class="user-card">
         <div class="pic">
-            <img :src="value.avatar" alt="" >
+            <img :src="value.avatar" alt="">
             <span @click="editUserInfo">
                 <icon :value="'&#xe602;'">编辑</icon>
             </span>

@@ -1,16 +1,16 @@
 <template>
-    <div class="element-page">
-        <div class="element-body">
-            <element-header @openDetails="toggleDetails"
-                            @sortPost="sortPostByType"
-                            ref="elementHead"
-                            :value="elementData"
-                            v-if="elementData"></element-header>
-            <element-body :value="postListArr"
-                          @loadmorePost="loadPostNextPage"
-                          v-if="elementData.data"></element-body>
-            <element-footer></element-footer>
-        </div>
+    <div class="element-page" :style="elementPageHeight" @scroll="scrollElementPage">
+        <transition name="active-title">
+            <p class="active-element-page" v-if="showActiveTitle" :style="positionTop">@{{elementData.element_name}}</p>
+        </transition>
+        <element-header @openDetails="toggleDetails"
+                        @sortPost="sortPostByType"
+                        ref="elementHead"
+                        :value="elementData"
+                        v-if="elementData"></element-header>
+        <element-body :value="postListArr"
+                      @loadmorePost="loadPostNextPage"
+                      v-if="elementData.data"></element-body>
         <transition name="openDetails">
             <element-details v-show="detailsIsOpen" @openDetails="toggleDetails" :value="elementData"></element-details>
         </transition>
@@ -38,24 +38,73 @@
                 },
                 postListArr: [],
                 page: 1,
-                totalPage: 1
+                totalPage: 1,
+                showActiveTitle: false
             }
         },
         created() {
-            this.elementInfo()
         },
         mounted() {
             this.$nextTick(() => {
-                this.setScrollBoxHeight()
+
+            })
+        },
+        beforeRouteEnter(to, from, next) {
+            let params = {
+                id: to.query.elementId,
+                page: 1
+            }
+            getElementDetails(params).then(res => {
+                if (res.status == 200 && res.data.status_code == 1) {
+                    next(vm => {
+                        vm.elementData = res.data.data
+                        vm.postListArr = vm.postListArr.concat(res.data.data.data.data)
+                        vm.totalPage = res.data.data.data.last_page
+                        vm.page = res.data.data.data.current_page
+                    })
+                } else {
+                    return
+                }
+            }).catch(err => {
+                throw err
             })
         },
         beforeRouteLeave(to, from, next) {
             next()
         },
         computed: {
-
+            elementPageHeight() {
+                if (!this.$store.getters.TOPNAVSTATE) {
+                    return {
+                        height: $(window).height() - 33 + 'px'
+                    }
+                } else {
+                    return {
+                        height: $(window).height() - 59 + 'px'
+                    }
+                }
+            },
+            positionTop() {
+                if (!this.$store.getters.TOPNAVSTATE) {
+                    return {
+                        top: 33 + 'px'
+                    }
+                } else {
+                    return {
+                        top: 59 + 'px'
+                    }
+                }
+            }
         },
         methods: {
+            scrollElementPage() {
+                let height = $('.element-page')[0].scrollTop
+                if (height > 140) {
+                    this.showActiveTitle = true
+                } else {
+                    this.showActiveTitle = false
+                }
+            },
             loadPostNextPage() {
                 this.page++
                 if (this.page > this.totalPage) {
@@ -91,10 +140,6 @@
                 sharePage(vm, url, title, desc, type)
             },
             elementInfo() {
-                this.$indicator.open({
-                    text: '加载中...',
-                    spinnerType: 'fading-circle'
-                })
                 let params = {}
                 params.id = this.$route.query.elementId;
                 params.page = this.page;
@@ -109,7 +154,6 @@
                             this.$set(this.share, 'title', res.data.data.element_name);
                             this.$set(this.share, 'desc', res.data.data.element_desc || '暂时没有描述信息');
                             this.sharePage()
-                            this.$indicator.close()
                         }
                     } else {
 
@@ -119,11 +163,10 @@
                 })
             },
             setScrollBoxHeight() {
-                let Height = $(window).height() - $('.element-header').height()
-                $('.element-body').height(Height + 27)
+
             },
             toggleDetails(e) {
-                // this.detailsIsOpen = !this.detailsIsOpen
+                this.detailsIsOpen = !this.detailsIsOpen
             }
         },
         components: {
@@ -142,21 +185,40 @@
     .element-page {
         background-color: #fff;
         width: 100%;
+        overflow-x: hidden;
+        transition: all 0.5s;
+        overflow-y: auto;
+        .active-element-page {
+            padding: 0 20px;
+            font-weight: bold;
+            height: 28px;
+            line-height: 28px;
+            font-size: 20px;
+            transition: all 1s;
+            width: 100%;
+            position: fixed;
+            background-color: #fff;
+            border-bottom: 1px solid rgba(0, 0, 0, .2);
+            top: 0px;
+            z-index: 20;
+            left: 0;
+        }
+
     }
 
-    .element-body {
-        width: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
+    .active-title-enter-active {
+        animation: fadeIn 1s;
+    }
+
+    .active-title-leave-active {
+        animation: fadeOut 1s;
     }
 
     .openDetails-enter-active {
-        animation: scaleToCenter 0.4s;
-        position: absolute;
+        animation: slideInUp 0.6s;
     }
 
     .openDetails-leave-active {
-        animation: scaleFromCenter 0.4s;
-        position: absolute;
+        animation: slideOutDown 0.6s;
     }
 </style>

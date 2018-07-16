@@ -5,7 +5,7 @@
                 <user-card :value="user" v-if="user"></user-card>
             </div>
             <pre class="post-content" v-html="content"></pre>
-            <h3 class="discuss-title">评论(<span>{{postDetails.comment_num}}</span>)</h3>
+            <h3 class="discuss-title">评论(<span>{{postDiscussList.length}}</span>)</h3>
             <ul class="discuss-list">
                 <discuss-card v-for="(item,index) in postDiscussList" :key="index" :value="item"></discuss-card>
                 <p class="post-footer">{{footerText}}</p>
@@ -48,14 +48,14 @@
         },
         mounted() {
             this.$nextTick(() => {
-                $('.post').height($(window).height() - $('.post')[0].offsetTop);
-                $('.post-scroll-box').height($('.post').height() - 51)
+                $('.post').height($(window).height() - 33)
             })
         },
         created() {
             this.getPostDetails();
             this.getPostDiscuss();
         },
+        computed: {},
         methods: {
             sharePage() {
                 let vm = this;
@@ -86,13 +86,14 @@
                 addComment(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
-                            this.discussContext = ''
                             this.getPostDiscuss()
                             this.$toast({
                                 message: '评论成功',
                                 duration: 1000,
                                 position: 'middle'
                             })
+                            this.discussContext = ''
+                            this.activeDiscuss = false
                         } else {
                             this.$toast({
                                 message: res.data.message,
@@ -110,7 +111,6 @@
             setText(val) {
                 this.discussContext = val;
                 this.submitDisCuss()
-                this.activeDiscuss = false
             },
             cancle() {
                 this.activeDiscuss = false

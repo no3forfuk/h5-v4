@@ -1,11 +1,6 @@
 <template>
 
     <div class="myself">
-        <rcm-header>
-            <div slot="back" @click="goPrve">
-                <i style="font-family: iconfont">&#xe600;</i><span>我的</span>
-            </div>
-        </rcm-header>
         <banner></banner>
         <tabs></tabs>
     </div>
@@ -21,8 +16,6 @@
             return {}
         },
         beforeRouteLeave(to, from, next) {
-            this.$store.commit('SETROUTERFROM', 'myself')
-            this.$store.commit('SETROUTERTO', to.name)
             next()
         },
         methods: {

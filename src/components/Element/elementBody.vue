@@ -54,7 +54,6 @@
         },
         mounted() {
             this.$nextTick(() => {
-                $('.post-list-loadmore').height($(window).height() - $('.post-list')[0].offsetTop)
 
             })
         },
@@ -83,12 +82,11 @@
     .post-list-loadmore {
         width: 100%;
         overflow-x: hidden;
-        overflow-y: auto;
+        overflow-y: hidden;
     }
 
     .post-list {
         width: 100%;
-        overflow-y: auto;
         li {
             width: 100%;
             padding: 10px 0;

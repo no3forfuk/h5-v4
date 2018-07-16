@@ -29,12 +29,16 @@
             }
         },
         created() {
-            // this.$store.commit('SETDIRECTION', 'forward')
-            // //是否登录过
-            // if (localStorage.getItem('userLogin')) {
-            //     const loginParams = JSON.parse(localStorage.getItem('userLogin'))
-            //     SNIPPET_LOGIN(loginParams)
-            // }
+            this.$store.commit('SETDIRECTION', 'forward')
+            //是否登录过
+            if (localStorage.getItem('TICKET')) {
+                const loginParams = JSON.parse(localStorage.getItem('TICKET'))
+                let data = {
+                    mobile: loginParams.mobile,
+                    password: this.MD5(loginParams.password)
+                }
+                SNIPPET_LOGIN(data)
+            }
             //是否登陆
 
         },
@@ -58,14 +62,14 @@
         },
         methods: {
             pageScroll() {
-                console.log('a');
+
             }
         },
         computed: {
             computerHeight() {
                 if (!this.$store.getters.TOPNAVSTATE) {
                     return {
-                        height: $(window).height() - 42 + 'px'
+                        height: $(window).height() - 33 + 'px'
                     }
                 } else {
                     return {
@@ -114,14 +118,14 @@
     /*前进进入*/
     .forward-enter-active,
     .userCenter-home-enter-active {
-        animation: slideInRight 0.5s;
+        animation: slideInRight 0.6s;
         position: absolute;
     }
 
     /*前进离开*/
     .forward-leave-active,
     .userCenter-home-leave-active {
-        animation: slideOutLeft 0.5s;
+        animation: slideOutLeft 0.6s;
         position: absolute;
     }
 
@@ -129,7 +133,7 @@
     .back-enter-active,
     .openuser-enter-active,
     .home-userCenter-enter-active {
-        animation: slideInLeft 0.5s;
+        animation: slideInLeft 0.6s;
         position: absolute;
     }
 
@@ -137,12 +141,12 @@
     .back-leave-active,
     .openuser-leave-active,
     .home-userCenter-leave-active {
-        animation: slideOutRight 0.5s;
+        animation: slideOutRight 0.6s;
         position: absolute;
     }
 
     .home-element-enter-active {
-        animation: scaleToCenter 0.5s;
+        animation: scaleToCenter 0.6s;
         position: absolute;
     }
 </style>

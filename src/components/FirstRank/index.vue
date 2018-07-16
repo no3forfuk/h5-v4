@@ -8,9 +8,9 @@
                          :auto-fill="false"
                          ref="loadmore">
                 <ul class="ranklist">
-                    <transition name="placeholder">
-                        <index-placeholder v-if="!list.length"></index-placeholder>
-                    </transition>
+                    <!--<transition name="placeholder">-->
+                    <!--<index-placeholder v-if="!list.length"></index-placeholder>-->
+                    <!--</transition>-->
                     <transition-group :name="listTransition">
                         <rank-card v-for="(item,index) in list"
                                    :value="item"
@@ -156,18 +156,18 @@
     }
 
     .list-after-enter-active {
-        animation: slideInRight 0.5s;
+        animation: fadeIn 0.4s;
     }
 
     .list-after-leave-active {
-        animation: slideOutLeft 0.5s;
+        animation: fadeOut 0.5s;
     }
 
     .list-before-enter-active {
-        animation: slideInLeft 0.5s;
+        animation: fadeIn 0.4s;
     }
 
     .list-before-leave-active {
-        animation: slideOutRight 0.5s;
+        animation: fadeOut 0.5s;
     }
 </style>

@@ -86,7 +86,12 @@
                     let windowWidth = $(window).width();
                     let ulOffSetX = $('.info-ul').offset().left;
                     let lastLiOffSetX = $(this.$refs.more).offset().left;
-                    let firstLiOffSetX = $(this.$refs.lis[0]).offset().left;
+                    let firstLiOffSetX;
+                    if (this.$refs.lis && this.$refs.lis.length > 0) {
+                        firstLiOffSetX = $(this.$refs.lis[0]).offset().left;
+                    } else {
+                        return
+                    }
                     if (lastLiOffSetX + lastLiWidth > windowWidth) {
                         this.rightBoundary = true;
                     } else {

@@ -3,8 +3,8 @@
         <div class="user-info">
             <edit-pic :value="userpic" :img="userInfo.avatar" @savePic="uploadPic27Niu"></edit-pic>
             <!--<edit-username @click="editStart" :value="userInfo.name"></edit-username>-->
-            <edit-userfav @click="editFav" :value="userInfo.get_expert.ranking_name"></edit-userfav>
-            <edit-usersign @click="editSign" :value="userInfo.signature"></edit-usersign>
+            <edit-userfav @click="editFav" :value="userfav"></edit-userfav>
+            <edit-usersign @click="editSign" :value="usersign"></edit-usersign>
             <div class="belt"></div>
             <div class="confirm">退出登陆</div>
             <div class="belt"></div>
@@ -149,7 +149,6 @@
                 let params = {
                     id: this.userInfo.id,
                     avatar: this.userInfo.avatar,
-                    avatar_key: this.userInfo.avatar_key,
                     avatar_key: this.userInfo.avatar_key,
                     signature: this.userInfo.signature,
                     expert: this.userInfo.get_expert.id,

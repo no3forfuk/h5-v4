@@ -10,19 +10,19 @@
                     <span><icon :value="'&#xe638;'"></icon></span>
                     <span v-text="selection.value"></span>
                 </div>
-                <!--<transition name="sort-select" mode="out-in">-->
-                <ul class="sort-select" v-if="selection.selectActive">
-                    <span class="sanjiao"></span>
-                    <li @click.stop="toggleSelect(index)"
-                        :key="index"
-                        v-for="(item,index) in selection.selectItems">
-                        <span>{{item.text}}</span>
-                        <icon :value="'&#xe680;'"
-                              v-if="selection.value == item.text">
-                        </icon>
-                    </li>
-                </ul>
-                <!--</transition>-->
+                <transition name="sort-select">
+                    <ul class="sort-select" v-if="selection.selectActive">
+                        <span class="sanjiao"></span>
+                        <li @click.stop="toggleSelect(index)"
+                            :key="index"
+                            v-for="(item,index) in selection.selectItems">
+                            <span>{{item.text}}</span>
+                            <icon :value="'&#xe680;'"
+                                  v-if="selection.value == item.text">
+                            </icon>
+                        </li>
+                    </ul>
+                </transition>
             </div>
         </div>
         <div class="second-list-body">
@@ -52,7 +52,7 @@
     export default {
         data() {
             return {
-                allLoaded: true,
+                allLoaded: false,
                 pullHeight: 20,
                 selection: {
                     selectActive: false,
@@ -215,6 +215,7 @@
         .second-list-body {
             width: 100%;
             overflow-x: hidden;
+            overflow-y: hidden;
         }
         .index-footer {
             width: 100%;
@@ -230,10 +231,10 @@
     }
 
     .sort-select-enter-active {
-        animation: fadeIn 0.2s;
+        animation: fadeIn 0.5s;
     }
 
     .sort-select-leave-active {
-        animation: fadeOut 0.2s;
+        animation: fadeOut 0.5s;
     }
 </style>

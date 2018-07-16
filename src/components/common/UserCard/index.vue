@@ -40,13 +40,20 @@
         },
         mounted() {
             this.$nextTick(() => {
-                if (this.value.get_expert) {
-                    this.rankName = this.value.get_expert.ranking_name
-                }
+
             })
         },
         methods: {},
-        props: ['value']
+        props: ['value'],
+        watch: {
+            'value.get_expert.ranking_name'(val) {
+                if (val) {
+                    this.rankName = val
+                } else {
+                    this.rankName = '暂无'
+                }
+            }
+        }
     }
 
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        pinglun
+
     </div>
 </template>
 

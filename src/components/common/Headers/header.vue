@@ -5,7 +5,7 @@
                 <icon :value="'&#xe609;'"
                       class="font-size-28"
                       v-if="val.index"></icon>
-                <icon :value="'&#xe600;'" class="font-size-20" v-if="!val.index"></icon>
+                <icon :value="'&#xe600;'" class="font-size-24" v-if="!val.index"></icon>
                 <span class="font-size-16">{{val.leftText}}</span>
             </div>
             <div class="right">
@@ -33,18 +33,7 @@
         data() {
             return {
                 findIsOpen: false,
-                crtRank: '发现',
-                renderData: {},
-                defaultData: {
-                    index: false,
-                    nav: false,
-                    left: {
-                        text: ''
-                    },
-                    right: {
-                        text: ''
-                    }
-                }
+                crtRank: '发现'
             }
         },
         mounted() {
@@ -53,7 +42,6 @@
             })
         },
         created() {
-            this.renderData = inheritObject(this.val, this.defaultData)
         },
         computed: {
             openFind() {
@@ -93,7 +81,7 @@
                 } else {
                     this.$store.commit('SETDIRECTION', 'back')
                     this.$router.push({
-                        name: this.backTarget,
+                        name: this.val.backTarget,
                         query: this.$route.query
                     })
                 }

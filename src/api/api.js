@@ -247,7 +247,15 @@ module.exports = {
             method: 'Post',
             data: data
         })
-    }
+    },
+    //批量添加元素
+    addElementMore(data) {
+        return request({
+            url: '/ranking/secondBindElement',
+            method: 'Post',
+            data: data
+        })
+    },
 
 
 }

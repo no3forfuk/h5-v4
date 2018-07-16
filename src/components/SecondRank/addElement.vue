@@ -31,7 +31,7 @@
 </template>
 
 <script>
-    import {getRankList, addElement, searchElementByName} from '../../api/api'
+    import {getRankList, addElement, searchElementByName, addElementMore} from '../../api/api'
 
     export default {
         data() {
@@ -54,22 +54,18 @@
             })
 
         },
+        beforeDestroy() {
+            $(this.nextStepDom).unbind()
+        },
         created() {
             this.getRankInfo()
         },
         mounted() {
             this.$nextTick(() => {
+                $('.add-body').height($(window).height() - 36)
                 this.nextStepDom = this.$parent.$refs.rcmHeaders.$refs.comfirm;
                 $(this.nextStepDom).on('click', () => {
-                    if (this.elemenName != '') {
-                        this.activeTextarea()
-                    } else {
-                        this.$toast({
-                            message: '请填写元素名称',
-                            position: 'middle',
-                            duration: 1000
-                        })
-                    }
+                    this.activeTextarea()
                 })
                 $(this.$refs.inputElement).on('keyup', () => {
                     let params = {}
@@ -100,7 +96,11 @@
                 this.selectList = [...new Set(this.selectList)];
             },
             activeTextarea() {
-                this.hasTitle = true;
+                if (this.selectList.length) {
+                    this.hasTitle = false;
+                } else {
+                    this.hasTitle = true;
+                }
                 this.nextStepDom.children[0].innerText = '完成';
                 $(this.nextStepDom).unbind()
                 $(this.nextStepDom).on('click', () => {
@@ -114,21 +114,53 @@
                             return
                         }
                     }
-                    let params = {};
-                    params.element_name = this.elemenName
-                    params.element_desc = this.elementDesc
-                    params.ranking_id = this.$route.query.secondId
-                    addElement(params).then(res => {
-                        if (res.status == 200) {
-                            if (res.data.status_code == 1) {
+                    //addElementMore
+                    if (this.selectList.length == 0) {
+                        let params = {};
+                        params.element_name = this.elemenName
+                        params.element_desc = this.elementDesc
+                        params.ranking_id = this.$route.query.secondId
+                        addElement(params).then(res => {
+                            if (res.status == 200) {
+                                if (res.data.status_code == 1) {
+                                    this.$toast({
+                                        message: '发布成功',
+                                        duration: 1000,
+                                        position: 'middle'
+                                    })
+                                    this.$router.replace({
+                                        name: 'secondRankList',
+                                        query: this.$route.query
+                                    })
+                                } else {
+                                    this.$toast({
+                                        message: res.data.message,
+                                        duration: 1000,
+                                        position: 'middle'
+                                    })
+                                }
+                            } else {
+                                return
+                            }
+                        }).catch(err => {
+                            throw err
+                        })
+                    } else {
+                        let arr = [], str = '';
+                        for (let i = 0; i < this.selectList.length; i++) {
+                            arr.push(this.selectList[i].id)
+                        }
+                        str = arr.join(',')
+                        let params = {
+                            ranking_id: this.$route.query.secondId,
+                            list: str
+                        }
+                        addElementMore(params).then(res => {
+                            if (res.status == 200 && res.data.status_code == 1) {
                                 this.$toast({
-                                    message: '发布成功',
+                                    message: '添加成功',
                                     duration: 1000,
                                     position: 'middle'
-                                })
-                                this.$router.replace({
-                                    name: 'secondRankList',
-                                    query: this.$route.query
                                 })
                             } else {
                                 this.$toast({
@@ -137,20 +169,11 @@
                                     position: 'middle'
                                 })
                             }
-                        } else {
-                            this.$toast({
-                                message: '系统异常',
-                                duration: 1000,
-                                position: 'middle'
-                            })
-                        }
-                    }).catch(err => {
-                        this.$toast({
-                            message: '系统异常',
-                            duration: 1000,
-                            position: 'middle'
+                        }).catch(err => {
+                            throw err
                         })
-                    })
+                    }
+
                 })
             },
             getRankInfo() {
@@ -173,6 +196,7 @@
         width: 100%;
         .add-body {
             width: 100%;
+            overflow-y: auto;
             h3 {
                 padding: 10px 20px;
                 font-size: 16px;

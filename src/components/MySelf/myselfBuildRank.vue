@@ -1,6 +1,6 @@
 <template>
     <div>
-        <rank-card></rank-card>
+
     </div>
 </template>
 

@@ -17,6 +17,9 @@
                     </div>
                     <span class="right">{{item.updated_at|timeformat}}</span>
                 </li>
+                <div class="index-footer">
+                    <p>自我认知的过程就像在做一个排行榜</p>
+                </div>
             </ul>
         </mt-loadmore>
     </div>
@@ -36,7 +39,6 @@
         },
         mounted() {
             this.$nextTick(() => {
-                $('.rank-discuss-list').height($(window).height() - $('.rank-discuss-list')[0].offsetTop)
             })
         },
         created() {
@@ -93,7 +95,7 @@
     .rank-discuss-list {
         width: 100%;
         overflow-x: hidden;
-        overflow-y: auto;
+        overflow-y: hidden;
     }
 
     ul {
@@ -158,6 +160,17 @@
                 padding-right: 10px;
                 color: #8B8B8B;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+            }
+        }
+        .index-footer {
+            width: 100%;
+            height: 80px;
+            margin-top: 10px;
+            p {
+                width: 100%;
+                color: #C8C7CD;
+                text-align: center;
+                font-size: 12px;
             }
         }
     }

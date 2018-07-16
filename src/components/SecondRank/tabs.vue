@@ -11,7 +11,7 @@
             <span class="__" :style="spanPosition"></span>
         </ul>
         <div class="second-tabs-body">
-            <transition name="transitionName">
+            <transition name="active-tab" mode="out-in">
                 <router-view class="second-view" :value="value" @loadNextPage="updataListPage"></router-view>
             </transition>
         </div>
@@ -132,13 +132,11 @@
         }
     }
 
-    .transitionName-enter-active {
-        animation: fadeIn 0.3s;
-        position: absolute;
+    .active-tab-enter-active {
+        animation: fadeIn 1s;
     }
 
-    .transitionName-leave-active {
-        animation: fadeOut 0.3s;
-        position: absolute;
+    .tactive-tab-leave-active {
+        animation: fadeOut 1s;
     }
 </style>

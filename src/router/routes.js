@@ -84,7 +84,8 @@ module.exports = [
             index: false,
             nav: false,
             leftText: '首页',
-            rightText: ''
+            rightText: '',
+            backTarget: 'hot'
         }
     },
     {
@@ -123,7 +124,8 @@ module.exports = [
                     index: false,
                     nav: true,
                     leftText: '首页',
-                    rightText: ''
+                    rightText: '',
+                    backTarget: 'hot'
                 },
             },
             {
@@ -134,7 +136,8 @@ module.exports = [
                     index: false,
                     nav: true,
                     leftText: '首页',
-                    rightText: ''
+                    rightText: '',
+                    backTarget: 'hot'
                 },
             },
             {
@@ -145,7 +148,8 @@ module.exports = [
                     index: false,
                     nav: true,
                     leftText: '首页',
-                    rightText: ''
+                    rightText: '',
+                    backTarget: 'hot'
                 },
             },
 
@@ -160,7 +164,8 @@ module.exports = [
             index: false,
             nav: true,
             leftText: '榜单',
-            rightText: ''
+            rightText: '',
+            backTarget: 'secondRankList'
         },
         children: []
     },
@@ -172,7 +177,8 @@ module.exports = [
             index: false,
             nav: false,
             leftText: '榜单',
-            rightText: '下一步'
+            rightText: '下一步',
+            backTarget: 'secondRankList'
         }
     },
     {
@@ -183,7 +189,8 @@ module.exports = [
             index: false,
             nav: false,
             leftText: '榜单',
-            rightText: ''
+            rightText: '',
+            backTarget: 'element'
         },
     },
     {
@@ -194,27 +201,62 @@ module.exports = [
             {
                 path: '/myself/all',
                 name: 'myselfAll',
-                component: subPath('MySelf/myselfAll')
+                component: subPath('MySelf/myselfAll'),
+                meta: {
+                    index: false,
+                    nav: false,
+                    leftText: '我的',
+                    rightText: '',
+                    backTarget: 'userCenter'
+                },
             },
             {
                 path: '/myself/BuildRank',
                 name: 'myselfBuildRank',
-                component: subPath('MySelf/myselfBuildRank')
+                component: subPath('MySelf/myselfBuildRank'),
+                meta: {
+                    index: false,
+                    nav: false,
+                    leftText: '我的',
+                    rightText: '',
+                    backTarget: 'userCenter'
+                },
             },
             {
                 path: '/myself/Comment',
                 name: 'myselfComment',
-                component: subPath('MySelf/myselfComment')
+                component: subPath('MySelf/myselfComment'),
+                meta: {
+                    index: false,
+                    nav: false,
+                    leftText: '我的',
+                    rightText: '',
+                    backTarget: 'userCenter'
+                },
             },
             {
                 path: '/myself/Examine',
                 name: 'myselfExamine',
-                component: subPath('MySelf/myselfExamine')
+                component: subPath('MySelf/myselfExamine'),
+                meta: {
+                    index: false,
+                    nav: false,
+                    leftText: '我的',
+                    rightText: '',
+                    backTarget: 'userCenter'
+                },
             },
             {
                 path: '/myself/fPost',
                 name: 'myselfPost',
-                component: subPath('MySelf/myselfPost')
+                component: subPath('MySelf/myselfPost'),
+                meta: {
+                    index: false,
+                    nav: false,
+                    leftText: '我的',
+                    rightText: '',
+                    backTarget: 'userCenter'
+                },
             }
         ]
     },

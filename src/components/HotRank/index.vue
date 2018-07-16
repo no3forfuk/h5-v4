@@ -68,10 +68,6 @@
                 let time = Date.now() - oneDay
                 this.time = timeFormat('-', time)
                 params.time = this.time
-                this.$indicator.open({
-                    text: '加载中',
-                    spinnerType: 'fading-circle'
-                })
                 getIndex(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
@@ -80,7 +76,6 @@
                             } else {
                                 this.dayNum++
                             }
-                            this.$indicator.close()
                         } else {
 
                         }
@@ -95,6 +90,16 @@
         watch: {
             'dayNum'() {
                 this.getPushRank()
+            },
+            'list.length'(val) {
+                if (val == 0) {
+                    this.$indicator.open({
+                        text: '加载中',
+                        spinnerType: 'fading-circle'
+                    })
+                } else {
+                    this.$indicator.close()
+                }
             }
         }
     }

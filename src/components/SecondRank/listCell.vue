@@ -1,11 +1,15 @@
 <template>
     <li class="cell">
         <router-link
-                :to="{name:'element',query:{
-                    elementId:value.id,
-                    secondId:$route.query.secondId,
-                    firstId:$route.query.firstId,
-                    idx:$route.query.idx,},params:{elementDetails:value}}">
+                :to="{
+                    name:'element',
+                    query:{
+                        elementId:value.id,
+                        secondId:$route.query.secondId,
+                        firstId:$route.query.firstId,
+                        idx:$route.query.idx,
+                        },
+                    params:{elementDetails:value}}">
             <div class="left">
                 <span>{{index+1}}</span>
             </div>
@@ -73,6 +77,7 @@
                 justify-content: space-between;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.2);
                 .element-text {
+                    overflow: hidden;
                     padding-right: 10px;
                     color: #000;
                     h2 {
@@ -88,10 +93,9 @@
                     }
                 }
                 .img {
-                    flex: 0 0 74px;
+                    flex: 0 0 20%;
                     padding-right: 10px;
                     height: 64px;
-                    background-color: #000;
                     img {
                         display: block;
                         width: 64px;
@@ -101,6 +105,9 @@
                 }
 
             }
+        }
+        a:active {
+            background-color: #efefef;
         }
     }
 </style>

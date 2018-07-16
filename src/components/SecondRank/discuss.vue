@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="second-discuss-page">
         <div class="list-head">
             <div class="add-element" @click="activeDiscuss">
                 <icon :value="'&#xe685;'" class="icon"></icon>
@@ -10,7 +10,7 @@
                     <span><icon :value="'&#xe638;'"></icon></span>
                     <span v-text="selection.value"></span>
                 </div>
-                <transition name="sort-select" mode="in-out">
+                <transition name="sort-select-type">
                     <ul class="sort-select" v-if="selection.selectActive">
                         <span class="sanjiao"></span>
                         <li @click="toggleSelect(index)"
@@ -26,7 +26,7 @@
             </div>
         </div>
         <discuess-list ref="discuessList" :value="discussList"></discuess-list>
-        <transition name="discuss">
+        <transition name="discuss-sort">
             <div class="add-discuss" v-show="discussIsOpen">
                 <rcm-header>
                     <span slot="back" @click.stop="cancelDiscuss" class="color-cancel">取消</span>
@@ -97,10 +97,6 @@
                 })
             },
             getRankDiscuss() {
-                this.$indicator.open({
-                    text: '加载中',
-                    spinnerType: 'fading-circle'
-                })
                 let params = {};
                 params.level = 2;
                 params.page = this.page;
@@ -111,7 +107,6 @@
                             this.totalPage = res.data.data.last_page
                             this.crtPage = res.data.data.current_page
                             this.discussList = this.discussList.concat(res.data.data.data)
-                            this.$indicator.close()
                         } else {
 
                         }
@@ -201,7 +196,13 @@
 </script>
 
 <style scoped lang="less">
+    .second-discuss-page {
+        width: 100%;
+        overflow: hidden;
+    }
+
     .list-head {
+        width: 100%;
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
@@ -286,6 +287,7 @@
         background-color: #fff;
         z-index: 100;
         .discuss-body {
+            width: 100%;
             padding: 10px;
             .discuss-user {
                 display: flex;
@@ -344,21 +346,17 @@
 
     .sort-select-enter-active {
         animation: fadeIn 0.5s;
-        position: absolute;
     }
 
     .sort-select-leave-active {
         animation: fadeOut 0.5s;
-        position: absolute;
     }
 
-    .discuss-enter-active {
+    .discuss-sort-enter-active {
         animation: slideInUp 0.4s;
-        position: absolute;
     }
 
-    .discuss-leave-active {
+    .discuss-sort-leave-active {
         animation: slideOutDown 0.4s;
-        position: absolute;
     }
 </style>

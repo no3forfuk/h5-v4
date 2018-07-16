@@ -3,7 +3,7 @@
                 <span class="font-size-16">
                     <input type="text"
                            disabled
-                           v-model="value">
+                           v-model="value" placeholder="修改擅长领域">
                 </span>
         <icon :value="'&#xe601;'" class="font-size-20"></icon>
     </div>

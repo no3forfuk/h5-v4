@@ -20,7 +20,7 @@
             <span>RCM评级</span>
             <span>{{value.rating}}</span>
             <span>8909(票)</span>
-            <span>33(排名)</span>
+            <span v-if="value.data">{{value.data.total}}(排名)</span>
         </div>
     </div>
 </template>
@@ -35,7 +35,6 @@
             }
         },
         created() {
-
         },
         mounted() {
             this.$nextTick(() => {
@@ -99,42 +98,41 @@
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-        padding: 15px 20px;
+        padding: 10px 20px;
         justify-content: space-between;
         .left {
-            flex: 1;
             padding-right: 10px;
             position: relative;
             h2 {
                 font-weight: bold;
+                line-height: 24px;
+                font-size: 20px;
+                transition: all 1s;
             }
             .desc {
                 p {
                     height: 20px;
+                    padding: 3px 0px;
+                    box-sizing: content-box;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                 }
             }
             .more-options {
-                position: absolute;
-                right: 10px;
-                bottom: 0px;
-                display: inline-flex;
-                flex-direction: row;
-                flex-wrap: nowrap;
+                width: 100%;
+                text-align: right;
                 .collect {
                     width: 30px;
-                    display: flex;
+                    display: inline-flex;
                     flex-direction: column;
                     font-size: 12px;
                     justify-content: center;
                     align-items: center;
                 }
-
                 .more {
                     width: 30px;
-                    display: flex;
+                    display: inline-flex;
                     flex-direction: column;
                     font-size: 12px;
                     justify-content: center;

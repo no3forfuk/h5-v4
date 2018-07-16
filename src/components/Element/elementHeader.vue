@@ -2,7 +2,7 @@
     <div class="ele-header">
         <div class="top">
             <div class="ele-info">
-                <p @click="$emit('openDetails','')">@{{value.element_name}}</p>
+                <p @click="$emit('openDetails','')" :style="showBGC">@{{value.element_name}}</p>
                 <p @click="$emit('openDetails','')">{{value.element_desc}}</p>
                 <p @click="vote">投一票</p>
                 <div class="more-options">
@@ -16,7 +16,7 @@
                     </div>
                 </div>
             </div>
-            <!--<img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">-->
+            <img :src="value.img" alt="" v-if="value.img">
         </div>
         <div class="center">
             <div class="vote">
@@ -86,9 +86,11 @@
                         }
                     ]
                 },
-                isCollect: false
+                isCollect: false,
+                showBGC: ''
             }
         },
+        computed: {},
         methods: {
             initCollectState(val) {
                 if (val) {
@@ -98,7 +100,7 @@
                 }
             },
             doCollectElement() {
-                if (sessionStorage.getItem('userInfo')) {
+                if (sessionStorage.getItem('X-Auth-Token')) {
                     elementCollect({
                         element_id: this.$route.query.elementId
                     }).then(res => {
@@ -176,7 +178,20 @@
                 }
             }
         },
-        props: ['value']
+        props: ['value'],
+        watch: {
+            'value.element_name'(n, o) {
+                if (n) {
+                    this.showBGC = {
+                        backgroundColor: '#fff'
+                    }
+                } else {
+                    this.showBGC = {
+                        backgroundColor: '#ccc'
+                    }
+                }
+            }
+        }
     }
 
 </script>
@@ -189,14 +204,15 @@
     .ele-header {
         width: 100%;
         .top {
+            width: 100%;
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
-            justify-content: space-between;
+            align-items: center;
             padding: 10px 20px;
             .ele-info {
-                flex: 1;
                 padding-right: 15px;
+                overflow: hidden;
                 position: relative;
                 .more-options {
                     position: absolute;
@@ -228,6 +244,7 @@
                     font-weight: bold;
                     line-height: 24px;
                     font-size: 20px;
+                    transition: all 1s;
                 }
                 p:nth-child(2) {
                     color: #939398;
@@ -237,6 +254,7 @@
                 }
                 p:nth-child(3) {
                     color: #FF2C09;
+                    margin-top: 20px;
                     width: 80px;
                     text-align: center;
                     border-radius: 6px;
@@ -248,7 +266,7 @@
                 width: 102px;
                 height: 102px;
                 border-radius: 4px;
-                flex: 0 0 102px;
+                flex: 0 0 27%;
             }
         }
         .center {
