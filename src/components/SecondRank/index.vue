@@ -111,6 +111,8 @@
 <style scoped lang="less">
     .second-page {
         background-color: #fff;
+        overflow-x: hidden;
+        overflow-y: auto;
         width: 100%;
         position: relative;
         transition: all 0.5s;

@@ -11,15 +11,27 @@ function subPath(component) {
 
 module.exports = [
     {
-        path: '*', redirect: '/index/hot'
+        path: '*', redirect: '/hot'
     },
     {
         path: '/', redirect: '/hot'
     },
     {
-        path: '/index/hot',
+        path: '/hot',
         name: 'hot',
         component: subPath('HotRank/index'),
+        meta: {
+            index: true,
+            nav: true,
+            leftText: '',
+            rightText: ''
+        },
+    },
+    {
+        path: '/firstRank',
+        name: 'firstRank',
+        query: {firstId: 'id'},
+        component: subPath('FirstRank/index'),
         meta: {
             index: true,
             nav: true,
@@ -37,26 +49,6 @@ module.exports = [
             leftText: '榜单',
             rightText: '完成'
         }
-    },
-    {
-        path: '/index',
-        name: 'home',
-        query: {firstId: 'id'},
-        component: _path('Home'),
-        children: [
-            {
-                path: '/index/firstRank',
-                name: 'firstRank',
-                query: {firstId: 'id'},
-                component: subPath('FirstRank/index'),
-                meta: {
-                    index: true,
-                    nav: true,
-                    leftText: '',
-                    rightText: ''
-                },
-            }
-        ]
     },
     {
         path: '/login',

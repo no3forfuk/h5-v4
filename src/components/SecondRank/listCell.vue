@@ -14,9 +14,10 @@
                     <h2>@{{value.element_name}}</h2>
                     <p>{{value.element_desc}}</p>
                 </div>
-                <img :src="value.img"
-                     v-if="value.img"
-                     alt="">
+                <div class="img" v-if="value.img">
+                    <img :src="value.img"
+                         alt="">
+                </div>
             </div>
         </router-link>
     </li>
@@ -45,7 +46,6 @@
         padding-bottom: 10px;
         a {
             display: flex;
-            width: 100%;
             flex-direction: row;
             justify-content: space-between;
             .left {
@@ -65,13 +65,12 @@
                 }
             }
             .right {
-                flex: 1;
-                padding-right: 10px;
+                width: calc(100% - 40px);
+                padding-bottom: 10px;
                 display: flex;
                 flex-direction: row;
-                justify-content: space-between;
                 align-items: center;
-                padding-bottom: 10px;
+                justify-content: space-between;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.2);
                 .element-text {
                     padding-right: 10px;
@@ -88,12 +87,19 @@
                         padding-top: 5px;
                     }
                 }
-                img:nth-child(2) {
-                    width: 64px;
+                .img {
+                    flex: 0 0 74px;
+                    padding-right: 10px;
                     height: 64px;
-                    border-radius: 2px;
-                    flex: 0 0 64px;
+                    background-color: #000;
+                    img {
+                        display: block;
+                        width: 64px;
+                        height: 64px;
+                        border-radius: 2px;
+                    }
                 }
+
             }
         }
     }

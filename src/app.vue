@@ -99,7 +99,7 @@
         .app-body {
             width: 100%;
             overflow-x: hidden;
-            overflow-y: auto;
+            overflow-y: hidden;
             transition: all 0.3s;
         }
         .app-mask {

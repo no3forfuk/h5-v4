@@ -1,20 +1,22 @@
 <template>
     <div class="hot-rank">
-        <mt-loadmore :bottom-method="loadBeforeDay"
-                     :bottom-all-loaded="allLoaded"
-                     :bottomDistance="pullHeight"
-                     :auto-fill="false"
-                     ref="loadmore">
-            <ul class="ranklist">
-                <p class="page-header">开荒神器RCM</p>
-                <rank-card v-for="(item,index) in list"
-                           :value="item"
-                           :key="index"></rank-card>
-                <div class="index-footer">
-                    <p>没找到感兴趣的？点开发现探索一下</p>
-                </div>
-            </ul>
-        </mt-loadmore>
+        <p class="page-header">RCM热门榜单</p>
+        <div class="hot-page-body">
+            <mt-loadmore :bottom-method="loadBeforeDay"
+                         :bottom-all-loaded="allLoaded"
+                         :bottomDistance="pullHeight"
+                         :auto-fill="false"
+                         ref="loadmore">
+                <ul class="ranklist">
+                    <rank-card v-for="(item,index) in list"
+                               :value="item"
+                               :key="index"></rank-card>
+                    <div class="index-footer">
+                        <p>没找到感兴趣的？点开发现探索一下</p>
+                    </div>
+                </ul>
+            </mt-loadmore>
+        </div>
     </div>
 </template>
 
@@ -102,13 +104,21 @@
 <style scoped lang="less">
     .hot-rank {
         width: 100%;
+        height: 100%;
         overflow-x: hidden;
+        overflow-y: hidden;
         .page-header {
             width: 100%;
             padding: 0 10px;
             padding-bottom: 5px;
             font-size: 30px;
             border-bottom: 1px solid #C8C7CD;
+        }
+        .hot-page-body {
+            width: 100%;
+            height: calc(100% - 46px);
+            overflow-x: hidden;
+            overflow-y: auto;
         }
         .index-footer {
             width: 100%;
@@ -127,5 +137,7 @@
         height: 100%;
         width: 100%;
         padding: 5px 0px;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 </style>

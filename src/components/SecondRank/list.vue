@@ -36,6 +36,9 @@
                           :value="item"
                           :index="index"
                           :key="index"></cell>
+                    <div class="index-footer">
+                        <p>每个榜单都会发现不同的玩法</p>
+                    </div>
                 </ul>
             </mt-loadmore>
         </div>
@@ -49,7 +52,7 @@
     export default {
         data() {
             return {
-                allLoaded: false,
+                allLoaded: true,
                 pullHeight: 20,
                 selection: {
                     selectActive: false,
@@ -67,8 +70,7 @@
         },
         mounted() {
             this.$nextTick(() => {
-                let height = $(window).height() - $('.list-head')[0].offsetTop - $('.list-head').height()
-                $('.second-list-body').height(height - 25)
+
             })
         },
         updated() {
@@ -132,94 +134,99 @@
 </script>
 
 <style scoped lang="less">
-    .list-head {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        .add-element {
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            display: inline-flex;
-            justify-content: left;
-            align-items: baseline;
+    .second-list-root {
+        width: 100%;
+        overflow: hidden;
+        .list-head {
+            width: 100%;
+            display: flex;
             flex-direction: row;
-            border-radius: 4px;
-            padding: 4px 15px 5px 5px;
-            .icon {
-                color: #FF2C09;
-                margin: 0 5px;
-            }
-            span:nth-child(2) {
-                font-size: 14px;
-                color: #939398;
-            }
-        }
-        .sort-element {
-            background-color: #fff;
-            position: relative;
-            .sort-ctrl {
-                display: flex;
-                flex-direction: column;
-                position: relative;
-                span:nth-child(1) {
-                    font-size: 20px;
-                    line-height: 20px;
-                    text-align: center;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            .add-element {
+                border: 1px solid rgba(0, 0, 0, 0.2);
+                display: inline-flex;
+                justify-content: left;
+                align-items: baseline;
+                flex-direction: row;
+                border-radius: 4px;
+                padding: 4px 15px 5px 5px;
+                .icon {
+                    color: #FF2C09;
+                    margin: 0 5px;
                 }
                 span:nth-child(2) {
-                    font-size: 12px;
+                    font-size: 14px;
+                    color: #939398;
                 }
             }
-            .sort-select {
+            .sort-element {
                 background-color: #fff;
-                width: 66px;
-                height: 40px;
-                border: 1px solid rgba(0, 0, 0, 0.1);
-                position: absolute;
-                z-index: 100;
-                right: 0px;
-                top: 40px;
-                .sanjiao {
-                    display: block;
-                    width: 10px;
-                    height: 10px;
-                    border-top: 1px solid rgba(0, 0, 0, 0.1);
-                    border-right: 1px solid rgba(0, 0, 0, 0.1);
-                    background-color: #fff;
-                    position: absolute;
-                    top: -5px;
-                    right: 10px;
-                    transform: rotate(-45deg);
-                }
-                li {
+                position: relative;
+                .sort-ctrl {
                     display: flex;
-                    flex-direction: row;
-                    flex-wrap: nowrap;
-                    justify-content: space-between;
-                    align-items: baseline;
-                    span {
-                        font-size: 14px;
+                    flex-direction: column;
+                    position: relative;
+                    span:nth-child(1) {
+                        font-size: 20px;
+                        line-height: 20px;
+                        text-align: center;
+                    }
+                    span:nth-child(2) {
+                        font-size: 12px;
+                    }
+                }
+                .sort-select {
+                    background-color: #fff;
+                    width: 66px;
+                    height: 40px;
+                    border: 1px solid rgba(0, 0, 0, 0.1);
+                    position: absolute;
+                    z-index: 100;
+                    right: 0px;
+                    top: 40px;
+                    .sanjiao {
+                        display: block;
+                        width: 10px;
+                        height: 10px;
+                        border-top: 1px solid rgba(0, 0, 0, 0.1);
+                        border-right: 1px solid rgba(0, 0, 0, 0.1);
+                        background-color: #fff;
+                        position: absolute;
+                        top: -5px;
+                        right: 10px;
+                        transform: rotate(-45deg);
+                    }
+                    li {
+                        display: flex;
+                        flex-direction: row;
+                        flex-wrap: nowrap;
+                        justify-content: space-between;
+                        align-items: baseline;
+                        span {
+                            font-size: 14px;
+                        }
                     }
                 }
             }
         }
-    }
-
-    .second-list-body {
-        overflow-y: auto;
-    }
-
-    .list-body {
-        width: 100%;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .second-list-root {
-        width: 100%;
-        height: 100%;
+        .second-list-body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+        .index-footer {
+            width: 100%;
+            height: 80px;
+            margin-top: 10px;
+            p {
+                width: 100%;
+                color: #C8C7CD;
+                text-align: center;
+                font-size: 12px;
+            }
+        }
     }
 
     .sort-select-enter-active {
