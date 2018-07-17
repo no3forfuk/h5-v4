@@ -8,7 +8,9 @@ const state = {
     rankIndex: 0,
     isLogin: false,
     goLogin: false,
-    topNavShow: false
+    topNavShow: false,
+    loginType: '',
+    backUrl: ''
 }
 const mutations = {
     TOGGLENAVSHOW(state, val) {
@@ -16,6 +18,14 @@ const mutations = {
     },
     LOGIN(state, login) {
         state.isLogin = login
+    },
+    //设置登陆类型
+    SETLOGINTYPE(state, type) {
+        state.loginType = type
+    },
+    //设置返回地址
+    SETBACKURL(state, url) {
+        state.backUrl = url
     },
     GOLOGIN(state, val) {
         state.goLogin = val
@@ -39,6 +49,14 @@ const getters = {
     },
     TOPNAVSTATE: state => {
         return state.topNavShow
+    },
+    //获取登陆类型
+    GETLOGINTYPE: state => {
+        return state.loginType
+    },
+    //获取返回地址
+    GETBACKURL: state => {
+        return state.backUrl
     }
 }
 module.exports = {

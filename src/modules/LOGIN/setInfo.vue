@@ -19,7 +19,7 @@
                            @change="viewPicture"
                            style="width: 0;height: 0;opacity: 0;position: absolute;top: 0;left: -9999px;">
                 </div>
-                <div>随机一个</div>
+                <div @click="randomPic">随机一个</div>
                 <div @click="cancelSelect">取消</div>
             </div>
         </transition>
@@ -39,6 +39,9 @@
             }
         },
         methods: {
+            randomPic() {
+                this.avatar = ''
+            },
             uploadPic27Niu() {
                 getQiniuToken().then(res => {
                     if (res.status == 200) {

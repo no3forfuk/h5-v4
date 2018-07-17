@@ -16,6 +16,7 @@
 
 <script>
     import {SNIPPET_LOGIN} from './Snippet'
+    import {getLoginCode} from './api/api'
 
     export default {
         data() {
@@ -25,10 +26,12 @@
                 backTarget: '',
                 hasNav: true,
                 rightText: '',
-                direction: ''
+                direction: '',
+                code: ''
             }
         },
         created() {
+
             this.$store.commit('SETDIRECTION', 'forward')
             //是否登录过
             if (localStorage.getItem('TICKET')) {
@@ -40,13 +43,26 @@
                 SNIPPET_LOGIN(data)
             }
             //是否登陆
-
         },
         mounted() {
             this.$nextTick(() => {
                 $('.app').css({
                     height: $(window).height()
                 })
+                this.loginByType()
+                if (this.code) {
+                    // getLoginCode('weixin', this.code).then(res => {
+                    //     if (res.status == 200 && res.data.status_code == 1) {
+                    //         console.log(res);
+                    //     } else {
+                    //         return
+                    //     }
+                    // }).catch(err => {
+                    //     throw err
+                    // })
+                } else {
+
+                }
             })
         },
         updated() {
@@ -63,7 +79,36 @@
         methods: {
             pageScroll() {
 
-            }
+            },
+            loginByType() {
+                this.code = this.GetQueryString(location.href, 'code')
+                if (!this.code) return
+                let type = sessionStorage.getItem('loginType')
+                let url = sessionStorage.getItem('crtUrl')
+                if (!type) return
+                // getLoginCode(type, this.code).then(res => {
+                //     if (res.status == 200 && res.data.status_code == 1) {
+                //         sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
+                //         sessionStorage.setItem('userInfo', JSON.stringify(res.data.data.user))
+                //         location.href = url
+                //     } else {
+                //         return
+                //     }
+                // }).catch(err => {
+                //     throw err
+                // })
+            },
+            GetQueryString(url, name) {
+                let index = url.indexOf('?')
+                let str = url.substring(index + 1);
+                let arr = str.split('&');
+                let result = {};
+                arr.forEach((item) => {
+                    let a = item.split('=');
+                    result[a[0]] = a[1];
+                })
+                return result[name];
+            },
         },
         computed: {
             computerHeight() {
@@ -88,7 +133,11 @@
                 }
             }
         },
-        watch: {}
+        watch: {
+            '$route'(n, o) {
+
+            }
+        }
     }
 
 </script>

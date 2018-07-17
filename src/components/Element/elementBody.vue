@@ -22,8 +22,8 @@
                         </router-link>
                         <div class="user">
                             <div>
-                                <img :src="item.user.avatar" alt="">
-                                <span>{{item.user.name}}</span>
+                                <img :src="item.avatar" alt="">
+                                <span>{{item.create_user}}</span>
                             </div>
                             <span>{{item.updated_at|timeformat}}</span>
                         </div>

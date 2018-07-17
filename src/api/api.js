@@ -163,32 +163,15 @@ module.exports = {
             data: data
         })
     },
-    getLoginCode(params) {
-        if (params == 'weixin') {
-            return request({
-                url: 'https://open.weixin.qq.com/connect/oauth2/authorize',
-                method: 'GET',
-                params: {
-                    appid: 'wx9b154f4a099953b0',
-                    redirect_uri: 'http://rcm.cc',
-                    response_type: 'code',
-                    scope: 'snsapi_userinfo',
-                    state: 'STATE#wechat_redirect'
-                }
-            })
-        }
-        if (params == 'qq') {
-            return request({
-                url: 'https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101476497&redirect_uri=http://test.bantangtv.com&state=111',
-                method: 'GET',
-                params: {
-                    client_id: '101476497',
-                    redirect_uri: 'http://test.bantangtv.com',
-                    response_type: 'code',
-                    state: '111'
-                }
-            })
-        }
+    getLoginCode(params, code) {
+        return request({
+            url: '/login/thirdLogin',
+            method: 'POST',
+            data: {
+                type: params,
+                code: code
+            }
+        })
 
     },
     //首次更新用户资料、

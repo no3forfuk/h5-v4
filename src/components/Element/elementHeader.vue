@@ -211,6 +211,7 @@
             align-items: center;
             padding: 10px 20px;
             .ele-info {
+                width: 100%;
                 padding-right: 15px;
                 overflow: hidden;
                 position: relative;

@@ -23,11 +23,11 @@
             </div>
         </div>
         <div class="login-tpye">
-            <div class="wechat">
+            <div class="wechat" @click="loginByOther('weixin')">
                 <span><i>微信登录</i><i>微信登录</i></span>
             </div>
             <span></span>
-            <div class="tx-qq">
+            <div class="tx-qq" @click="loginByOther('qq')" id="qqLoginBtn">
                 <span><i>QQ登录</i><i>QQ登录</i></span>
             </div>
         </div>
@@ -41,7 +41,9 @@
         data() {
             return {
                 phone: '',
-                pwd: ''
+                pwd: '',
+                type: '',
+                code: ''
 
             }
         },
@@ -92,8 +94,28 @@
                 }).catch(err => {
                     throw err
                 })
+            },
+            loginByOther(type) {
+                this.type = type
+                this.$store.commit('SETLOGINTYPE', type)
+                sessionStorage.setItem('loginType', type)
+                sessionStorage.setItem('crtUrl', location.href)
+                if (this.type == 'weixin') {
+                    location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx50d671a0a75e1115&redirect_uri=http://test.bantangtv.com&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+                }
+                if (this.type == 'qq') {
+                    // console.log('b');
+                    // console.log(QC);
+                    // let opts = {
+                    //     appId: '101476497',
+                    //     redirectURI: 'http://test.bantangtv.com/#/hot'
+                    // }
+                    // QC.Login.showPopup(opts, window)
+                    location.href = `https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=10147649&redirect_uri=http://test.bantangtv.com/#/hot&state=rcm`
+                }
             }
-        }
+        },
+        watch: {}
     }
 
 </script>

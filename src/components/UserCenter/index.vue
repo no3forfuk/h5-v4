@@ -52,6 +52,9 @@
         beforeRouteLeave(to, from, next) {
             next()
         },
+        beforeDestroy() {
+            this.$store.commit('SETOPENUSERCENTER', true)
+        },
         methods: {
             getUserInfoFromServer() {
                 getUserInfo().then(res => {
@@ -67,6 +70,7 @@
                 let data = sessionStorage.getItem('userInfo')
                 if (data) {
                     this.userData = inheritObject(JSON.parse(data), this.defaultData)
+                    console.log(this.userData);
                 } else {
                     this.getUserInfoFromServer()
                 }

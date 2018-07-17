@@ -30,8 +30,8 @@ module.exports = merge(base, {
             const rp = require('request-promise');
             app.use(bodyParser.urlencoded({extended: false}));
             app.use(bodyParser.json());
-            // var baseUrl = 'http://test.bantangtv.com';
-            var baseUrl = 'http://www.rcm.ink';
+            var baseUrl = 'http://test.bantangtv.com';
+            // var baseUrl = 'http://www.rcm.ink';
             const go = function (requset, response) {
                 var method = requset.method;
                 var options;
@@ -166,6 +166,15 @@ module.exports = merge(base, {
             //批量添加元素
             app.post('/api/home/ranking/secondBindElement', (req, res) => {
                 go(req, res)
+            })
+            rp({
+                "method": 'GET',
+                "json": true,
+                "uri": 'https://graph.qq.com/oauth2.0/token?code=EAF40A5E7CAF37030E9D520EFB346459&grant_type=authorization_code&client_id=101476497&client_secret=299f583a6e4c840ec1765e38dd596819&redirect_uri=http://test.bantangtv.com/#/hot'
+            }).then(data => {
+                console.log(data);
+            }).catch(err => {
+                throw err;
             })
             //--------------------------------------------
             //获取微信签名

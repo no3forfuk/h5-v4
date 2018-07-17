@@ -36,7 +36,7 @@
             }
         },
         created() {
-
+            console.log(this.value);
         },
         methods: {},
         props: ['value', 'index']

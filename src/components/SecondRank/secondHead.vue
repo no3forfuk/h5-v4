@@ -19,7 +19,7 @@
         <div class="right">
             <span>RCM评级</span>
             <span>{{value.rating}}</span>
-            <span>8909(票)</span>
+            <span>{{value.vote}}(票)</span>
             <span v-if="value.data">{{value.data.total}}(排名)</span>
         </div>
     </div>

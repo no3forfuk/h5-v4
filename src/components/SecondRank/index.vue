@@ -53,8 +53,13 @@
                     if (res.data.status_code == 1) {
                         next(vm => {
                             vm.secondInfo = res.data.data;
+                            console.log(res.data.data.data.data);
                             vm.listInfo = vm.listInfo.concat(res.data.data.data.data)
                             vm.listTotalPage = res.data.data.data.last_page
+                            let shareTitle = res.data.data.ranking_name
+                            let shareDesc = res.data.data.ranking_desc
+                            console.log(vm.secondInfo);
+                            sharePage(vm, location.href, shareTitle, shareDesc, 'link')
                         })
                     } else {
 
@@ -108,6 +113,7 @@
                 this.getSecondRankInfo()
             },
             sharePage() {
+                debugger
                 sharePage(this, location.href, this.share.title, this.share.desc, 'link')
             },
             getSecondRankInfo() {
