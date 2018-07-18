@@ -1,38 +1,25 @@
 /*Created By Jsir on 2018/7/13*/
 'use strict'
-import API from '../api/api'
-import store from '../store/index'
 
-const SNIPPET = {
-    //login
-    SNIPPET_LOGIN: function (params) {
-        API.loginByPhone(params).then(res => {
-            if (res.status == 200) {
-                if (res.data.status_code == 1) {
-                    sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
-                    API.getUserInfo().then(res => {
-                        if (res.status == 200) {
-                            if (res.data.status_code == 1) {
-                                let str = JSON.stringify(res.data.data)
-                                sessionStorage.setItem('userInfo', str)
-                            } else {
-                                return
-                            }
-                        } else {
-                            return
-                        }
-                    }).catch(err => {
-                        throw err
-                    })
-                } else {
-                    return
-                }
-            } else {
-                return
-            }
-        }).catch(err => {
-            throw err
-        })
-    }
+import store from '../store/index'
+import {SVS_userInfo, SVS_loginByTel} from '../Servers/API'
+import Storage from '../Servers/Storage'
+
+const SNIPPET = {}
+SNIPPET.SNI_userInfo = () => {
+    SVS_userInfo(res => {
+        Storage.SET_session('userInfo', res.data)
+    }, err => {
+        return
+    })
+}
+SNIPPET.SNI_login = (val) => {
+    if (!val) return
+    SVS_loginByTel(res => {
+        Storage.SET_session('X-Auth-Token', res.data.token.access_token)
+        SNIPPET.SNI_userInfo()
+    }, err => {
+        return
+    }, val)
 }
 module.exports = SNIPPET

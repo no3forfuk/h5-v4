@@ -167,14 +167,9 @@ module.exports = merge(base, {
             app.post('/api/home/ranking/secondBindElement', (req, res) => {
                 go(req, res)
             })
-            rp({
-                "method": 'GET',
-                "json": true,
-                "uri": 'https://graph.qq.com/oauth2.0/token?code=EAF40A5E7CAF37030E9D520EFB346459&grant_type=authorization_code&client_id=101476497&client_secret=299f583a6e4c840ec1765e38dd596819&redirect_uri=http://test.bantangtv.com/#/hot'
-            }).then(data => {
-                console.log(data);
-            }).catch(err => {
-                throw err;
+            //重置密码
+            app.post('/api/home/login/forgot', (req, res) => {
+                go(req, res)
             })
             //--------------------------------------------
             //获取微信签名

@@ -12,7 +12,7 @@
         </div>
         <div class="login-opts">
             <div>
-                <button @click="loginByMobile">
+                <button @click="login">
                     登入
                 </button>
             </div>
@@ -35,7 +35,8 @@
 </template>
 
 <script>
-    import {loginByPhone} from '../../api/api'
+    import {SVS_loginByTel} from '../../Servers/API'
+    import {SNI_userInfo} from '../../Snippet'
 
     export default {
         data() {
@@ -44,74 +45,85 @@
                 pwd: '',
                 type: '',
                 code: ''
-
             }
         },
         mounted() {
-            this.$nextTick(() => {
-
-            })
         },
         methods: {
-            loginByMobile() {
+            //准备登陆参数
+            loginBefore() {
                 let params = {
                     mobile: this.phone,
                     password: this.MD5(this.pwd)
                 }
-                loginByPhone(params).then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
-                            sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
-                            this.$store.commit('LOGIN', true)
-                            this.$store.commit('GOLOGIN', false)
-                            localStorage.setItem('TICKET', JSON.stringify({
-                                mobile: this.phone,
-                                password: this.pwd
-                            }))
-                            this.$toast({
-                                message: '登录成功',
-                                duration: 1000,
-                                position: 'middle'
-                            })
-                        } else if (res.data.status_code == 11) {
-                            sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
-                            this.$store.commit('LOGIN', true)
-                            localStorage.setItem('TICKET', JSON.stringify({
-                                mobile: this.phone,
-                                password: this.pwd
-                            }))
-                            this.$emit('goSetInfo', params)
-                        } else {
-                            this.$toast({
-                                message: res.data.message,
-                                duration: 1000,
-                                position: 'middle'
-                            })
-                        }
-                    } else {
-                        return
-                    }
-                }).catch(err => {
-                    throw err
-                })
+                return params
             },
+            //登陆成功后的回调
+            loginSuccess(res) {
+                //保存token到session
+                this.$storage.SET_session('X-Auth-Token', res.data.token.access_token)
+                //保存登陆信息到local
+                this.$storage.SET_local('TICKET', this.loginBefore())
+                //提交登陆登陆成功到全局
+                this.$store.commit('LOGIN', true)
+                //提示登录成功
+                this.$toast({
+                    message: '登录成功',
+                    duration: 1000,
+                    position: 'middle'
+                })
+                //关闭登陆窗口
+                this.$store.commit('GOLOGIN', false)
+                //拉取用户信息
+                SNI_userInfo()
+            },
+            // 登陆失败后的回调
+            loginError(err) {
+                if (err.status_code == 11) {
+                    //没有设置用户信息
+                    this.$storage.SET_session('X-Auth-Token', err.data.token.access_token)
+                    this.$storage.GET_local('TICKET', this.loginBefore())
+                    this.$emit('goSetInfo', this.loginBefore())
+                } else {
+                    //其他原因登陆失败
+                    this.$toast({
+                        message: err.message,
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                }
+            },
+            login() {
+                //登录校验
+                if (this.phone.length !== 11) {
+                    this.$toast({
+                        message: '请输入有效的手机号码',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                } else if (this.pwd.length == 0) {
+                    this.$toast({
+                        message: '请输入密码',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                } else {
+                    //手机登陆
+                    SVS_loginByTel(this.loginSuccess, this.loginError, this.loginBefore())
+                }
+            },
+            //其他方式登陆
             loginByOther(type) {
                 this.type = type
                 this.$store.commit('SETLOGINTYPE', type)
-                sessionStorage.setItem('loginType', type)
-                sessionStorage.setItem('crtUrl', location.href)
+                //设置登陆类型到session
+                this.$storage.SET_session('loginType', type)
+                this.$storage.SET_session('crtUrl', location.href)
                 if (this.type == 'weixin') {
                     location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx50d671a0a75e1115&redirect_uri=http://test.bantangtv.com&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
                 }
                 if (this.type == 'qq') {
-                    // console.log('b');
-                    // console.log(QC);
-                    // let opts = {
-                    //     appId: '101476497',
-                    //     redirectURI: 'http://test.bantangtv.com/#/hot'
-                    // }
-                    // QC.Login.showPopup(opts, window)
-                    location.href = `https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=10147649&redirect_uri=http://test.bantangtv.com/#/hot&state=rcm`
+                    location.href = `https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101476497&state=rcm&redirect_uri=http%3a%2f%2ftest.bantangtv.com%2f%23%2fhot`
                 }
             }
         },

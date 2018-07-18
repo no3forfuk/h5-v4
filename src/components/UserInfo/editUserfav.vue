@@ -1,9 +1,9 @@
 <template>
-    <div class="user-fav" @click="$emit('click',value)">
+    <div class="user-fav" @click="$emit('click','a')">
                 <span class="font-size-16">
                     <input type="text"
                            disabled
-                           v-model="value" placeholder="修改擅长领域">
+                           v-model="label" placeholder="修改擅长领域">
                 </span>
         <icon :value="'&#xe601;'" class="font-size-20"></icon>
     </div>
@@ -13,9 +13,16 @@
 
     export default {
         data() {
-            return {}
+            return {
+                label: '修改擅长领域'
+            }
         },
-        props: ['value']
+        props: ['value'],
+        watch: {
+            'value'(val) {
+                this.label = val
+            }
+        }
     }
 
 </script>

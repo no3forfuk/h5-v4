@@ -45,6 +45,9 @@ Vue.filter('timeformat', val => {
     }
 })
 
+import Storage from './Servers/Storage'
+
+Vue.prototype.$storage = Storage
 let bus = new Vue()
 Vue.prototype.bus = bus
 //vuex

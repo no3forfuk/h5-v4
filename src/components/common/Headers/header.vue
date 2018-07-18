@@ -112,7 +112,7 @@
         components: {
             finderBody
         },
-        props: ['val']
+        props: ['val', 'firstRank']
     }
 
 </script>

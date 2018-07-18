@@ -3,7 +3,7 @@
         <span class="font-size-16">
         <input type="text"
                disabled
-               v-model="value">
+               v-model="label">
         <input type="file"
                @change="viewPicture"
                style="width: 0;opacity: 0;height: 0px;position: absolute;z-index: -10"
@@ -19,7 +19,9 @@
 
     export default {
         data() {
-            return {}
+            return {
+                label: '修改头像'
+            }
         },
         created() {
         },
@@ -31,7 +33,7 @@
                 const flies = new FileReader();
                 flies.onload = data => {
                     this.$refs.viewBox.src = data.target.result
-                    this.$emit('savePic', this.$refs.pic.files[0])
+                    this.$emit('editConfirm', {value: this.$refs.pic.files[0], type: 'pic'})
                 }
                 flies.readAsDataURL(this.$refs.pic.files[0])
             }

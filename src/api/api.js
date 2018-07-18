@@ -115,14 +115,6 @@ module.exports = {
             data: data
         })
     },
-//获取第三方登陆code
-    loginByOther(data) {
-        return request({
-            url: '/login/thirdLogin',
-            method: 'POST',
-            data: data
-        })
-    },
     //添加元素
     addElement(data) {
         return request({
@@ -163,14 +155,11 @@ module.exports = {
             data: data
         })
     },
-    getLoginCode(params, code) {
+    getLoginCode(data) {
         return request({
             url: '/login/thirdLogin',
             method: 'POST',
-            data: {
-                type: params,
-                code: code
-            }
+            data: data
         })
 
     },

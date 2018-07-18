@@ -29,6 +29,8 @@
 
 <script>
     import {registerByPhone, getYZM, firstUpdataUserInfo, loginByPhone} from '../../api/api'
+    import {SVS_register, SVS_getYZM, SVS_loginByTel} from '../../Servers/API'
+    import {SNI_userInfo} from '../../Snippet'
 
     export default {
         data() {
@@ -39,17 +41,17 @@
                 yzmText: '获取验证码',
                 time: 60,
                 timer: null,
-                lock: false
+                lock: false//验证码发送按钮开关
             }
         },
         mounted() {
-            this.$nextTick(() => {
 
-            })
         },
         methods: {
+            //获取验证码
             getYZM() {
                 if (!this.lock) {
+                    //开关打开时
                     this.time = 60
                     if (this.phoneNumber.length !== 11) {
                         this.$toast({
@@ -57,7 +59,6 @@
                             position: 'middle',
                             duration: 1000
                         })
-
                     } else if (this.password.length < 6) {
                         this.$toast({
                             message: '密码长度不能少于6位',
@@ -71,46 +72,49 @@
                             duration: 1000
                         })
                     } else {
+                        //开关关闭
                         this.timer = setInterval(() => {
                             this.time--;
                             this.yzmText = this.time + 's后重新获取'
                         }, 1000)
                         let params = {};
                         params.mobile = this.phoneNumber
-                        getYZM(params).then(res => {
-                            if (res.status == 200) {
-                                if (res.data.status_code == 1) {
-                                    this.$toast({
-                                        message: '验证码已发送，请注意查收',
-                                        position: 'middle',
-                                        duration: 1000
-                                    })
-                                } else {
-                                    this.$toast({
-                                        message: res.data.message,
-                                        position: 'middle',
-                                        duration: 1000
-                                    })
-                                }
-                            } else {
-                                this.$toast({
-                                    message: '网络异常',
-                                    position: 'middle',
-                                    duration: 1000
-                                })
-                            }
-                        }).catch(err => {
+                        SVS_getYZM((res) => {
                             this.$toast({
-                                message: '网络异常',
+                                message: '验证码已发送，请注意查收',
                                 position: 'middle',
                                 duration: 1000
                             })
-                        })
+                        }, (err) => {
+                            this.$toast({
+                                message: err.message,
+                                position: 'middle',
+                                duration: 1000
+                            })
+                        }, params)
                     }
                 } else {
                     return
                 }
 
+            },
+            //登陆逻辑
+            login() {
+                let loginInfo = {
+                    mobile: this.phoneNumber,
+                    password: this.MD5(this.password)
+                }
+                SVS_loginByTel(res => {
+                    this.$storage.SET_session('X-Auth-Token', res.data.token.access_token)
+                    this.$storage.SET_local('TICKET', loginInfo)
+                    this.$store.commit('LOGIN', true)
+                    SNI_userInfo()
+                }, err => {
+                    this.$storage.SET_session('X-Auth-Token', err.data.token.access_token)
+                    this.$storage.SET_local('TICKET', loginInfo)
+                    this.$store.commit('LOGIN', true)
+                    this.$emit('goSetUserInfo', loginInfo)
+                }, loginInfo)
             },
             submitRegister() {
                 if (this.phoneNumber.length !== 11) {
@@ -120,7 +124,14 @@
                         duration: 1000
                     })
 
-                } else if (this.password.length < 6) {
+                } else if (this.yzm.length == 0) {
+                    this.$toast({
+                        message: '请输入验证码',
+                        position: 'middle',
+                        duration: 1000
+                    })
+                }
+                else if (this.password.length < 6) {
                     this.$toast({
                         message: '密码长度不能少于6位',
                         position: 'middle',
@@ -135,67 +146,25 @@
                 } else {
                     let params = {
                         mobile: this.phoneNumber,
-                        password: this.password,
+                        password: this.MD5(this.password),
                         mobile_code: this.yzm
                     }
-                    registerByPhone(params).then(res => {
-                        if (res.status == 200) {
-                            if (res.data.status_code == 1) {
-                                this.$toast({
-                                    message: '注册成功',
-                                    duration: 1000,
-                                    position: 'middle'
-                                })
-                                loginByPhone({
-                                    mobile: this.phoneNumber,
-                                    password: this.MD5(this.password)
-                                }).then(res => {
-                                    if (res.status == 200) {
-                                        if (res.data.status_code == 1) {
-                                            sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
-                                            this.$store.commit('LOGIN', true)
-                                            localStorage.setItem('TICKET', JSON.stringify({
-                                                mobile: this.phoneNumber,
-                                                password: this.password
-                                            }))
-                                        } else if (res.data.status_code == 11) {
-                                            sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
-                                            this.$store.commit('LOGIN', true)
-                                            localStorage.setItem('TICKET', JSON.stringify({
-                                                mobile: this.phoneNumber,
-                                                password: this.password
-                                            }))
-                                            this.$emit('goSetUserInfo', {
-                                                mobile: this.phoneNumber,
-                                                password: this.MD5(this.password)
-                                            })
-                                        } else {
-                                            return
-                                        }
-                                    } else {
-                                        return
-                                    }
-                                }).catch(err => {
-                                    throw err
-                                })
-                            } else {
-                                this.$toast({
-                                    message: res.data.message,
-                                    duration: 1000,
-                                    position: 'middle'
-                                })
-                            }
-                        } else {
-                            return
-                        }
-                    }).catch(err => {
-                        throw err
-                    })
+                    SVS_register((res) => {
+                        //注册成功之后 自动登陆
+                        this.login()
+                    }, err => {
+                        this.$toast({
+                            message: err.message,
+                            duration: 1000,
+                            position: 'middle'
+                        })
+                    }, params)
                 }
             },
         },
         watch: {
             'time'(val) {
+                //根据time的值改变开关状态
                 if (0 < val < 60) {
                     this.lock = true
                 }

@@ -10,7 +10,7 @@
             <span>{{value.name}}</span>
         </p>
         <div class="fav">
-            <span v-if="value.get_expert">#{{value.get_expert.ranking_name}}</span>
+            <span v-if="value.ranking_name">#{{value.ranking_name}}</span>
             <span>{{value.signature}}</span>
         </div>
         <div class="focus">

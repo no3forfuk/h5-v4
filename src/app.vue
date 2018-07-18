@@ -3,6 +3,7 @@
         <rcm-headers class="header"
                      ref="rcmHeaders"
                      :val="$route.meta"
+                     :firstRank="firstRankList"
         ></rcm-headers>
         <!--<div class="app-mask"></div>-->
         <div class="app-body" :style="computerHeight">
@@ -15,12 +16,15 @@
 </template>
 
 <script>
-    import {SNIPPET_LOGIN} from './Snippet'
+    import {SNI_login} from './Snippet'
     import {getLoginCode} from './api/api'
+    import {SVS_loginByOther, SVS_firstRankList} from './Servers/API'
+
 
     export default {
         data() {
             return {
+                firstRankList: [],//一级榜单列表
                 leftText: '',
                 isIndex: true,
                 backTarget: '',
@@ -30,19 +34,12 @@
                 code: ''
             }
         },
-        created() {
+        beforeCreate() {
 
+        },
+        created() {
             this.$store.commit('SETDIRECTION', 'forward')
-            //是否登录过
-            if (localStorage.getItem('TICKET')) {
-                const loginParams = JSON.parse(localStorage.getItem('TICKET'))
-                let data = {
-                    mobile: loginParams.mobile,
-                    password: this.MD5(loginParams.password)
-                }
-                SNIPPET_LOGIN(data)
-            }
-            //是否登陆
+            this.init()
         },
         mounted() {
             this.$nextTick(() => {
@@ -50,19 +47,6 @@
                     height: $(window).height()
                 })
                 this.loginByType()
-                if (this.code) {
-                    // getLoginCode('weixin', this.code).then(res => {
-                    //     if (res.status == 200 && res.data.status_code == 1) {
-                    //         console.log(res);
-                    //     } else {
-                    //         return
-                    //     }
-                    // }).catch(err => {
-                    //     throw err
-                    // })
-                } else {
-
-                }
             })
         },
         updated() {
@@ -77,27 +61,24 @@
 
         },
         methods: {
-            pageScroll() {
-
-            },
+            //第三方登陆
             loginByType() {
                 this.code = this.GetQueryString(location.href, 'code')
                 if (!this.code) return
                 let type = sessionStorage.getItem('loginType')
                 let url = sessionStorage.getItem('crtUrl')
                 if (!type) return
-                // getLoginCode(type, this.code).then(res => {
-                //     if (res.status == 200 && res.data.status_code == 1) {
-                //         sessionStorage.setItem('X-Auth-Token', res.data.data.token.access_token)
-                //         sessionStorage.setItem('userInfo', JSON.stringify(res.data.data.user))
-                //         location.href = url
-                //     } else {
-                //         return
-                //     }
-                // }).catch(err => {
-                //     throw err
-                // })
+                SVS_loginByOther(res => {
+                    this.$storage.SET_session('X-Auth-Token', res.data.token.access_token)
+                    this.$storage.SET_session('userInfo', res.data.user)
+                }, err => {
+                    return
+                }, {
+                    type: type,
+                    code: this.code
+                })
             },
+            //获取地址栏code
             GetQueryString(url, name) {
                 let index = url.indexOf('?')
                 let str = url.substring(index + 1);
@@ -109,6 +90,15 @@
                 })
                 return result[name];
             },
+            init() {
+                //存在登陆信息时自动登陆
+                SNI_login(this.$storage.GET_local('TICKET'))
+                //获取一级榜单列表
+                SVS_firstRankList(res => {
+                    this.$storage.SET_session('firstRank', res.data.data)
+                    this.firstRankList = res.data.data
+                })
+            }
         },
         computed: {
             computerHeight() {

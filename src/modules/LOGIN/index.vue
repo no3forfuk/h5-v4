@@ -136,21 +136,21 @@
 
     .active-body-enter-active {
         position: absolute;
-        animation: slideInRight 0.5s;
+        animation: slideInRight 0.6s;
     }
 
     .active-body-leave-active {
         position: absolute;
-        animation: slideOutLeft 0.5s;
+        animation: slideOutLeft 0.6s;
     }
 
     .login-enter-active {
         position: absolute;
-        animation: slideInUp 0.5s;
+        animation: slideInUp 0.6s;
     }
 
     .login-leave-active {
         position: absolute;
-        animation: slideOutDown 0.5s;
+        animation: slideOutDown 0.6s;
     }
 </style>

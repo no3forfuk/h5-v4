@@ -1,9 +1,9 @@
 <template>
-    <div class="user-sign" @click="$emit('click',value)">
+    <div class="user-sign" @click="$emit('click',label)">
                 <span class="font-size-16">
                     <input type="text"
                            disabled
-                           v-model="value">
+                           v-model="label">
                 </span>
         <icon :value="'&#xe601;'" class="font-size-20"></icon>
     </div>
@@ -13,9 +13,16 @@
 
     export default {
         data() {
-            return {}
+            return {
+                label: '编辑个性签名'
+            }
         },
-        props: ['value']
+        props: ['value'],
+        watch: {
+            'value'(val) {
+                this.label = val
+            }
+        }
     }
 
 </script>

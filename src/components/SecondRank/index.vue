@@ -173,8 +173,6 @@
         left: 0;
         padding: 0 20px;
         font-weight: bold;
-        height: 28px;
-        line-height: 28px;
         font-size: 20px;
     }
 

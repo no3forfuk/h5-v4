@@ -1,16 +1,16 @@
 <template>
     <transition name="transitionName" mode="in-out">
         <div class="user-info">
-            <edit-pic :value="userpic" :img="userInfo.avatar" @savePic="uploadPic27Niu"></edit-pic>
+            <edit-pic :img="userInfo.avatar" @editConfirm="submitEdit"></edit-pic>
             <!--<edit-username @click="editStart" :value="userInfo.name"></edit-username>-->
-            <edit-userfav @click="editFav" :value="userfav"></edit-userfav>
-            <edit-usersign @click="editSign" :value="usersign"></edit-usersign>
+            <edit-userfav @click="editFavorite" :value="fav"></edit-userfav>
+            <edit-usersign @click="editSign" :value="signature"></edit-usersign>
             <div class="belt"></div>
-            <div class="confirm">退出登陆</div>
+            <div class="confirm" @click="logOut">退出登陆</div>
             <div class="belt"></div>
             <div class="footer"><p>用爱喂食挚爱，那么TA将GO BIG</p></div>
             <transition name="editModal">
-                <div class="modal-edit" v-show="editActive">
+                <div class="modal-edit" v-if="editActive">
                     <rcm-header>
                     <span slot="back"
                           class="font-size-16"
@@ -18,27 +18,27 @@
                           style="color:#FF2C09;">取消</span>
                         <span slot="right"
                               class="font-size-16"
-                              @click="editComplete"
+                              @click="submitEdit"
                               style="color:#FF2C09;">完成</span>
                     </rcm-header>
                     <div class="modal-body">
                         <div class="input-box">
-                            <input type="text"
-                                   placeholder="有趣的昵称很重要哦！"
-                                   v-model="username"
-                                   ref="username"
-                                   v-show="editItem == 'username'">
+                            <!--<input type="text"-->
+                            <!--placeholder="有趣的昵称很重要哦！"-->
+                            <!--v-model="username"-->
+                            <!--ref="username"-->
+                            <!--v-show="editItem == 'username'">-->
                             <input type="text"
                                    placeholder="输入自己的个性签名"
-                                   v-model="userInfo.signature"
-                                   v-show="editItem == 'usersign'">
+                                   v-model="signature"
+                                   v-show="editType == 'sign'">
                             <input type="text"
-                                   v-model="userInfo.get_expert.ranking_name"
+                                   v-model="fav"
                                    disabled
                                    placeholder="选择一个自己的擅长领域"
-                                   v-show="editItem == 'userfav'">
+                                   v-show="editType == 'fav'">
                         </div>
-                        <scroll-select v-if="editItem == 'userfav'" @change="selectFav"></scroll-select>
+                        <scroll-select v-if="editType == 'fav'" @change="selectFav"></scroll-select>
                     </div>
                 </div>
             </transition>
@@ -52,107 +52,92 @@
     import editUserfav from './editUserfav'
     import editUsersign from './editUsersign'
     import scrollSelect from './scrollSelect'
-    import {editUserInfo, getQiniuToken, getUserInfo} from '../../api/api'
-    import {inheritObject, timeFormat} from '../../utils'
+    import {editUserInfo, getUserInfo} from '../../api/api'
+    import {uploadFile, timeFormat} from '../../utils'
 
     export default {
         data() {
             return {
                 editActive: false,
                 userInfo: {},
-                editItem: '',
-                username: '修改昵称',
-                usersign: '修改个性签名',
-                userpic: '修改头像',
-                userfav: '修改擅长领域',
-                temp: {},
+                editType: '',
+                fav: '',
                 expert: '',
-                avatar_key: '',
-                avatar: '',
-                defaultData: {
-                    avatar: 'http://p8rk87lub.bkt.clouddn.com/visitor.jpg',
-                    avatar_key: 'visitor.jpg',
-                    email: '',
-                    get_expert: {
-                        ranking_name: '暂无',
-                        id: NaN
-                    },
-                    name: '用户' + parseInt(new Date() / 123),
-                    signature: '该用户什么也不想说',
-                    updated_at: timeFormat('-')
-                }
+                signature: ''
+
             }
         },
         created() {
-            this.initData()
+
+        },
+        beforeRouteEnter(to, from, next) {
+            if (sessionStorage.getItem('userInfo')) {
+                next(vm => {
+                    let userObj = JSON.parse(sessionStorage.getItem('userInfo'))
+                    vm.userInfo = userObj;
+                })
+            } else {
+                getUserInfo().then(res => {
+                    if (res.status == 200 && res.data.status_code == 1) {
+                        next(vm => {
+                            let userInfoStr = JSON.stringify(res.data.data[0])
+                            sessionStorage.setItem('userInfo', userInfoStr)
+                            vm.userData = res.data.data[0]
+                        })
+                    } else {
+                        return
+                    }
+                }).catch(err => {
+                    throw err
+                })
+            }
         },
         beforeRouteLeave(to, from, next) {
             next()
         },
         methods: {
-            initData() {
-                let obj = JSON.parse(sessionStorage.getItem('userInfo'));
-                this.userInfo = inheritObject(obj, this.defaultData)
-            },
-            editFav(msg) {
-                this.editItem = 'userfav';
-                this.editActive = true;
-                this.userInfo.get_expert.ranking_name = msg
-            },
-            editSign(msg) {
-                this.editItem = 'usersign';
-                this.editActive = true;
-                this.userInfo.signature = msg
-            },
-            uploadPic27Niu(val) {
-                let file = val;
-                getQiniuToken().then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
-                            let token = res.data.data.qiniu_token;
-                            let strFileName = 'user/' + file.name
-                            let putExtra = {
-                                fname: "",
-                                params: {},
-                                mimeType: null
-                            };
-                            let config = {
-                                useCdnDomain: true,
-                                region: this.qiniu.region.z2
-                            };
-                            var self = this;
-                            let observer = {
-                                next(res) {
-
-                                },
-                                error(err) {
-                                    throw err;
-                                },
-                                complete(res) {
-                                    self.userInfo.avatar = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
-                                    self.userInfo.avatar_key = 'http://p8rk87lub.bkt.clouddn.com/' + res.key
-                                    self.submitEdit()
-                                }
-                            }
-                            let observable = this.qiniu.upload(file, strFileName, token, putExtra, config);
-                            let subscription = observable.subscribe(observer);
-                        }
-                    }
-                }).catch(err => {
-                    throw err
-                })
-            },
             selectFav(val) {
-                this.userInfo.get_expert = val
+                this.fav = val.ranking_name
+                this.expert = val.id
             },
-            submitEdit() {
-                let params = {
-                    id: this.userInfo.id,
-                    avatar: this.userInfo.avatar,
-                    avatar_key: this.userInfo.avatar_key,
-                    signature: this.userInfo.signature,
-                    expert: this.userInfo.get_expert.id,
+            submitEdit(val) {
+                if (this.editType == 'pic') {
+                    uploadFile(this, val.value, this.editPic)
+                    return
                 }
+                if (this.editType == 'fav') {
+                    let submitData = {
+                        expert: this.expert
+                    }
+                    this.editComplete(submitData)
+                    return
+                }
+                if (this.editType == 'sign') {
+                    let submitData = {
+                        signature: this.signature
+                    }
+                    this.editComplete(submitData)
+                    return
+                }
+
+            },
+            editFavorite() {
+                this.editActive = true
+                this.editType = 'fav'
+            },
+            editSign(val) {
+                this.editType = 'sign'
+                this.editActive = true;
+                this.signature = val
+            },
+            editPic(params, fileName) {
+                const submitData = {
+                    avatar: 'http://p8rk87lub.bkt.clouddn.com/' + fileName,
+                    avatar_key: 'http://p8rk87lub.bkt.clouddn.com/' + params.key
+                }
+                this.editComplete(submitData)
+            },
+            editComplete(params) {
                 editUserInfo(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
@@ -160,6 +145,7 @@
                                 message: '修改成功',
                                 duration: 1000
                             })
+                            this.editActive = false;
                             getUserInfo().then(res => {
                                 this.userInfo = res.data.data
                                 let str = JSON.stringify(res.data.data)
@@ -173,21 +159,13 @@
                     throw err
                 })
             },
-            editStart(msg) {
-                this.editItem = msg;
-                this.editActive = true;
-                this.temp = {[msg]: this[msg]};
-                this[msg] = '';
-            },
-            editComplete() {
-                this.editActive = false;
-                this.submitEdit()
-            },
             editCancel() {
                 this.editActive = false;
-                for (let k in this.temp) {
-                    this[k] = this.temp[k]
-                }
+            },
+            logOut() {
+                sessionStorage.removeItem('X-Auth-Token')
+                sessionStorage.removeItem('userInfo')
+                this.$router.replace('hot')
             }
         },
         mounted() {
@@ -214,15 +192,20 @@
         height: 100%;
         background-color: #fff;
         position: absolute;
-        top: 0;
+        bottom: 0;
         left: 0;
         z-index: 2;
         padding: 10px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        box-shadow: 0 -1px 1px 1px rgba(0, 0, 0, .2);
         .modal-body {
             padding: 10px;
             width: 100%;
             .input-box {
                 width: 100%;
+                overflow: hidden;
+                border-radius: 4px;
                 border: 1px solid #C8C7CD;
                 input {
                     width: 100%;
@@ -279,12 +262,12 @@
     }
 
     .editModal-enter-active {
-        animation: slideInRight 0.4s;
+        animation: slideInUp 0.4s;
         position: absolute;
     }
 
     .editModal-leave-active {
-        animation: slideOutRight 0.4s;
+        animation: slideOutDown 0.4s;
         position: absolute;
     }
 </style>

@@ -1,13 +1,13 @@
 <template>
     <div class="set-info-root">
         <div class="user-photo">
-            <img src="http://p8rk87lub.bkt.clouddn.com/uploadImg.png" ref="viewBox" alt="" @click="selectPhoto">
+            <img :src="avatar" ref="viewBox" alt="" @click="selectPhoto">
         </div>
         <div class="user-name">
             <input type="text" placeholder="起个响亮的昵称吧" v-model="userName">
         </div>
         <div class="set-info-opts">
-            <button @click="uploadPic27Niu">下一步</button>
+            <button @click="submit">下一步</button>
         </div>
         <transition name="select-photo">
             <div class="selectPhotoType" v-if="activeSelectPhoto">
@@ -27,101 +27,61 @@
 </template>
 
 <script>
-    import {firstUpdataUserInfo, loginByPhone, getQiniuToken} from '../../api/api'
+    import {editUserInfo, loginByPhone, getQiniuToken} from '../../api/api'
+    import {uploadFile, UTS_viewPicture} from '../../utils'
+    import {SNI_login, SNI_userInfo} from '../../Snippet'
+    import {SVS_editUserInfo} from '../../Servers/API'
 
     export default {
         data() {
             return {
                 activeSelectPhoto: false,
-                avatar: '',
+                avatar: 'http://p8rk87lub.bkt.clouddn.com/uploadImg.png',
                 userName: '',
                 imgFile: ''
             }
         },
         methods: {
             randomPic() {
-                this.avatar = ''
+                this.avatar = 'http://p8rk87lub.bkt.clouddn.com/visitor.jpg'
+                this.activeSelectPhoto = false
             },
-            uploadPic27Niu() {
-                getQiniuToken().then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
-                            let file = this.imgFile
-                            let token = res.data.data.qiniu_token;
-                            let strFileName = 'user/' + file.name
-                            let putExtra = {
-                                fname: "",
-                                params: {},
-                                mimeType: null
-                            };
-                            let config = {
-                                useCdnDomain: true,
-                                region: this.qiniu.region.z2
-                            };
-                            var self = this;
-                            let observer = {
-                                next(res) {
-
-                                },
-                                error(err) {
-                                    throw err;
-                                },
-                                complete(res) {
-                                    self.avatar = 'http://p8rk87lub.bkt.clouddn.com/' + strFileName
-                                    self.submitRegister()
-                                }
-                            }
-                            let observable = this.qiniu.upload(file, strFileName, token, putExtra, config);
-                            let subscription = observable.subscribe(observer);
-                        }
-                    }
-                }).catch(err => {
-                    throw err
-                })
+            submit() {
+                if (this.imgFile) {
+                    uploadFile(this, this.imgFile, this.afterUploadFile)
+                } else {
+                    this.afterSubmit({
+                        name: this.userName,
+                        avatar: this.avatar,
+                        avatar_key: 'visitor.jpg'
+                    })
+                }
             },
-            viewPicture() {
-                const flies = new FileReader();
-                flies.onload = data => {
-                    this.$refs.viewBox.src = data.target.result
-                    this.activeSelectPhoto = false
-                }
-                if (this.$refs.takePhotos.files[0]) {
-                    this.imgFile = this.$refs.takePhotos.files[0]
-                    flies.readAsDataURL(this.$refs.takePhotos.files[0])
-                }
-
-            },
-            submitRegister() {
-                let params = {
-                    name: this.userName,
-                    avatar: this.avatar
-                }
-                if (this.userName.length == 0) {
+            afterSubmit(params) {
+                SVS_editUserInfo(res => {
+                    this.$store.commit('GOLOGIN', false)
+                    SNI_userInfo()
+                }, err => {
                     this.$toast({
-                        message: '昵称不能为空',
+                        message: res.data.message,
                         duration: 1000,
                         position: 'middle'
                     })
-                    return
+                }, params)
+            },
+            afterUploadFile(data, fileName) {
+                let params = {
+                    name: this.userName,
+                    avatar: 'http://p8rk87lub.bkt.clouddn.com/' + fileName,
+                    avatar_key: data.key
                 }
-                firstUpdataUserInfo(params).then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
-                            this.$store.commit('GOLOGIN', false)
-                        } else {
-                            this.$toast({
-                                message: res.data.message,
-                                duration: 1000,
-                                position: 'middle'
-                            })
-                        }
-                    } else {
-                        return
-                    }
-                }).catch(err => {
-                    throw err
+                this.afterSubmit(params)
+            },
+            viewPicture() {
+                UTS_viewPicture(this.$refs.viewBox, this.$refs.takePhotos, () => {
+                    this.activeSelectPhoto = false
+                    this.imgFile = this.$refs.takePhotos.files[0]
                 })
-
             },
             selectPhoto() {
                 this.activeSelectPhoto = true

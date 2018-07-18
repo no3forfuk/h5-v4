@@ -1,7 +1,7 @@
 /*Created By Jsir on 2018/6/15*/
 'use strict'
 const utils = {};
-import {getWXConfig} from '../api/api'
+import {getWXConfig, getQiniuToken} from '../api/api'
 
 utils.inheritObject = function (obj, def) {
     let result = {}
@@ -113,14 +113,50 @@ utils.getTouchType = function (vm, jqueryObj, index) {
 utils.getWindowHeight = function () {
     return $(window).height();
 }
-utils.uploadFile = function (file, filename, token, putExtra, config, observer) {
-    var file = file;
-    var key = filename;
-    var token = token;
-    var putExtra = putExtra;
-    var config = config;
-    var observer = observer;
-    var observable = qiniu.upload(file, key, token, putExtra, config);
-    var subscription = observable.subscribe(observer);
+//七牛文件上传
+utils.uploadFile = function (vm, file, cb) {
+    getQiniuToken().then(res => {
+        if (res.status == 200) {
+            if (res.data.status_code == 1) {
+                let token = res.data.data.qiniu_token;
+                let strFileName = 'user/' + file.name
+                let putExtra = {
+                    fname: "",
+                    params: {},
+                    mimeType: null
+                };
+                let config = {
+                    useCdnDomain: true,
+                    region: vm.qiniu.region.z2
+                };
+                let observer = {
+                    next(res) {
+
+                    },
+                    error(err) {
+                        throw err;
+                    },
+                    complete(res) {
+                        cb(res, strFileName)
+                    }
+                }
+                let observable = vm.qiniu.upload(file, strFileName, token, putExtra, config);
+                let subscription = observable.subscribe(observer);
+            }
+        }
+    }).catch(err => {
+        throw err
+    })
+}
+//图片预览
+utils.UTS_viewPicture = function (box, file, cb) {
+    const flies = new FileReader();
+    flies.onload = data => {
+        box.src = data.target.result
+        cb()
+    }
+    if (file.files[0]) {
+        flies.readAsDataURL(file.files[0])
+    }
 }
 module.exports = utils;
