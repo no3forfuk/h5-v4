@@ -28,7 +28,7 @@
             }
         },
         created() {
-
+            this.$store.commit('SETDIRECTION', 'forward')
         },
         mounted() {
             this.$nextTick(() => {
@@ -57,7 +57,7 @@
             next()
         },
         beforeDestroy() {
-            this.$store.commit('SETOPENUSERCENTER', true)
+
         },
         methods: {},
         computed: {},

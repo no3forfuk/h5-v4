@@ -120,10 +120,10 @@
                 this.$storage.SET_session('loginType', type)
                 this.$storage.SET_session('crtUrl', location.href)
                 if (this.type == 'weixin') {
-                    location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx50d671a0a75e1115&redirect_uri=http://test.bantangtv.com&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+                    location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx50d671a0a75e1115&redirect_uri=http://www.rcm.ink&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
                 }
                 if (this.type == 'qq') {
-                    location.href = `https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101476497&state=rcm&redirect_uri=http%3a%2f%2ftest.bantangtv.com%2f%23%2fhot`
+                    location.href = `https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101476497&state=rcm&redirect_uri=http%3a%2f%2fwww.rcm.ink%2f%23%2fhot`
                 }
             }
         },

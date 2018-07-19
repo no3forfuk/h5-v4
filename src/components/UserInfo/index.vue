@@ -54,13 +54,14 @@
     import scrollSelect from './scrollSelect'
     import {editUserInfo, getUserInfo} from '../../api/api'
     import {uploadFile, timeFormat} from '../../utils'
+    import {SNI_userInfo} from '../../Snippet'
 
     export default {
         data() {
             return {
                 editActive: false,
                 userInfo: {},
-                editType: '',
+                editType: 'pic',
                 fav: '',
                 expert: '',
                 signature: ''
@@ -80,9 +81,9 @@
                 getUserInfo().then(res => {
                     if (res.status == 200 && res.data.status_code == 1) {
                         next(vm => {
-                            let userInfoStr = JSON.stringify(res.data.data[0])
+                            let userInfoStr = JSON.stringify(res.data.data)
                             sessionStorage.setItem('userInfo', userInfoStr)
-                            vm.userData = res.data.data[0]
+                            vm.userData = res.data.data
                         })
                     } else {
                         return
@@ -101,7 +102,7 @@
                 this.expert = val.id
             },
             submitEdit(val) {
-                if (this.editType == 'pic') {
+                if (val.type == 'pic') {
                     uploadFile(this, val.value, this.editPic)
                     return
                 }
@@ -146,13 +147,14 @@
                                 duration: 1000
                             })
                             this.editActive = false;
-                            getUserInfo().then(res => {
-                                this.userInfo = res.data.data
-                                let str = JSON.stringify(res.data.data)
-                                sessionStorage.setItem('userInfo', str)
-                            }).catch(err => {
-                                throw err
-                            })
+                            SNI_userInfo()
+                            // getUserInfo().then(res => {
+                            //     this.userInfo = res.data.data
+                            //     let str = JSON.stringify(res.data.data)
+                            //     sessionStorage.setItem('userInfo', str)
+                            // }).catch(err => {
+                            //     throw err
+                            // })
                         }
                     }
                 }).catch(err => {

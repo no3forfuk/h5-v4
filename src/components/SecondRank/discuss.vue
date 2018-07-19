@@ -35,8 +35,8 @@
                 <div class="discuss-body">
                     <div class="discuss-user">
                         <div class="left">
-                            <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
-                            <span>广东猎人</span>
+                            <img :src="userImg" alt="">
+                            <span>{{userName}}</span>
                         </div>
                         <span class="right" v-if="isVisitor" @click="goRegister">注册并享受更多好礼</span>
                     </div>
@@ -76,7 +76,9 @@
                 crtPage: 1,
                 discussList: [],
                 isVisitor: false,
-                type: ''
+                type: '',
+                userName: '',
+                userImg: ''
             }
         },
         created() {
@@ -84,6 +86,9 @@
             if (sessionStorage.getItem('X-Auth-Token')) {
                 this.isVisitor = false
                 this.type = 1
+                let user = this.$storage.GET_session('userInfo')
+                this.userName = user.name
+                this.userImg = user.avatar
             } else {
                 this.isVisitor = true
                 this.type = 2
@@ -170,6 +175,7 @@
                 addComment(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
+                            this.discussList = []
                             this.getRankDiscuss()
                             this.discussText = ''
                             this.discussIsOpen = false;
@@ -285,7 +291,7 @@
         top: 0;
         left: 0;
         background-color: #fff;
-        z-index: 100;
+        z-index: 900;
         .discuss-body {
             width: 100%;
             padding: 10px;

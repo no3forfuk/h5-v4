@@ -14,12 +14,12 @@
             <span>{{value.signature}}</span>
         </div>
         <div class="focus">
-            <i>1200</i>
-            <span>关注</span>
-            <i>230</i>
-            <span>粉丝</span>
-            <i>10</i>
-            <span>获赞</span>
+            <!--<i>1200</i>-->
+            <!--<span>关注</span>-->
+            <!--<i>230</i>-->
+            <!--<span>粉丝</span>-->
+            <i>{{value.collect}}</i>
+            <span>收藏</span>
         </div>
     </div>
 </template>

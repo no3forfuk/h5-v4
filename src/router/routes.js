@@ -125,7 +125,7 @@ module.exports = [
                     nav: true,
                     leftText: '首页',
                     rightText: '',
-                    backTarget: 'hot'
+                    backTarget: 'firstRank'
                 },
             },
             {
@@ -137,7 +137,7 @@ module.exports = [
                     nav: true,
                     leftText: '首页',
                     rightText: '',
-                    backTarget: 'hot'
+                    backTarget: 'firstRank'
                 },
             },
             {
@@ -149,10 +149,9 @@ module.exports = [
                     nav: true,
                     leftText: '首页',
                     rightText: '',
-                    backTarget: 'hot'
+                    backTarget: 'firstRank'
                 },
             },
-
         ]
     },
     {
@@ -247,7 +246,7 @@ module.exports = [
                 },
             },
             {
-                path: '/myself/fPost',
+                path: '/myself/Post',
                 name: 'myselfPost',
                 component: subPath('MySelf/myselfPost'),
                 meta: {

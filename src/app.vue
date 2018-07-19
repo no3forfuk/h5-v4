@@ -17,7 +17,6 @@
 
 <script>
     import {SNI_login} from './Snippet'
-    import {getLoginCode} from './api/api'
     import {SVS_loginByOther, SVS_firstRankList} from './Servers/API'
 
 

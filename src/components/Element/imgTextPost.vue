@@ -1,7 +1,7 @@
 <template>
     <div class="img-text">
         <p>{{text}}</p>
-        <img :src="value.img" alt="">
+        <img :src="imgSrc" alt="">
     </div>
 </template>
 
@@ -19,14 +19,13 @@
         },
         methods: {
             getText() {
-                this.text = this.value.post_content.split('<div>')[0]
-                let reg = /(([A-Za-z]*)\:\/\/(([A-Za-z0-9]*)\.)*com\/([A-Za-z]*|[0-9]*|[_]*|[-]*|[\.]*\/)*.([A-Za-z])*)/
-                if (reg.test(this.value.post_content)) {
-                    this.imgSrc = reg.exec(this.value.post_content)[0]
+                this.text = this.value.post_content.split('<')[0]
+                let reg = /(([A-Za-z]*)\:\/\/(([A-Za-z0-9]*)\.)*com\/([A-Za-z]*|[0-9]*|[_]*|[-]*|[\.]*|[\u4e00-\u9fa5])*\.([A-Za-z])*)/
+                if (this.value.img) {
+                    this.imgSrc = this.value.img
                 } else {
-                    this.imgSrc = ''
+                    this.imgSrc = reg.exec(this.value.post_content)[0]
                 }
-
             }
         },
         props: ['value']

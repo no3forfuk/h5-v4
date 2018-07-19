@@ -20,7 +20,7 @@
         </div>
         <div class="center">
             <div class="vote">
-                <p><span>{{value.vote}}</span><i>票</i></p>
+                <p><span ref="voteNum">{{value.vote}}</span><i>票</i></p>
                 <span>{{value.vote_user}}人投票</span>
             </div>
             <!--<div class="father-rank">-->
@@ -92,13 +92,6 @@
         },
         computed: {},
         methods: {
-            initCollectState(val) {
-                if (val) {
-                    this.isCollect = true
-                } else {
-                    this.isCollect = false
-                }
-            },
             doCollectElement() {
                 if (sessionStorage.getItem('X-Auth-Token')) {
                     elementCollect({
@@ -162,6 +155,7 @@
                                     duration: 1000,
                                     position: 'middle'
                                 })
+                                this.$refs.voteNum.innerText = parseInt(this.$refs.voteNum.innerText) + 1
                             } else {
                                 this.$toast({
                                     message: res.data.message,
@@ -189,6 +183,13 @@
                     this.showBGC = {
                         backgroundColor: '#ccc'
                     }
+                }
+            },
+            'value.collect'(val) {
+                if (val == 0) {
+                    this.isCollect = false
+                } else {
+                    this.isCollect = true
                 }
             }
         }

@@ -5,6 +5,15 @@
             <div class="input-box">
                 <input type="text" placeholder="为这个榜单添加新的成员" v-model="elemenName" ref="inputElement">
             </div>
+            <div class="easy-pic">
+                <img src="" alt="" class="img-view" ref="viewBox">
+                <icon :value="'&#xe604;'" :style="addStyle" @click="choosePic"></icon>
+                <input type="file"
+                       ref="takePhotos"
+                       name="file"
+                       @change="viewPicture"
+                       style="width: 0;height: 0;opacity: 0;position: absolute;top: 0;left: -9999px;">
+            </div>
             <div class="element-desc" v-if="hasTitle">
                 <textarea v-model="elementDesc" placeholder="介绍一下啊这个新成员吧"></textarea>
             </div>
@@ -32,6 +41,7 @@
 
 <script>
     import {getRankList, addElement, searchElementByName, addElementMore} from '../../api/api'
+    import {UTS_viewPicture, uploadFile} from '../../utils'
 
     export default {
         data() {
@@ -45,7 +55,9 @@
                 selectList: [],
                 iconList: {},
                 tempArr: [],
-                routerFrom: ''
+                routerFrom: '',
+                imgFile: '',
+                img: ''
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -53,6 +65,15 @@
                 vm.routerFrom = from.name
             })
 
+        },
+        computed: {
+            addStyle() {
+                return {
+                    fontSize: '50px',
+                    color: 'rgba(0,0,0,.2)',
+                    marginLeft: '20px'
+                }
+            }
         },
         beforeDestroy() {
             $(this.nextStepDom).unbind()
@@ -82,6 +103,14 @@
             })
         },
         methods: {
+            viewPicture() {
+                UTS_viewPicture(this.$refs.viewBox, this.$refs.takePhotos, () => {
+                    this.imgFile = this.$refs.takePhotos.files[0]
+                })
+            },
+            choosePic() {
+                this.$refs.takePhotos.click()
+            },
             deleteElement(index) {
                 this.selectList.splice(index, 1)
                 delete  this.iconList[this.tempArr[index]]
@@ -116,15 +145,54 @@
                     }
                     //addElementMore
                     if (this.selectList.length == 0) {
-                        let params = {};
-                        params.element_name = this.elemenName
-                        params.element_desc = this.elementDesc
-                        params.ranking_id = this.$route.query.secondId
-                        addElement(params).then(res => {
-                            if (res.status == 200) {
-                                if (res.data.status_code == 1) {
+                        uploadFile(this, this.imgFile, (res, filename) => {
+                            let params = {};
+                            params.element_name = this.elemenName
+                            params.element_desc = this.elementDesc
+                            params.ranking_id = this.$route.query.secondId
+                            params.img = 'http://p8rk87lub.bkt.clouddn.com/' + filename
+                            addElement(params).then(res => {
+                                if (res.status == 200) {
+                                    if (res.data.status_code == 1) {
+                                        this.$toast({
+                                            message: '发布成功',
+                                            duration: 1000,
+                                            position: 'middle'
+                                        })
+                                        this.$router.replace({
+                                            name: 'secondRankList',
+                                            query: this.$route.query
+                                        })
+                                    } else {
+                                        this.$toast({
+                                            message: res.data.message,
+                                            duration: 1000,
+                                            position: 'middle'
+                                        })
+                                    }
+                                } else {
+                                    return
+                                }
+                            }).catch(err => {
+                                throw err
+                            })
+                        })
+                    } else {
+                        uploadFile(this, this.imgFile, (res, filename) => {
+                            let arr = [], str = '';
+                            for (let i = 0; i < this.selectList.length; i++) {
+                                arr.push(this.selectList[i].id)
+                            }
+                            str = arr.join(',')
+                            let params = {
+                                ranking_id: this.$route.query.secondId,
+                                list: str,
+                                img: 'http://p8rk87lub.bkt.clouddn.com/' + filename
+                            }
+                            addElementMore(params).then(res => {
+                                if (res.status == 200 && res.data.status_code == 1) {
                                     this.$toast({
-                                        message: '发布成功',
+                                        message: '添加成功',
                                         duration: 1000,
                                         position: 'middle'
                                     })
@@ -139,39 +207,11 @@
                                         position: 'middle'
                                     })
                                 }
-                            } else {
-                                return
-                            }
-                        }).catch(err => {
-                            throw err
+                            }).catch(err => {
+                                throw err
+                            })
                         })
-                    } else {
-                        let arr = [], str = '';
-                        for (let i = 0; i < this.selectList.length; i++) {
-                            arr.push(this.selectList[i].id)
-                        }
-                        str = arr.join(',')
-                        let params = {
-                            ranking_id: this.$route.query.secondId,
-                            list: str
-                        }
-                        addElementMore(params).then(res => {
-                            if (res.status == 200 && res.data.status_code == 1) {
-                                this.$toast({
-                                    message: '添加成功',
-                                    duration: 1000,
-                                    position: 'middle'
-                                })
-                            } else {
-                                this.$toast({
-                                    message: res.data.message,
-                                    duration: 1000,
-                                    position: 'middle'
-                                })
-                            }
-                        }).catch(err => {
-                            throw err
-                        })
+
                     }
 
                 })
@@ -192,6 +232,21 @@
 </script>
 
 <style scoped lang="less">
+    .easy-pic {
+        width: 100%;
+        display: flex;
+        padding-right: 20px;
+        justify-content: space-between;
+        align-items: center;
+        .img-view {
+            width: 50px;
+            height: 50px;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-left: 10px;
+        }
+    }
+
     .add-element {
         width: 100%;
         .add-body {

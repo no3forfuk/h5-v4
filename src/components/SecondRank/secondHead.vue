@@ -44,13 +44,6 @@
             })
         },
         methods: {
-            initIsCollect(val) {
-                if (val) {
-                    this.isCollect = true
-                } else {
-                    this.isCollect = false
-                }
-            },
             doCollectRank() {
                 if (sessionStorage.getItem('X-Auth-Token')) {
                     rankCollect({
@@ -82,8 +75,17 @@
                 }
             }
         },
+        computed: {},
         props: ['value'],
-        watch: {}
+        watch: {
+            'value.collect'(val) {
+                if (val == 0) {
+                    this.isCollect = false
+                } else {
+                    this.isCollect = true
+                }
+            }
+        }
     }
 
 </script>

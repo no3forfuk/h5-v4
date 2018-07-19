@@ -8,6 +8,7 @@ function factory(fn, success, error, options) {
             if (res.data.status_code == 1) {
                 success(res.data)
             } else {
+                if (!error) return
                 error(res.data)
             }
         } else {
@@ -46,6 +47,10 @@ Servers.SVS_editUserInfo = function (success, error, options) {
 //获取一级榜单列表
 Servers.SVS_firstRankList = function (success, error, options) {
     factory(API.getFirstRankList, success, error, options)
+}
+//获取通知
+Servers.SVS_getNotice = function (success, error, options) {
+    factory(API.getNotice, success, error, options)
 }
 
 module.exports = Servers;

@@ -228,6 +228,14 @@ module.exports = {
             data: data
         })
     },
+    //通知
+    getNotice(data) {
+        return request({
+            url: '/user/userNotice',
+            method: 'Post',
+            data: data
+        })
+    }
 
 
 }

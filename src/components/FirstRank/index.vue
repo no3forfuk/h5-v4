@@ -29,6 +29,7 @@
 <script>
     import {getRankList} from '../../api/api'
     import indexPlaceholder from './placeholder'
+    import {sharePage} from '../../utils'
 
     export default {
         data() {
@@ -53,6 +54,20 @@
             })
         },
         methods: {
+            sharePage() {
+                let vm = this;
+                let url = location.href;
+                let desc = 'RCM热门榜单';
+                let type = 'link';
+                let firstRankArr = this.$storage.GET_session('firstRank')
+                var title = '';
+                for (let i = 0; i < firstRankArr.length; i++) {
+                    if (firstRankArr[i].id == this.$route.query.firstId) {
+                        title = firstRankArr[i].ranking_name;
+                    }
+                }
+                sharePage(vm, url, title, desc, type)
+            },
             loadNextPage() {
                 this.page++;
                 if (this.page > this.totalPage) {
@@ -93,6 +108,7 @@
                 this.page = 1
                 this.list = []
                 this.getFirstList()
+                this.sharePage()
             },
             '$route.query.idx'(n, o) {
                 if (n - o > 0) {
@@ -117,7 +133,7 @@
         overflow-y: hidden;
         .page-header {
             width: 100%;
-            padding: 0 10px;
+            padding: 0 20px;
             padding-bottom: 5px;
             font-size: 30px;
             border-bottom: 1px solid #C8C7CD;

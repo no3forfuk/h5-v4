@@ -44,13 +44,14 @@
             time = timeFormat('-', time)
             this.time = time;
             this.getPushRank()
+            this.sharePage()
         },
         methods: {
             sharePage() {
                 let vm = this;
                 let url = location.href;
-                let title = '首页';
-                let desc = 'RCM';
+                let title = '热门榜单';
+                let desc = 'RCM热门榜单';
                 let type = 'link';
                 sharePage(vm, url, title, desc, type)
             },
@@ -114,7 +115,7 @@
         overflow-y: hidden;
         .page-header {
             width: 100%;
-            padding: 0 10px;
+            padding: 0 20px;
             padding-bottom: 5px;
             font-size: 30px;
             border-bottom: 1px solid #C8C7CD;

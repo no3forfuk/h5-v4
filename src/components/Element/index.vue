@@ -43,6 +43,7 @@
             }
         },
         created() {
+            this.$store.commit('TOGGLENAVSHOW', false)
         },
         mounted() {
             this.$nextTick(() => {
@@ -61,6 +62,7 @@
                         vm.postListArr = vm.postListArr.concat(res.data.data.data.data)
                         vm.totalPage = res.data.data.data.last_page
                         vm.page = res.data.data.data.current_page
+                        sharePage(vm, location.href, res.data.data.element_name, res.data.data.element_desc)
                     })
                 } else {
                     return
@@ -134,7 +136,7 @@
             sharePage() {
                 let vm = this;
                 let url = location.href;
-                let title = this.share.title;
+                let title = elementData.title;
                 let desc = this.share.desc;
                 let type = 'link';
                 sharePage(vm, url, title, desc, type)

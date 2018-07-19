@@ -26,7 +26,7 @@
             return {
                 ulTranslateY: 0,
                 scrollData: [],
-                step: 20,
+                step: 21,
                 index: 0
             }
         },
@@ -39,7 +39,12 @@
                             $(this.$refs.lis[this.index]).css({
                                 transform: 'scale(1.5)'
                             })
-                            this.$emit('change', this.scrollData[this.index])
+                            if (this.index < this.$refs.lis.length) {
+                                this.$emit('change', this.scrollData[this.index])
+                            } else {
+                                return
+                            }
+
                         })
                     }
                 } else {
@@ -66,7 +71,12 @@
                         transform: 'scale(1.5)'
                     })
                 }
-                this.$emit('change', this.scrollData[this.index])
+                if (this.index < this.$refs.lis.length) {
+                    this.$emit('change', this.scrollData[this.index])
+                } else {
+                    return
+                }
+
             }
         },
         computed: {}

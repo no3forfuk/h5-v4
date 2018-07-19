@@ -45,7 +45,7 @@
         },
         computed: {
             openFind() {
-                if (this.findIsOpen) {
+                if (this.$store.state.topNavShow) {
                     return {
                         height: '26px'
                     }
@@ -62,9 +62,11 @@
                 if (this.val.index) {
                     this.$store.commit('SETOPENUSERCENTER', true)
                     if (sessionStorage.getItem('X-Auth-Token')) {
-                        this.$router.push({
-                            name: 'userCenter',
-                            query: this.$route.query
+                        this.$nextTick(() => {
+                            this.$router.push({
+                                name: 'userCenter',
+                                query: this.$route.query
+                            })
                         })
                     } else {
                         this.$store.commit('GOLOGIN', true)
@@ -72,6 +74,7 @@
                     return
                 } else {
                     this.$store.commit('SETOPENUSERCENTER', false)
+                    this.$store.commit('SETDIRECTION', 'back')
                 }
                 if (!this.val.backTarget) {
                     this.$store.commit('SETDIRECTION', 'forward')
@@ -79,11 +82,31 @@
                         this.$router.back()
                     })
                 } else {
-                    this.$store.commit('SETDIRECTION', 'back')
-                    this.$router.push({
-                        name: this.val.backTarget,
-                        query: this.$route.query
-                    })
+                    if (this.val.backTarget == 'firstRank') {
+                        if (this.$route.query.firstId) {
+                            this.$router.push({
+                                name: 'firstRank',
+                                query: this.$route.query
+                            })
+                        } else {
+                            this.$router.push({
+                                name: 'hot',
+                                query: this.$route.query
+                            })
+                        }
+                    } else {
+                        if (this.$route.name == 'userCenter') {
+                            this.$store.commit('SETDIRECTION', 'forward')
+                        } else {
+                            this.$store.commit('SETDIRECTION', 'back')
+                        }
+                        this.$nextTick(() => {
+                            this.$router.push({
+                                name: this.val.backTarget,
+                                query: this.$route.query
+                            })
+                        })
+                    }
                 }
 
             },

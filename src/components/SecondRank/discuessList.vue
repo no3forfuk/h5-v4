@@ -12,7 +12,7 @@
                         <span>{{item.like}}</span>
                     </div>
                     <div class="center">
-                        <user-card :value="item.visitor || item.user"></user-card>
+                        <user-card :value="item.user"></user-card>
                         <p class="content">{{item.content}}</p>
                     </div>
                     <span class="right">{{item.updated_at|timeformat}}</span>
@@ -50,6 +50,7 @@
             },
             didGreat(index, item) {
                 this.$refs.likes[index].style.color = '#FF2C09'
+                let spanDom = this.$refs.likes[index].children[1]
                 let params = {
                     comment_id: item.id,
                     user_type: 1
@@ -62,6 +63,7 @@
                                 duration: 1000,
                                 position: 'middle'
                             })
+                            spanDom.innerText = parseInt(spanDom.innerText) + 1
                         } else {
                             this.$toast({
                                 message: '操作太快，休息一会',

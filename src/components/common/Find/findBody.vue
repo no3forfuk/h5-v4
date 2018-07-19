@@ -19,11 +19,12 @@
 
 <script>
     import {getFirstRankList} from '../../../api/api'
+    import {SVS_firstRankList} from '../../../Servers/API'
 
     export default {
         data() {
             return {
-                crtIndex: 0,
+                crtIndex: -1,
                 crtPositon: 0,
                 leftBoundary: false,
                 rightBoundary: false,
@@ -31,28 +32,20 @@
             }
         },
         created() {
-
-            if (this.value) {
-                this.getListInfo()
-            } else {
-                return
-            }
+            this.getListInfo()
         },
         mounted() {
-
-        },
-        updated() {
             this.$nextTick(() => {
-                if (this.rankData.length > 0) {
+                if (!this.$route.query.firstId) {
+                    this.crtIndex = 0
+                } else {
                     for (let i = 0; i < this.rankData.length; i++) {
                         if (this.$route.query.firstId == this.rankData[i].id) {
-                            this.crtIndex = i;
-                            this.$emit('setName', this.rankData[i].ranking_name)
+                            this.crtIndex = i
                         }
                     }
-                } else {
-                    this.crtIndex = this.$route.query.idx;
                 }
+
             })
         },
         methods: {
@@ -63,50 +56,44 @@
                     value: item
                 })
             },
+            //获取一级列表数据
             getListInfo() {
-                getFirstRankList().then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
-                            this.rankData = res.data.data.data
-                            this.rankData.unshift({ranking_name: '热门榜单', id: -1});
-                            this.$nextTick(() => {
-                                if (!this.$route.query.idx || this.$route.query.idx == 0) {
-                                    this.$route.query.idx = 0
-                                    this.setCrtPosition(0)
-                                } else {
-                                    this.setCrtPosition(parseInt(this.$route.query.idx))
-                                }
-
-                            })
-                        } else {
-
-                        }
-                    } else {
-
-                    }
-                }).catch(err => {
-                    throw err
-                })
+                if (this.$storage.GET_session('firstRank')) {
+                    this.rankData = this.$storage.GET_session('firstRank')
+                    this.rankData.unshift({ranking_name: '热门榜单', id: -1});
+                } else {
+                    SVS_firstRankList(res => {
+                        this.rankData = res.data.data
+                        this.$storage.SET_session('firstRank', res.data.data)
+                        this.rankData.unshift({ranking_name: '热门榜单', id: -1});
+                    })
+                }
             },
+            //滚动监听
             navScroll() {
+                this.initUlWidth()
                 this.judgeBoundary()
             },
+            //初始化Ul的宽度
             initUlWidth() {
                 let lastLiWidth = $(this.$refs.lis[(this.rankData.length - 1)]).width();
                 let lastLiLeft = this.$refs.lis[(this.rankData.length - 1)].offsetLeft;
                 let width = lastLiWidth + lastLiLeft;
                 $('.li-buffer').width(width);
             },
+            //下标span的位置
             setCrtPosition(i) {
                 let width = $(this.$refs.lis[i]).width();
                 let left = this.$refs.lis[i].offsetLeft;
                 let X = (width - 12) / 2;
                 this.crtPositon = left + X;
             },
+            //TODO
+            //点击li使li居中
             setSelectLiPosition(i) {
-                //TODO
-                //点击li使li居中
+
             },
+            //前后透明遮罩
             judgeBoundary(i) {
                 let ulWidth = $('.li-buffer').width();
                 let windowWidth = $(window).width();
@@ -137,9 +124,12 @@
             }
         },
         watch: {
+            '$route.query.idx'(val) {
+                this.crtIndex = val;
+            },
             crtIndex(n, o) {
                 this.setCrtPosition(n);
-            }
+            },
         },
         props: ['value']
     }

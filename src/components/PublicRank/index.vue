@@ -142,7 +142,9 @@
 </script>
 
 <style scoped lang="less">
-
+    .add-rank-page {
+        width: 100%;
+    }
 
     .input-rank-name {
         width: 100%;

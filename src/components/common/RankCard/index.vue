@@ -17,11 +17,13 @@
                         <router-link
                                 :to="{name:'element',query:{elementId:item.id,secondId:renderData.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
                             <i>No.{{index+1}}</i>
-                            <span>{{item.element_name}}</span>
+                            <span v-if="!item.img">{{item.element_name}}</span>
+                            <img :src="item.img" alt="" v-if="item.img">
                         </router-link>
                     </li>
                     <li ref="more">
-                        <router-link :to="{name:'secondRankList'}">
+                        <router-link
+                                :to="{name:'secondRankList',query:{secondId:renderData.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
                             <span>更多...</span>
                         </router-link>
                     </li>
@@ -184,6 +186,7 @@
                             display: block;
                             width: 100%;
                             height: 100%;
+                            overflow: hidden;
                             i {
                                 position: absolute;
                                 top: 3px;
@@ -204,6 +207,12 @@
                                 white-space: normal;
                                 max-height: 65px;
                                 overflow: hidden;
+                            }
+                            img {
+                                width: 100%;
+                                height: 100%;
+                                border-radius: 4px;
+                                border: 0 none;
                             }
                         }
                     }

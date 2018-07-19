@@ -1,6 +1,6 @@
 <template>
     <div class="banner">
-        <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
+        <img src="http://p8rk87lub.bkt.clouddn.com/2018-07-19_193050.png" alt="">
     </div>
 </template>
 

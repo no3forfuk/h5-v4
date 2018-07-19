@@ -36,6 +36,7 @@ utils.timeFormat = function (type, ms) {
     }
     return time.getFullYear() + type + mouth + type + day;
 }
+//微信分享
 utils.sharePage = function (vm, url, title, desc, type, cb) {
     var params = {};
     var linkUrl = url.split('#')[0] + url.split('#/')[1];

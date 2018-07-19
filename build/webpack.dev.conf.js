@@ -171,6 +171,10 @@ module.exports = merge(base, {
             app.post('/api/home/login/forgot', (req, res) => {
                 go(req, res)
             })
+            //通知
+            app.post('/api/home/user/userNotice', (req, res) => {
+                go(req, res)
+            })
             //--------------------------------------------
             //获取微信签名
             // app.post('/api/Wx/signature', (req, res) => {

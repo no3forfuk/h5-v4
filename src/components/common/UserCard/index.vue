@@ -2,9 +2,9 @@
     <div class="user-card" v-if="value">
         <img :src="value.avatar||'http://p8rk87lub.bkt.clouddn.com/visitor.jpg'" alt="">
         <div class="user-info">
-            <h6>{{value.name||value.area +'猎人'}}</h6>
+            <h6>{{value.name || value.area +'猎人'}}</h6>
             <p>
-                <span>{{rankName||'暂无'}}</span>
+                <span>#{{ value.ranking_name||'暂无'}}</span>
                 <span></span>
                 <span>{{value.signature||'暂无'}}</span>
             </p>
@@ -20,19 +20,7 @@
             return {
                 renderData: {},
                 rankName: '',
-                type: 2,
-                defaultData: {
-                    avatar: 'http://p8rk87lub.bkt.clouddn.com/visitor.jpg',
-                    avatar_key: 'visitor.jpg',
-                    email: '',
-                    get_expert: {
-                        ranking_name: '暂无',
-                        id: NaN
-                    },
-                    name: '用户' + parseInt(new Date() / 123),
-                    signature: '该用户什么也不想说',
-                    updated_at: timeFormat('-')
-                }
+                type: 2
             }
         },
         created() {

@@ -4,12 +4,10 @@
 const state = {
     direction: 'forward',
     openUserCenter: false,
-    routerDirection: 'forward',
     rankIndex: 0,
     isLogin: false,
     goLogin: false,
     topNavShow: false,
-    loginType: '',
     backUrl: ''
 }
 const mutations = {
@@ -18,10 +16,6 @@ const mutations = {
     },
     LOGIN(state, login) {
         state.isLogin = login
-    },
-    //设置登陆类型
-    SETLOGINTYPE(state, type) {
-        state.loginType = type
     },
     //设置返回地址
     SETBACKURL(state, url) {
@@ -38,21 +32,15 @@ const mutations = {
     },
     SETROUTERDIRECTION(state, direction) {
         state.routerDirection = direction
-    },
-    SETRANKINDEX(state, index) {
-        state.rankIndex = index
     }
 };
 const getters = {
+    //是否打開登陸頁面
     GOLOGIN: state => {
         return state.goLogin
     },
     TOPNAVSTATE: state => {
         return state.topNavShow
-    },
-    //获取登陆类型
-    GETLOGINTYPE: state => {
-        return state.loginType
     },
     //获取返回地址
     GETBACKURL: state => {

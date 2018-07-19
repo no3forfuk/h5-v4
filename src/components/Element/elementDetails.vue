@@ -5,14 +5,14 @@
         <h4 class="title">@{{value.element_name}}</h4>
         <p class="content">
             {{value.element_desc}}</p>
-        <div class="builder">
-            <h4 class="builder-header">排名创建者</h4>
-            <user-card></user-card>
-        </div>
-        <div class="builder">
-            <h4 class="builder-header">最后维护者</h4>
-            <user-card></user-card>
-        </div>
+        <!--<div class="builder">-->
+        <!--<h4 class="builder-header">排名创建者</h4>-->
+        <!--<user-card></user-card>-->
+        <!--</div>-->
+        <!--<div class="builder">-->
+        <!--<h4 class="builder-header">最后维护者</h4>-->
+        <!--<user-card></user-card>-->
+        <!--</div>-->
     </div>
 </template>
 
@@ -40,6 +40,8 @@
     .element-details {
         width: 100%;
         height: 90%;
+        overflow-x: hidden;
+        overflow-y: auto;
         position: absolute;
         background-color: #fff;
         border-top-left-radius: 5px;
