@@ -1,7 +1,8 @@
 <template>
     <div class="hot-rank">
-        <p class="page-header">RCM热门榜单</p>
-        <div class="hot-page-body">
+        <rcm-header-placehloder></rcm-header-placehloder>
+        <rcm-page-header :value="pageTitle"></rcm-page-header>
+        <div class="hot-page-body" :style="scrollDivHeight">
             <mt-loadmore :bottom-method="loadBeforeDay"
                          :bottom-all-loaded="allLoaded"
                          :bottomDistance="pullHeight"
@@ -31,7 +32,8 @@
                 pullHeight: 20,
                 list: [],
                 time: '',
-                dayNum: 0
+                dayNum: 0,
+                pageTitle: 'RCM热门榜单'
             }
         },
         mounted() {
@@ -45,6 +47,19 @@
             this.time = time;
             this.getPushRank()
             this.sharePage()
+        },
+        computed: {
+            scrollDivHeight() {
+                if (this.$store.getters.TOPNAVSTATE) {
+                    return {
+                        height: $(window).height() - 120 + 'px'
+                    }
+                } else {
+                    return {
+                        height: $(window).height() - 94 + 'px'
+                    }
+                }
+            }
         },
         methods: {
             sharePage() {
@@ -122,7 +137,6 @@
         }
         .hot-page-body {
             width: 100%;
-            height: calc(100% - 46px);
             overflow-x: hidden;
             overflow-y: auto;
         }

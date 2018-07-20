@@ -1,7 +1,8 @@
 <template>
     <div class="first-rank">
-        <p class="page-header">开荒神器RCM</p>
-        <div class="first-page-body">
+        <rcm-header-placehloder></rcm-header-placehloder>
+        <rcm-page-header :value="pageTitle"></rcm-page-header>
+        <div class="first-page-body" :style="scrollDivHeight">
             <mt-loadmore :bottom-method="loadNextPage"
                          :bottom-all-loaded="allLoaded"
                          :bottomDistance="pullHeight"
@@ -39,7 +40,8 @@
                 list: [],
                 page: 1,
                 totalPage: 0,
-                listTransition: ''
+                listTransition: '',
+                pageTitle: '开荒神器RCM'
             }
         },
         created() {
@@ -102,7 +104,19 @@
                 })
             }
         },
-        computed: {},
+        computed: {
+            scrollDivHeight() {
+                if (this.$store.getters.TOPNAVSTATE) {
+                    return {
+                        height: $(window).height() - 120 + 'px'
+                    }
+                } else {
+                    return {
+                        height: $(window).height() - 94 + 'px'
+                    }
+                }
+            }
+        },
         watch: {
             '$route.query.firstId'(val) {
                 this.page = 1
@@ -140,7 +154,6 @@
         }
         .first-page-body {
             width: 100%;
-            height: calc(100% - 46px);
             overflow-x: hidden;
             overflow-y: auto;
         }

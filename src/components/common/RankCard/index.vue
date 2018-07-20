@@ -17,14 +17,19 @@
                         <router-link
                                 :to="{name:'element',query:{elementId:item.id,secondId:renderData.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
                             <i>No.{{index+1}}</i>
-                            <span v-if="!item.img">{{item.element_name}}</span>
-                            <img :src="item.img" alt="" v-if="item.img">
+                            <div class="element-item">
+                                <span v-if="!item.img">{{item.element_name}}</span>
+                                <img :src="item.img" alt="" v-if="item.img">
+                            </div>
                         </router-link>
                     </li>
                     <li ref="more">
                         <router-link
                                 :to="{name:'secondRankList',query:{secondId:renderData.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
-                            <span>更多...</span>
+
+                            <div class="element-item">
+                                <span>更多...</span>
+                            </div>
                         </router-link>
                     </li>
                 </ul>
@@ -174,7 +179,9 @@
                     width: 100%;
                     padding-bottom: 20px;
                     padding-right: 10px;
+                    display: flex;
                     li {
+                        flex: 0 0 70px;
                         width: 70px;
                         height: 70px;
                         border: 1px solid rgba(0, 0, 0, 0.2);
@@ -194,26 +201,31 @@
                                 color: #d4d4d4;
                                 font-size: 8px;
                             }
-                            span {
-                                display: block;
-                                width: 100%;
-                                color: #000;
-                                position: absolute;
-                                top: 50%;
-                                transform: translateY(-50%);
-                                left: 0;
-                                font-size: 10px;
-                                text-align: center;
-                                white-space: normal;
-                                max-height: 65px;
-                                overflow: hidden;
-                            }
-                            img {
+                            .element-item {
                                 width: 100%;
                                 height: 100%;
-                                border-radius: 4px;
-                                border: 0 none;
+                                span {
+                                    display: block;
+                                    width: 100%;
+                                    color: #000;
+                                    position: absolute;
+                                    top: 50%;
+                                    transform: translateY(-50%);
+                                    left: 0;
+                                    font-size: 10px;
+                                    text-align: center;
+                                    white-space: normal;
+                                    max-height: 65px;
+                                    overflow: hidden;
+                                }
+                                img {
+                                    width: 100%;
+                                    height: 100%;
+                                    border-radius: 4px;
+                                    border: 0 none;
+                                }
                             }
+
                         }
                     }
                 }

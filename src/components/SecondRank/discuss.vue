@@ -27,7 +27,7 @@
         </div>
         <discuess-list ref="discuessList" :value="discussList"></discuess-list>
         <transition name="discuss-sort">
-            <div class="add-discuss" v-show="discussIsOpen">
+            <div class="add-discuss" v-show="false">
                 <rcm-header>
                     <span slot="back" @click.stop="cancelDiscuss" class="color-cancel">取消</span>
                     <span slot="right" @click.stop="confirmDiscuss" class="color-cancel">完成</span>
@@ -150,7 +150,7 @@
                 this.sort(i)
             },
             activeDiscuss() {
-                this.discussIsOpen = true;
+                this.$emit('openDis')
             },
             cancelDiscuss() {
                 this.discussIsOpen = false;
@@ -287,7 +287,7 @@
     .add-discuss {
         width: 100%;
         height: 100%;
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         background-color: #fff;

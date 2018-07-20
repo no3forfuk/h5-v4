@@ -22,6 +22,7 @@
             <span>{{value.vote}}(票)</span>
             <span v-if="value.data">{{value.data.total}}(排名)</span>
         </div>
+        <!--<rcm-popup></rcm-popup>-->
     </div>
 </template>
 

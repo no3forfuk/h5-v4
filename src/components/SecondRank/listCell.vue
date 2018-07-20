@@ -85,10 +85,11 @@
                         line-height: 18px;
                     }
                     p {
-                        height: 44px;
+                        box-sizing: content-box;
+                        height: 40px;
                         overflow: hidden;
                         text-align: justify;
-                        padding-top: 5px;
+                        padding: 5px 0;
                     }
                 }
                 .img {
@@ -97,8 +98,8 @@
                     height: 64px;
                     img {
                         display: block;
-                        width: 64px;
-                        height: 64px;
+                        width: 4rem;
+                        height: 4rem;
                         border-radius: 2px;
                     }
                 }

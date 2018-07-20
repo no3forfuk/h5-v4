@@ -1,10 +1,16 @@
 <template>
-    <div class="second-page" :style="heightStyle" @scroll="scrollSecondPage">
+    <div class="second-page" @scroll="scrollSecondPage">
+        <rcm-header-placehloder></rcm-header-placehloder>
         <transition name="active-title">
             <p class="activeTitle" v-if="showActiveTitle" :style="positionTop">#{{secondInfo.ranking_name}}</p>
         </transition>
         <second-head :value="secondInfo" class="second-head" ref="secondHead"></second-head>
-        <tabs :value="listInfo" class="second-tabs-box" @nextListPage="loadNextList"></tabs>
+        <tabs :value="listInfo" class="second-tabs-box" @nextListPage="loadNextList" @openDis="openDis"></tabs>
+        <rcm-popup :show="activeDiscuss"
+                   :type="'full'"
+                   @close="closeDIS">
+            <dis-modal slot="fullPage"></dis-modal>
+        </rcm-popup>
     </div>
 </template>
 
@@ -13,6 +19,7 @@
     import findBody from '../common/Find/findBody'
     import secondHead from './secondHead'
     import tabs from './tabs'
+    import disModal from './discuss2'
     import {getRankList} from '../../api/api'
     import {sharePage} from '../../utils/index'
 
@@ -27,7 +34,8 @@
                 },
                 listPage: 1,
                 listTotalPage: 1,
-                showActiveTitle: false
+                showActiveTitle: false,
+                activeDiscuss: true
             }
         },
         mounted() {
@@ -71,17 +79,7 @@
 
         },
         computed: {
-            heightStyle() {
-                if (!this.$store.getters.TOPNAVSTATE) {
-                    return {
-                        height: $(window).height() - 33 + 'px'
-                    }
-                } else {
-                    return {
-                        height: $(window).height() - 59 + 'px'
-                    }
-                }
-            },
+
             positionTop() {
                 if (!this.$store.getters.TOPNAVSTATE) {
                     return {
@@ -95,6 +93,14 @@
             }
         },
         methods: {
+            //打开评论框
+            openDis() {
+                this.activeDiscuss = true
+            },
+            //关闭评论框
+            closeDIS() {
+                this.activeDiscuss = false
+            },
             scrollSecondPage() {
                 let height = $('.second-page')[0].scrollTop
                 if (height > 140) {
@@ -144,7 +150,8 @@
             findCtrl,
             findBody,
             secondHead,
-            tabs
+            tabs,
+            disModal
         },
         watch: {}
     }
@@ -157,6 +164,7 @@
         overflow-x: hidden;
         overflow-y: auto;
         width: 100%;
+        height: 100%;
         transition: all 0.5s;
     }
 

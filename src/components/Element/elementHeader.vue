@@ -251,7 +251,10 @@
                 p:nth-child(2) {
                     color: #939398;
                     margin: 5px 0;
-                    max-height: 60px;
+                    max-height: 20px;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    box-sizing: content-box;
                     overflow: hidden;
                 }
                 p:nth-child(3) {
@@ -260,6 +263,7 @@
                     width: 80px;
                     text-align: center;
                     border-radius: 6px;
+                    font-size: 14px;
                     padding: 4px 18px;
                     background-color: #E4E4E4;
                 }

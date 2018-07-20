@@ -45,7 +45,7 @@
                         }
                     }
                 }
-
+                this.navScroll()
             })
         },
         methods: {

@@ -21,5 +21,6 @@
         width: 100%;
         max-height: 94px;
         overflow: hidden;
+        text-align: left;
     }
 </style>

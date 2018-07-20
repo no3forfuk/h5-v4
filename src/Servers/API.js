@@ -52,5 +52,9 @@ Servers.SVS_firstRankList = function (success, error, options) {
 Servers.SVS_getNotice = function (success, error, options) {
     factory(API.getNotice, success, error, options)
 }
+//获取榜单详情
+Servers.SVS_getRankList = function (success, error, options) {
+    factory(API.getRankList, success, error, options)
+}
 
 module.exports = Servers;

@@ -1,5 +1,6 @@
 <template>
     <div class="element-page" :style="elementPageHeight" @scroll="scrollElementPage">
+        <rcm-header-placehloder></rcm-header-placehloder>
         <transition name="active-title">
             <p class="active-element-page" v-if="showActiveTitle" :style="positionTop">@{{elementData.element_name}}</p>
         </transition>
@@ -193,8 +194,6 @@
         .active-element-page {
             padding: 0 20px;
             font-weight: bold;
-            height: 28px;
-            line-height: 28px;
             font-size: 20px;
             transition: all 1s;
             width: 100%;

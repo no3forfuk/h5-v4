@@ -146,8 +146,12 @@
         width: 100%;
         display: flex;
         flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
         flex-wrap: nowrap;
         background-color: #fff;
+        z-index: 10;
         padding: 0 10px;
         justify-content: space-between;
         .header-top {

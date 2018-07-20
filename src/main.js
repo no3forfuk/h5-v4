@@ -16,6 +16,9 @@ function phoneType() {
     }
 }
 
+import propUp from './components/common/propUp/index'
+
+Vue.prototype.$propUp = propUp
 Vue.filter('timeformat', val => {
     let ms;
     if (phoneType() == 'Android') {

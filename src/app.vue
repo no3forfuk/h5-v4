@@ -1,12 +1,12 @@
 <template>
-    <div class="app">
+    <div class="app" id="app">
         <rcm-headers class="header"
                      ref="rcmHeaders"
                      :val="$route.meta"
                      :firstRank="firstRankList"
         ></rcm-headers>
         <!--<div class="app-mask"></div>-->
-        <div class="app-body" :style="computerHeight">
+        <div class="app-body">
             <transition :name="transitionName">
                 <router-view class="router-view"></router-view>
             </transition>
@@ -39,6 +39,7 @@
         created() {
             this.$store.commit('SETDIRECTION', 'forward')
             this.init()
+
         },
         mounted() {
             this.$nextTick(() => {
@@ -47,6 +48,7 @@
                 })
                 this.loginByType()
             })
+
         },
         updated() {
             this.$nextTick(() => {
@@ -100,17 +102,6 @@
             }
         },
         computed: {
-            computerHeight() {
-                if (!this.$store.getters.TOPNAVSTATE) {
-                    return {
-                        height: $(window).height() - 33 + 'px'
-                    }
-                } else {
-                    return {
-                        height: $(window).height() - 68 + 'px'
-                    }
-                }
-            },
             isLogin() {
                 return this.$store.getters.GOLOGIN
             },
@@ -122,11 +113,7 @@
                 }
             }
         },
-        watch: {
-            '$route'(n, o) {
-
-            }
-        }
+        watch: {}
     }
 
 </script>
@@ -143,6 +130,7 @@
             overflow-x: hidden;
             overflow-y: hidden;
             transition: all 0.3s;
+            height: 100%;
         }
         .app-mask {
             width: 100%;
