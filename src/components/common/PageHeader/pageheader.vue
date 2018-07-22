@@ -20,12 +20,12 @@
 <style scoped lang="less">
     .rcm-page-header {
         width: 100%;
+        height: 40px;
         background-color: #fff;
-        font-size: 1.92rem;
-        line-height: 1.92rem;
-        padding: 0.65rem 1.3125rem;
-        border-bottom: 1px solid rgba(0, 0, 0, .08);
-        position: relative;
+        font-size: 30px;
+        line-height: 40px;
+        padding: 5px 20px;
+        box-sizing: content-box;
         span {
             background: linear-gradient(to top, #FFCECE 0%, #FFCECE, 50%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 1) 100%);
         }

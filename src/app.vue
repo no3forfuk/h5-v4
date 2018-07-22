@@ -1,16 +1,8 @@
 <template>
-    <div class="app" id="app">
-        <rcm-headers class="header"
-                     ref="rcmHeaders"
-                     :val="$route.meta"
-                     :firstRank="firstRankList"
-        ></rcm-headers>
-        <!--<div class="app-mask"></div>-->
-        <div class="app-body">
-            <transition :name="transitionName">
-                <router-view class="router-view"></router-view>
-            </transition>
-        </div>
+    <div id="app">
+        <transition :name="transitionName">
+            <router-view></router-view>
+        </transition>
         <rcm-login v-if="isLogin"></rcm-login>
     </div>
 </template>
@@ -37,13 +29,12 @@
 
         },
         created() {
-            this.$store.commit('SETDIRECTION', 'forward')
             this.init()
 
         },
         mounted() {
             this.$nextTick(() => {
-                $('.app').css({
+                $('#app').css({
                     height: $(window).height()
                 })
                 this.loginByType()
@@ -52,10 +43,8 @@
         },
         updated() {
             this.$nextTick(() => {
-                // this.$store.commit('SETDIRECTION', 'forward')
-                setTimeout(() => {
-                    this.$store.commit('SETDIRECTION', 'forward')
-                }, 1000)
+
+
             })
         },
         beforeDestroy() {
@@ -106,11 +95,7 @@
                 return this.$store.getters.GOLOGIN
             },
             transitionName() {
-                if (this.$store.state.openUserCenter) {
-                    return 'openuser'
-                } else {
-                    return this.$store.state.direction
-                }
+                return this.$store.getters.GET_TRANSITIONTYPE
             }
         },
         watch: {}
@@ -119,60 +104,18 @@
 </script>
 
 <style scoped lang="less">
-
-    .app {
+    #app {
         width: 100%;
+        height: 100%;
         overflow: hidden;
         position: relative;
-        background-color: #fff;
-        .app-body {
-            width: 100%;
-            overflow-x: hidden;
-            overflow-y: hidden;
-            transition: all 0.3s;
-            height: 100%;
-        }
-        .app-mask {
-            width: 100%;
-            height: 20px;
-            position: absolute;
-            left: 0;
-            background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-        }
     }
 
-    /*前进进入*/
-    .forward-enter-active,
-    .userCenter-home-enter-active {
-        animation: slideInRight 0.6s;
-        position: absolute;
+    .fade-enter-active {
+        animation: fadeIn 0.4s;
     }
 
-    /*前进离开*/
-    .forward-leave-active,
-    .userCenter-home-leave-active {
-        animation: slideOutLeft 0.6s;
-        position: absolute;
-    }
-
-    /*后退进入*/
-    .back-enter-active,
-    .openuser-enter-active,
-    .home-userCenter-enter-active {
-        animation: slideInLeft 0.6s;
-        position: absolute;
-    }
-
-    /*后退离开*/
-    .back-leave-active,
-    .openuser-leave-active,
-    .home-userCenter-leave-active {
-        animation: slideOutRight 0.6s;
-        position: absolute;
-    }
-
-    .home-element-enter-active {
-        animation: scaleToCenter 0.6s;
-        position: absolute;
+    .fade-leave-active {
+        animation: fadeOut 0.4s;
     }
 </style>

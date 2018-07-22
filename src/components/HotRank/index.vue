@@ -1,17 +1,19 @@
 <template>
     <div class="hot-rank">
-        <rcm-header-placehloder></rcm-header-placehloder>
+        <rcm-head :idx="0" @getIndexData="getFirstRankInfo"></rcm-head>
         <rcm-page-header :value="pageTitle"></rcm-page-header>
-        <div class="hot-page-body" :style="scrollDivHeight">
+        <div class="hot-page-body" :style="scrollBoxHeight" ref="rankListBox">
             <mt-loadmore :bottom-method="loadBeforeDay"
                          :bottom-all-loaded="allLoaded"
                          :bottomDistance="pullHeight"
                          :auto-fill="false"
                          ref="loadmore">
-                <ul class="ranklist">
-                    <rank-card v-for="(item,index) in list"
-                               :value="item"
-                               :key="index"></rank-card>
+                <ul>
+                    <transition-group name="rank-list-transition">
+                        <rank-card v-for="(item,index) in list"
+                                   :value="item"
+                                   :key="index"></rank-card>
+                    </transition-group>
                     <div class="index-footer">
                         <p>没找到感兴趣的？点开发现探索一下</p>
                     </div>
@@ -22,8 +24,8 @@
 </template>
 
 <script>
-    import {getIndex} from '../../api/api'
     import {timeFormat, sharePage} from '../../utils/index'
+    import {SVS_getIndex, SVS_getRankList} from '../../Servers/API'
 
     export default {
         data() {
@@ -33,7 +35,9 @@
                 list: [],
                 time: '',
                 dayNum: 0,
-                pageTitle: 'RCM热门榜单'
+                page: 1,
+                pageTitle: 'RCM热门榜单',
+                pageType: ''
             }
         },
         mounted() {
@@ -49,19 +53,31 @@
             this.sharePage()
         },
         computed: {
-            scrollDivHeight() {
+            scrollBoxHeight() {
                 if (this.$store.getters.TOPNAVSTATE) {
                     return {
-                        height: $(window).height() - 120 + 'px'
+                        height: $(window).height() - 133 + 'px'
                     }
                 } else {
                     return {
-                        height: $(window).height() - 94 + 'px'
+                        height: $(window).height() - 102 + 'px'
                     }
                 }
             }
         },
         methods: {
+            getFirstRankInfo(val) {
+                this.list = []
+                if (val.ranking_name == '热门榜单') {
+                    this.pageType = 'hot'
+                    this.pageTitle = 'RCM热门榜单'
+                    this.getPushRank()
+                } else {
+                    this.pageTitle = '开荒神器RCM'
+                    this.pageType = 'firstRank'
+                    this.getFirstRank(val.id)
+                }
+            },
             sharePage() {
                 let vm = this;
                 let url = location.href;
@@ -71,51 +87,50 @@
                 sharePage(vm, url, title, desc, type)
             },
             loadBeforeDay() {
-                this.dayNum++;
-                let oneDay = this.dayNum * 3600 * 24 * 1000
-                let time = Date.now() - oneDay
-                this.time = timeFormat('-', time)
-                this.getPushRank()
+                if (this.pageType == 'hot') {
+                    this.dayNum++;
+                    let oneDay = this.dayNum * 3600 * 24 * 1000
+                    let time = Date.now() - oneDay
+                    this.time = timeFormat('-', time)
+                } else {
+                    this.page++;
+                }
                 this.$refs.loadmore.onBottomLoaded();
             },
+            //获取推送榜单
             getPushRank() {
                 let params = {}
                 let oneDay = this.dayNum * 3600 * 24 * 1000
                 let time = Date.now() - oneDay
                 this.time = timeFormat('-', time)
                 params.time = this.time
-                getIndex(params).then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
-                            if (res.data.data.length > 0) {
-                                this.list = this.list.concat(res.data.data)
-                            } else {
-                                this.dayNum++
-                            }
-                        } else {
-
-                        }
+                SVS_getIndex(res => {
+                    if (res.data.length > 0) {
+                        this.list = this.list.concat(res.data)
                     } else {
-
+                        this.dayNum++
                     }
-                }).catch(err => {
-                    throw err
-                })
+                }, err => {
+                    return
+                }, params)
+            },
+            //获取一级榜单
+            getFirstRank(id) {
+                let params = {
+                    id: id,
+                    level: 1,
+                    page: this.page
+                }
+                SVS_getRankList(res => {
+                    this.list = this.list.concat(res.data.data.data)
+                }, err => {
+                    return
+                }, params)
             }
         },
         watch: {
             'dayNum'() {
                 this.getPushRank()
-            },
-            'list.length'(val) {
-                if (val == 0) {
-                    this.$indicator.open({
-                        text: '加载中',
-                        spinnerType: 'fading-circle'
-                    })
-                } else {
-                    this.$indicator.close()
-                }
             }
         }
     }
@@ -127,14 +142,8 @@
         width: 100%;
         height: 100%;
         overflow-x: hidden;
+        transition: all 0.5s;
         overflow-y: hidden;
-        .page-header {
-            width: 100%;
-            padding: 0 20px;
-            padding-bottom: 5px;
-            font-size: 30px;
-            border-bottom: 1px solid #C8C7CD;
-        }
         .hot-page-body {
             width: 100%;
             overflow-x: hidden;
@@ -153,11 +162,11 @@
         }
     }
 
-    .ranklist {
-        height: 100%;
-        width: 100%;
-        padding: 5px 0px;
-        overflow-x: hidden;
-        overflow-y: auto;
+    .rank-list-transition-enter-active {
+        animation: fadeIn 0.4s;
+    }
+
+    .rank-list-transition-leave-active {
+        animation: fadeOut 0.4s;
     }
 </style>

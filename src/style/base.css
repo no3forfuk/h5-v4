@@ -7,6 +7,7 @@
     url('//at.alicdn.com/t/font_707731_69cohl0xvu4.ttf') format('truetype'),
     url('//at.alicdn.com/t/font_707731_69cohl0xvu4.svg#iconfont') format('svg');
 }
+
 /*全局样式*/
 /*字体*/
 .font-size-16 {
@@ -36,4 +37,8 @@
 
 .color-white {
     color: #fff;
+}
+
+.daly-bgc {
+    background-color: rgba(0, 0, 0, .2);
 }

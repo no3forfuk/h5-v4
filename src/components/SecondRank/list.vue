@@ -47,7 +47,6 @@
 
 <script>
     import cell from './listCell'
-    import {getRankList} from '../../api/api'
 
     export default {
         data() {
@@ -80,9 +79,6 @@
 
         },
         methods: {
-            getList() {
-
-            },
             sort(type) {
                 if (type == 0) {
                     this.value = this.value.sort((a, b) => {

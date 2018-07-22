@@ -44,6 +44,10 @@ Servers.SVS_getYZM = function (success, error, options) {
 Servers.SVS_editUserInfo = function (success, error, options) {
     factory(API.editUserInfo, success, error, options)
 }
+//获取推送列表
+Servers.SVS_getIndex = function (success, error, options) {
+    factory(API.getIndex, success, error, options)
+}
 //获取一级榜单列表
 Servers.SVS_firstRankList = function (success, error, options) {
     factory(API.getFirstRankList, success, error, options)
@@ -52,7 +56,7 @@ Servers.SVS_firstRankList = function (success, error, options) {
 Servers.SVS_getNotice = function (success, error, options) {
     factory(API.getNotice, success, error, options)
 }
-//获取榜单详情
+//获取1,2级榜单详情
 Servers.SVS_getRankList = function (success, error, options) {
     factory(API.getRankList, success, error, options)
 }

@@ -21,8 +21,9 @@ module.exports = merge(base, {
         new HtmlWebpackPlugin({template: './index.html', filename: 'index.html'}),
     ],
     devServer: {
-        host: '192.168.0.122',
+        // host: '192.168.0.122',
         // host: '192.168.199.101',
+        host: '172.20.10.2',
         port: 3000,
         contentBase: './dist',
         before(app) {

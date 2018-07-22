@@ -7,11 +7,11 @@
         <div class="dis-modal-body">
             <div class="dis-user">
                 <div class="user-left">
-                    <img src="" alt="">
-                    <span></span>
+                    <img :src="user.avatar" alt="">
+                    <span v-text="user.name"></span>
                 </div>
-                <div class="user-right">
-                    <span class="" v-if="isVisitor" @click="goRegister">注册并享受更多好礼</span>
+                <div class="user-right" v-if="isVisitor">
+                    <span class="" @click="goRegister">注册并享受更多好礼</span>
                 </div>
             </div>
             <div class="discuss-content">
@@ -27,8 +27,12 @@
     export default {
         data() {
             return {
-                discussText: ''
+                discussText: '',
+                user: ''
             }
+        },
+        created() {
+            this.user = this.$storage.GET_session('userInfo')
         },
         computed: {
             isVisitor() {
@@ -55,6 +59,8 @@
     .dis-modal-rank {
         width: 100%;
         background-color: #fff;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
         height: 100%;
         .dis-modal-header {
             padding: 10px 20px;

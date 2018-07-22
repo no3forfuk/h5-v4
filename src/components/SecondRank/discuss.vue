@@ -26,27 +26,6 @@
             </div>
         </div>
         <discuess-list ref="discuessList" :value="discussList"></discuess-list>
-        <transition name="discuss-sort">
-            <div class="add-discuss" v-show="false">
-                <rcm-header>
-                    <span slot="back" @click.stop="cancelDiscuss" class="color-cancel">取消</span>
-                    <span slot="right" @click.stop="confirmDiscuss" class="color-cancel">完成</span>
-                </rcm-header>
-                <div class="discuss-body">
-                    <div class="discuss-user">
-                        <div class="left">
-                            <img :src="userImg" alt="">
-                            <span>{{userName}}</span>
-                        </div>
-                        <span class="right" v-if="isVisitor" @click="goRegister">注册并享受更多好礼</span>
-                    </div>
-                    <div class="discuss-content">
-                        <textarea v-model="discussText" ref="discussTextarea" id="discussTextarea"></textarea>
-                        <span style="color: #D3D3D3;">{{wordLength}}/350</span>
-                    </div>
-                </div>
-            </div>
-        </transition>
     </div>
 </template>
 

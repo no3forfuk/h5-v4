@@ -1,6 +1,6 @@
 <template>
     <div class="first-rank">
-        <rcm-header-placehloder></rcm-header-placehloder>
+        <rcm-head ></rcm-head>
         <rcm-page-header :value="pageTitle"></rcm-page-header>
         <div class="first-page-body" :style="scrollDivHeight">
             <mt-loadmore :bottom-method="loadNextPage"

@@ -1,11 +1,13 @@
 <template>
-    <div class="second-page" @scroll="scrollSecondPage">
-        <rcm-header-placehloder></rcm-header-placehloder>
-        <transition name="active-title">
-            <p class="activeTitle" v-if="showActiveTitle" :style="positionTop">#{{secondInfo.ranking_name}}</p>
-        </transition>
-        <second-head :value="secondInfo" class="second-head" ref="secondHead"></second-head>
-        <tabs :value="listInfo" class="second-tabs-box" @nextListPage="loadNextList" @openDis="openDis"></tabs>
+    <div class="second-page">
+        <rcm-head></rcm-head>
+        <div class="second-page-body" @scroll="scrollSecondPage" :style="scrollBoxHeight">
+            <transition name="active-title">
+                <p class="activeTitle" v-if="showActiveTitle" :style="positionTop">#{{secondInfo.ranking_name}}</p>
+            </transition>
+            <second-head :value="secondInfo" class="second-head" ref="secondHead"></second-head>
+            <tabs :value="listInfo" class="second-tabs-box" @nextListPage="loadNextList" @openDis="openDis"></tabs>
+        </div>
         <rcm-popup :show="activeDiscuss"
                    :type="'full'"
                    @close="closeDIS">
@@ -15,13 +17,11 @@
 </template>
 
 <script>
-    import findCtrl from '../common/Find/findCtrl'
-    import findBody from '../common/Find/findBody'
     import secondHead from './secondHead'
     import tabs from './tabs'
     import disModal from './discuss2'
-    import {getRankList} from '../../api/api'
     import {sharePage} from '../../utils/index'
+    import {SVS_getRankList} from '../../Servers/API'
 
     export default {
         data() {
@@ -47,47 +47,29 @@
 
         },
         created() {
+            this.getSecondRankInfo()
             this.$store.commit('TOGGLENAVSHOW', false)
         },
-        beforeRouteEnter(to, from, next) {
-            let params = {
-                id: to.query.secondId,
-                page: 1,
-                level: 2,
-                solt_name: 'exponent'
-            }
-            getRankList(params).then(res => {
-                if (res.status == 200) {
-                    if (res.data.status_code == 1) {
-                        next(vm => {
-                            vm.secondInfo = res.data.data;
-                            vm.listInfo = vm.listInfo.concat(res.data.data.data.data)
-                            vm.listTotalPage = res.data.data.data.last_page
-                            let shareTitle = res.data.data.ranking_name
-                            let shareDesc = res.data.data.ranking_desc
-                            sharePage(vm, location.href, shareTitle, shareDesc, 'link')
-                        })
-                    } else {
-
+        computed: {
+            scrollBoxHeight() {
+                if (!this.$store.getters.TOPNAVSTATE) {
+                    return {
+                        height: $(window).height() - 73 + 'px'
                     }
                 } else {
-
+                    return {
+                        height: $(window).height() - 42 + 'px'
+                    }
                 }
-            }).catch(err => {
-                return
-            })
-
-        },
-        computed: {
-
+            },
             positionTop() {
                 if (!this.$store.getters.TOPNAVSTATE) {
                     return {
-                        top: 33 + 'px'
+                        top: 40 + 'px'
                     }
                 } else {
                     return {
-                        top: 59 + 'px'
+                        top: 71 + 'px'
                     }
                 }
             }
@@ -102,12 +84,15 @@
                 this.activeDiscuss = false
             },
             scrollSecondPage() {
-                let height = $('.second-page')[0].scrollTop
+                let height = $('.second-page-body')[0].scrollTop
                 if (height > 140) {
                     this.showActiveTitle = true
                 } else {
                     this.showActiveTitle = false
                 }
+            },
+            sharePage() {
+                sharePage(this, location.href, this.share.title, this.share.desc, 'link')
             },
             loadNextList() {
                 this.listPage++
@@ -116,39 +101,28 @@
                 }
                 this.getSecondRankInfo()
             },
-            sharePage() {
-                sharePage(this, location.href, this.share.title, this.share.desc, 'link')
-            },
             getSecondRankInfo() {
-                let params = {};
-                params.id = this.$route.query.secondId;
-                params.page = this.listPage;
-                params.level = 2;
-                getRankList(params).then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
-                            this.secondInfo = res.data.data;
-                            this.listTotalPage = res.data.data.data.last_page
-                            this.listInfo = this.listInfo.concat(res.data.data.data.data)
-                            this.$refs.secondHead.initIsCollect(this.secondInfo.collect)
-                            this.$set(this.share, 'title', res.data.data.ranking_name);
-                            this.$set(this.share, 'desc', res.data.data.ranking_desc);
-                            this.sharePage();
-                            $(document)[0].title = this.secondInfo.ranking_name;
-                        } else {
-
-                        }
-                    } else {
-
-                    }
-                }).catch(err => {
-                    throw err
-                })
+                let params = {
+                    level: 2,
+                    page: this.page,
+                    id: this.$route.query.secondId,
+                    solt_name: this.solt_name
+                }
+                SVS_getRankList(res => {
+                    this.secondInfo = res.data;
+                    this.listInfo = this.listInfo.concat(res.data.data.data)
+                    this.listTotalPage = res.data.data.last_page
+                    // this.$refs.secondHead.initIsCollect(this.secondInfo.collect)
+                    this.$set(this.share, 'title', res.data.ranking_name);
+                    this.$set(this.share, 'desc', res.data.ranking_desc);
+                    this.sharePage();
+                    $(document)[0].title = this.secondInfo.ranking_name;
+                }, err => {
+                    return
+                }, params)
             },
         },
         components: {
-            findCtrl,
-            findBody,
             secondHead,
             tabs,
             disModal
@@ -162,13 +136,19 @@
     .second-page {
         background-color: #fff;
         overflow-x: hidden;
-        overflow-y: auto;
+        overflow-y: hidden;
         width: 100%;
         height: 100%;
         transition: all 0.5s;
+        .second-page-body {
+            width: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
     }
 
     .activeTitle {
+        transition: all 0.3s;
         position: fixed;
         background-color: #fff;
         width: 100%;

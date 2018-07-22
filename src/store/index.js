@@ -2,13 +2,11 @@
 'use strict'
 
 const state = {
-    direction: 'forward',
-    openUserCenter: false,
-    rankIndex: 0,
-    isLogin: false,
+    isLogin: false,//是否登陆
     goLogin: false,
     topNavShow: false,
-    backUrl: ''
+    transitionType: '',//路由切换动画类型
+    firstRankIndex: 0
 }
 const mutations = {
     TOGGLENAVSHOW(state, val) {
@@ -17,21 +15,15 @@ const mutations = {
     LOGIN(state, login) {
         state.isLogin = login
     },
-    //设置返回地址
-    SETBACKURL(state, url) {
-        state.backUrl = url
-    },
     GOLOGIN(state, val) {
         state.goLogin = val
     },
-    SETOPENUSERCENTER(state, val) {
-        state.openUserCenter = val
+    //路由切换动画类型
+    SET_TRANSITIONTYPE(state, type) {
+        state.transitionType = type
     },
-    SETDIRECTION(state, direction) {
-        state.direction = direction
-    },
-    SETROUTERDIRECTION(state, direction) {
-        state.routerDirection = direction
+    SET_FIRSTRANKINDEX(state, index) {
+        state.firstRankIndex = index
     }
 };
 const getters = {
@@ -39,12 +31,16 @@ const getters = {
     GOLOGIN: state => {
         return state.goLogin
     },
+    //是否展示顶部导航
     TOPNAVSTATE: state => {
         return state.topNavShow
     },
-    //获取返回地址
-    GETBACKURL: state => {
-        return state.backUrl
+    //路由切换动画类型
+    GET_TRANSITIONTYPE: state => {
+        return state.transitionType
+    },
+    GET_FIRSTRANKINDEX: state => {
+        return state.firstRankIndex
     }
 }
 module.exports = {

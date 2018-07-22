@@ -2,7 +2,12 @@
 'use strict'
 const Storage = {}
 Storage.GET_session = function (item) {
-    let k = JSON.parse(sessionStorage.getItem(item))
+    var k;
+    if (item == 'X-Auth-Token') {
+        k = sessionStorage.getItem(item)
+    } else {
+        k = JSON.parse(sessionStorage.getItem(item));
+    }
     return k
 }
 //设置sessionStorage
