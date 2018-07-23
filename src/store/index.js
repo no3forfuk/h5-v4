@@ -6,7 +6,8 @@ const state = {
     goLogin: false,
     topNavShow: false,
     transitionType: '',//路由切换动画类型
-    firstRankIndex: 0
+    firstRankIndex: 0,
+    getDiscuss: false
 }
 const mutations = {
     TOGGLENAVSHOW(state, val) {
@@ -24,6 +25,10 @@ const mutations = {
     },
     SET_FIRSTRANKINDEX(state, index) {
         state.firstRankIndex = index
+    },
+    //获取评论
+    SET_GETDISCUSS(state, val) {
+        state.getDiscuss = val
     }
 };
 const getters = {
@@ -39,8 +44,12 @@ const getters = {
     GET_TRANSITIONTYPE: state => {
         return state.transitionType
     },
+    //获取一级榜单序号
     GET_FIRSTRANKINDEX: state => {
         return state.firstRankIndex
+    },
+    GET_GETDISCUSS: state => {
+        return state.getDiscuss
     }
 }
 module.exports = {

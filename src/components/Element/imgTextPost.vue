@@ -1,5 +1,5 @@
 <template>
-    <div class="img-text">
+    <div class="img-text" @click="$emit('click')">
         <p>{{text}}</p>
         <img :src="imgSrc" alt="">
     </div>

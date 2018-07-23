@@ -1,25 +1,25 @@
 <template>
-    <transition name="discuss">
-        <div class="add-discuss">
-            <div class="add-discuss-header">
-                <span @click="$emit('cancleDiscuss','')">取消</span>
-                <span @click="$emit('confirmDiscuss',discussText)">完成</span>
+    <div class="add-discuss">
+        <div class="add-discuss-header">
+            <span @click="$emit('cancleDiscuss','')">取消</span>
+            <span @click="$emit('confirmDiscuss',discussText)">完成</span>
+        </div>
+        <div class="discuss-body">
+            <div class="discuss-user">
+                <div class="left">
+                    <img :src="user.avatar" alt="" v-if="!isVisitor">
+                    <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="" v-if="isVisitor">
+                    <span v-text="user.name" v-if="!isVisitor"></span>
+                    <span v-if="isVisitor">广东猎人</span>
+                </div>
+                <span class="right" v-if="isVisitor" @click="goRegister">注册并享受更多好礼</span>
             </div>
-            <div class="discuss-body">
-                <div class="discuss-user">
-                    <div class="left">
-                        <img src="http://p9w69x04q.bkt.clouddn.com/you.jpg" alt="">
-                        <span>广东猎人</span>
-                    </div>
-                    <span class="right" v-if="isVisitor" @click="goRegister">注册并享受更多好礼</span>
-                </div>
-                <div class="discuss-content">
-                    <textarea v-model="discussText" ref="discussTextarea" id="discussTextarea"></textarea>
-                    <span style="color: #D3D3D3;">{{wordLength}}/350</span>
-                </div>
+            <div class="discuss-content">
+                <textarea v-model="discussText" ref="discussTextarea" id="discussTextarea"></textarea>
+                <span style="color: #D3D3D3;">{{wordLength}}/350</span>
             </div>
         </div>
-    </transition>
+    </div>
 </template>
 
 <script>
@@ -28,12 +28,14 @@
         data() {
             return {
                 discussText: '',
-                wordLength: 0
+                wordLength: 0,
+                user: ''
             }
         },
         created() {
             if (sessionStorage.getItem('userInfo')) {
                 this.isVisitor = false
+                this.user = this.$storage.GET_session('userInfo')
             } else {
                 this.isVisitor = true
             }
@@ -59,15 +61,11 @@
     .add-discuss {
         width: 100%;
         height: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        background-color: #fff;
-        z-index: 100;
         .add-discuss-header {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
+            color: #FF2C09;
             padding: 10px;
         }
         .discuss-body {
@@ -90,6 +88,7 @@
                     }
                     span {
                         margin-left: 10px;
+                        font-size: 14px;
                     }
                 }
                 .right {
@@ -121,6 +120,7 @@
                     position: absolute;
                     right: 3px;
                     bottom: 0;
+                    font-size: 14px;
                 }
             }
         }

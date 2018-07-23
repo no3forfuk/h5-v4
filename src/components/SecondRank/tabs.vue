@@ -13,7 +13,7 @@
         <div class="second-tabs-body">
             <transition name="active-tab" mode="out-in">
                 <router-view class="second-view" :value="value" @loadNextPage="updataListPage"
-                             @openDis="$emit('openDis')"></router-view>
+                             @openDis="$emit('openDis')" @openAddEle="$emit('openAddEle')"></router-view>
             </transition>
         </div>
     </div>

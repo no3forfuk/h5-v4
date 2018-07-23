@@ -1,31 +1,49 @@
 <template>
-    <div class="element-page" :style="elementPageHeight" @scroll="scrollElementPage">
-        <rcm-header-placehloder></rcm-header-placehloder>
-        <transition name="active-title">
-            <p class="active-element-page" v-if="showActiveTitle" :style="positionTop">@{{elementData.element_name}}</p>
-        </transition>
-        <element-header @openDetails="toggleDetails"
-                        @sortPost="sortPostByType"
-                        ref="elementHead"
-                        :value="elementData"
-                        v-if="elementData"></element-header>
-        <element-body :value="postListArr"
-                      @loadmorePost="loadPostNextPage"
-                      v-if="elementData.data"></element-body>
-        <transition name="openDetails">
-            <element-details v-show="detailsIsOpen" @openDetails="toggleDetails" :value="elementData"></element-details>
-        </transition>
+    <div class="element-page">
+        <rcm-head :type="'back'"
+                  @linkTo="back"
+                  :right="true">
+        </rcm-head>
+        <div class="element-page-body"
+             :class="{noscroll:addPost || detailsIsOpen}"
+             :style="elementPageHeight"
+             @scroll="scrollElementPage">
+            <transition name="active-title">
+                <p class="active-element-page"
+                   v-if="showActiveTitle"
+                   :style="positionTop">
+                    @{{elementData.element_name}}
+                </p>
+            </transition>
+            <element-header @openDetails="toggleDetails"
+                            @sortPost="sortPostByType"
+                            @addPost="addPost = true"
+                            ref="elementHead"
+                            :value="elementData"
+                            v-if="elementData"></element-header>
+            <element-body :value="postListArr"
+                          @loadmorePost="loadPostNextPage"
+                          v-if="elementData.data"></element-body>
+            <rcm-popup :show="detailsIsOpen" :type="'full'" @close="detailsIsOpen = false">
+                <element-details v-show="detailsIsOpen"
+                                 @openDetails="toggleDetails"
+                                 slot="fullPage"
+                                 :value="elementData"></element-details>
+            </rcm-popup>
+            <rcm-popup :show="addPost" :type="'full'" @close="addPost = false">
+                <add-post slot="fullPage" @cancel="addPost=false" @refresh="elementInfo"></add-post>
+            </rcm-popup>
+        </div>
     </div>
 </template>
 
 <script>
-    import findCtrl from '../common/Find/findCtrl'
-    import findBody from '../common/Find/findBody'
     import elementHeader from './elementHeader'
     import elementBody from './elementBody'
     import elementDetails from './elementDetails'
     import elementFooter from './elementFooter'
-    import {getElementDetails} from '../../api/api'
+    import addPost from './addPost'
+    import {SVS_getElementDetails} from '../../Servers/API'
     import {sharePage} from '../../utils'
 
     export default {
@@ -40,68 +58,53 @@
                 postListArr: [],
                 page: 1,
                 totalPage: 1,
-                showActiveTitle: false
+                showActiveTitle: false,
+                addPost: false
             }
         },
         created() {
             this.$store.commit('TOGGLENAVSHOW', false)
+            this.elementInfo()
         },
         mounted() {
             this.$nextTick(() => {
 
             })
         },
-        beforeRouteEnter(to, from, next) {
-            let params = {
-                id: to.query.elementId,
-                page: 1
-            }
-            getElementDetails(params).then(res => {
-                if (res.status == 200 && res.data.status_code == 1) {
-                    next(vm => {
-                        vm.elementData = res.data.data
-                        vm.postListArr = vm.postListArr.concat(res.data.data.data.data)
-                        vm.totalPage = res.data.data.data.last_page
-                        vm.page = res.data.data.data.current_page
-                        sharePage(vm, location.href, res.data.data.element_name, res.data.data.element_desc)
-                    })
-                } else {
-                    return
-                }
-            }).catch(err => {
-                throw err
-            })
-        },
-        beforeRouteLeave(to, from, next) {
-            next()
-        },
         computed: {
             elementPageHeight() {
                 if (!this.$store.getters.TOPNAVSTATE) {
                     return {
-                        height: $(window).height() - 33 + 'px'
+                        height: $(window).height() - 42 + 'px'
                     }
                 } else {
                     return {
-                        height: $(window).height() - 59 + 'px'
+                        height: $(window).height() - 73 + 'px'
                     }
                 }
             },
             positionTop() {
                 if (!this.$store.getters.TOPNAVSTATE) {
                     return {
-                        top: 33 + 'px'
+                        top: 40 + 'px'
                     }
                 } else {
                     return {
-                        top: 59 + 'px'
+                        top: 71 + 'px'
                     }
                 }
             }
         },
         methods: {
+            back() {
+                this.$store.commit('SET_TRANSITIONTYPE', 'back')
+                this.$router.push({
+                    name: 'secondRankList',
+                    query: this.$route.query
+                })
+            },
             scrollElementPage() {
-                let height = $('.element-page')[0].scrollTop
+                let height = $('.element-page-body')[0].scrollTop
                 if (height > 140) {
                     this.showActiveTitle = true
                 } else {
@@ -137,8 +140,8 @@
             sharePage() {
                 let vm = this;
                 let url = location.href;
-                let title = elementData.title;
-                let desc = this.share.desc;
+                let title = this.elementData.element_name;
+                let desc = this.elementData.element_desc;
                 let type = 'link';
                 sharePage(vm, url, title, desc, type)
             },
@@ -146,39 +149,28 @@
                 let params = {}
                 params.id = this.$route.query.elementId;
                 params.page = this.page;
-                getElementDetails(params).then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
-                            this.elementData = res.data.data
-                            this.postListArr = this.postListArr.concat(res.data.data.data.data)
-                            this.totalPage = res.data.data.data.last_page
-                            this.page = res.data.data.data.current_page
-                            this.$refs.elementHead.initCollectState(this.elementData.collect)
-                            this.$set(this.share, 'title', res.data.data.element_name);
-                            this.$set(this.share, 'desc', res.data.data.element_desc || '暂时没有描述信息');
-                            this.sharePage()
-                        }
-                    } else {
-
-                    }
-                }).catch(err => {
-                    throw err
-                })
-            },
-            setScrollBoxHeight() {
-
+                SVS_getElementDetails(res => {
+                    this.elementData = res.data
+                    this.postListArr = this.postListArr.concat(res.data.data.data)
+                    this.totalPage = res.data.data.last_page
+                    this.page = res.data.data.current_page
+                    this.$set(this.share, 'title', res.data.element_name)
+                    this.$set(this.share, 'desc', res.data.element_desc || '暂时没有描述信息')
+                    this.sharePage()
+                }, err => {
+                    return
+                }, params)
             },
             toggleDetails(e) {
                 this.detailsIsOpen = !this.detailsIsOpen
             }
         },
         components: {
-            findCtrl,
-            findBody,
             elementHeader,
             elementBody,
             elementFooter,
-            elementDetails
+            elementDetails,
+            addPost
         }
     }
 
@@ -188,9 +180,15 @@
     .element-page {
         background-color: #fff;
         width: 100%;
+        height: 100%;
         overflow-x: hidden;
         transition: all 0.5s;
-        overflow-y: auto;
+        overflow-y: hidden;
+        .element-page-body {
+            width: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
         .active-element-page {
             padding: 0 20px;
             font-weight: bold;

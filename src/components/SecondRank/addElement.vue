@@ -1,12 +1,19 @@
 <template>
     <div class="add-element">
+        <div class="add-header">
+            <span @click="$emit('cancel')">取消</span>
+            <span @click="submitAddElement">完成</span>
+        </div>
         <div class="add-body">
-            <h3>#{{title}}</h3>
             <div class="input-box">
-                <input type="text" placeholder="为这个榜单添加新的成员" v-model="elemenName" ref="inputElement">
+                <input type="text"
+                       placeholder="为这个榜单添加新的成员"
+                       @keyup="searchElement"
+                       v-model="elemenName"
+                       ref="inputElement">
             </div>
             <div class="easy-pic">
-                <img src="" alt="" class="img-view" ref="viewBox">
+                <img src="" alt="" class="img-view" ref="viewBox" v-show="imgFile">
                 <icon :value="'&#xe604;'" :style="addStyle" @click="choosePic"></icon>
                 <input type="file"
                        ref="takePhotos"
@@ -15,7 +22,7 @@
                        style="width: 0;height: 0;opacity: 0;position: absolute;top: 0;left: -9999px;">
             </div>
             <div class="element-desc" v-if="hasTitle">
-                <textarea v-model="elementDesc" placeholder="介绍一下啊这个新成员吧"></textarea>
+                <textarea v-model="elementDesc" placeholder="介绍一下啊这个新成员吧" ref="addDesc"></textarea>
             </div>
             <ul class="pick-element">
                 <div class="pick-element-buffer">
@@ -42,11 +49,11 @@
 <script>
     import {getRankList, addElement, searchElementByName, addElementMore} from '../../api/api'
     import {UTS_viewPicture, uploadFile} from '../../utils'
+    import {SVS_addElementMore, SVS_addElement} from '../../Servers/API'
 
     export default {
         data() {
             return {
-                title: '',
                 elemenName: '',
                 elementDesc: '',
                 hasTitle: false,
@@ -60,12 +67,6 @@
                 img: ''
             }
         },
-        beforeRouteEnter(to, from, next) {
-            next(vm => {
-                vm.routerFrom = from.name
-            })
-
-        },
         computed: {
             addStyle() {
                 return {
@@ -76,33 +77,116 @@
             }
         },
         beforeDestroy() {
-            $(this.nextStepDom).unbind()
+            // $(this.nextStepDom).unbind()
         },
         created() {
-            this.getRankInfo()
         },
         mounted() {
             this.$nextTick(() => {
-                $('.add-body').height($(window).height() - 36)
-                this.nextStepDom = this.$parent.$refs.rcmHeaders.$refs.comfirm;
-                $(this.nextStepDom).on('click', () => {
-                    this.activeTextarea()
-                })
-                $(this.$refs.inputElement).on('keyup', () => {
-                    let params = {}
-                    params.like = this.elemenName
-                    searchElementByName(params).then(res => {
-                        if (res.status == 200 && res.data.status_code == 1) {
-                            this.elementList = res.data.data.data
-                        }
-                    }).catch(err => {
-                        throw err
-                    })
-                })
+                // $('.add-body').height($(window).height() - 36)
+                // this.nextStepDom = this.$parent.$refs.rcmHeaders.$refs.comfirm;
+                // $(this.nextStepDom).on('click', () => {
+                //     this.activeTextarea()
+                // })
+                // $(this.$refs.inputElement).on('keyup', () => {
+                //     let params = {}
+                //     params.like = this.elemenName
+                //     searchElementByName(params).then(res => {
+                //         if (res.status == 200 && res.data.status_code == 1) {
+                //             this.elementList = res.data.data.data
+                //         }
+                //     }).catch(err => {
+                //         throw err
+                //     })
+                // })
 
             })
         },
         methods: {
+            submitAddElement() {
+                if (this.selectList.length > 0) {
+                    uploadFile(this, this.imgFile, (res, filename) => {
+                        let arr = [], str = '';
+                        for (let i = 0; i < this.selectList.length; i++) {
+                            arr.push(this.selectList[i].id)
+                        }
+                        str = arr.join(',')
+                        let params = {
+                            ranking_id: this.$route.query.secondId,
+                            list: str,
+                            img: 'http://p8rk87lub.bkt.clouddn.com/' + filename
+                        }
+                        SVS_addElementMore(res => {
+                            this.$toast({
+                                message: res.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                            this.$emit('cancel')
+                            this.$emit('refresh')
+                        }, err => {
+                            this.$toast({
+                                message: err.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                        }, params)
+                    })
+                } else {
+                    if (this.elemenName.length > 0) {
+                        this.hasTitle = true
+                        if (this.elementDesc.length == 0) {
+                            this.$toast({
+                                message: '请介绍一下新元素吧',
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                            return
+                        }
+                        uploadFile(this, this.imgFile, (response, filename) => {
+                            let params = {};
+                            params.element_name = this.elemenName
+                            params.element_desc = this.elementDesc
+                            params.ranking_id = this.$route.query.secondId
+                            params.img = 'http://p8rk87lub.bkt.clouddn.com/' + filename
+                            SVS_addElement(res => {
+                                this.$toast({
+                                    message: res.message,
+                                    duration: 1000,
+                                    position: 'middle'
+                                })
+                                this.$emit('cancel')
+                                this.$emit('refresh')
+                            }, err => {
+                                this.$toast({
+                                    message: err.message,
+                                    duration: 1000,
+                                    position: 'middle'
+                                })
+                            }, params)
+                        })
+
+                    } else {
+                        this.$toast({
+                            message: '请填写元素名称',
+                            duration: 1000,
+                            position: 'middle'
+                        })
+                    }
+
+                }
+            },
+            searchElement() {
+                let params = {}
+                params.like = this.elemenName
+                searchElementByName(params).then(res => {
+                    if (res.status == 200 && res.data.status_code == 1) {
+                        this.elementList = res.data.data.data
+                    }
+                }).catch(err => {
+                    throw err
+                })
+            },
             viewPicture() {
                 UTS_viewPicture(this.$refs.viewBox, this.$refs.takePhotos, () => {
                     this.imgFile = this.$refs.takePhotos.files[0]
@@ -124,108 +208,6 @@
                 }
                 this.selectList = [...new Set(this.selectList)];
             },
-            activeTextarea() {
-                if (this.selectList.length) {
-                    this.hasTitle = false;
-                } else {
-                    this.hasTitle = true;
-                }
-                this.nextStepDom.children[0].innerText = '完成';
-                $(this.nextStepDom).unbind()
-                $(this.nextStepDom).on('click', () => {
-                    for (let i = 0; i < this.elementList.length; i++) {
-                        if (this.elemenName == this.elementList[i].element_name) {
-                            this.$toast({
-                                message: '该元素已存在',
-                                duration: 1000,
-                                position: 'middle'
-                            })
-                            return
-                        }
-                    }
-                    //addElementMore
-                    if (this.selectList.length == 0) {
-                        uploadFile(this, this.imgFile, (res, filename) => {
-                            let params = {};
-                            params.element_name = this.elemenName
-                            params.element_desc = this.elementDesc
-                            params.ranking_id = this.$route.query.secondId
-                            params.img = 'http://p8rk87lub.bkt.clouddn.com/' + filename
-                            addElement(params).then(res => {
-                                if (res.status == 200) {
-                                    if (res.data.status_code == 1) {
-                                        this.$toast({
-                                            message: '发布成功',
-                                            duration: 1000,
-                                            position: 'middle'
-                                        })
-                                        this.$router.replace({
-                                            name: 'secondRankList',
-                                            query: this.$route.query
-                                        })
-                                    } else {
-                                        this.$toast({
-                                            message: res.data.message,
-                                            duration: 1000,
-                                            position: 'middle'
-                                        })
-                                    }
-                                } else {
-                                    return
-                                }
-                            }).catch(err => {
-                                throw err
-                            })
-                        })
-                    } else {
-                        uploadFile(this, this.imgFile, (res, filename) => {
-                            let arr = [], str = '';
-                            for (let i = 0; i < this.selectList.length; i++) {
-                                arr.push(this.selectList[i].id)
-                            }
-                            str = arr.join(',')
-                            let params = {
-                                ranking_id: this.$route.query.secondId,
-                                list: str,
-                                img: 'http://p8rk87lub.bkt.clouddn.com/' + filename
-                            }
-                            addElementMore(params).then(res => {
-                                if (res.status == 200 && res.data.status_code == 1) {
-                                    this.$toast({
-                                        message: '添加成功',
-                                        duration: 1000,
-                                        position: 'middle'
-                                    })
-                                    this.$router.replace({
-                                        name: 'secondRankList',
-                                        query: this.$route.query
-                                    })
-                                } else {
-                                    this.$toast({
-                                        message: res.data.message,
-                                        duration: 1000,
-                                        position: 'middle'
-                                    })
-                                }
-                            }).catch(err => {
-                                throw err
-                            })
-                        })
-
-                    }
-
-                })
-            },
-            getRankInfo() {
-                let params = {};
-                params.id = this.$route.query.secondId
-                params.level = 2
-                getRankList(params).then(res => {
-                    this.title = res.data.data.ranking_name
-                }).catch(err => {
-                    throw err
-                })
-            }
         }
     }
 
@@ -235,23 +217,35 @@
     .easy-pic {
         width: 100%;
         display: flex;
-        padding-right: 20px;
-        justify-content: space-between;
         align-items: center;
+        padding: 10px 0;
         .img-view {
             width: 50px;
+            border: 0 none;
             height: 50px;
             border-radius: 2px;
             overflow: hidden;
-            margin-left: 10px;
         }
     }
 
     .add-element {
         width: 100%;
+        background-color: #fff;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        padding: 10px;
+        height: 100%;
+        .add-header {
+            padding: 10px 20px;
+            color: #FF2C09;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
         .add-body {
             width: 100%;
             overflow-y: auto;
+            height: calc(100% - 51px);
             h3 {
                 padding: 10px 20px;
                 font-size: 16px;
@@ -259,18 +253,19 @@
             }
             .input-box {
                 width: 100%;
-                border-top: 1px solid rgba(0, 0, 0, .3);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.18);
                 input {
                     width: 100%;
                     height: 24px;
                     border: 0 none;
                     text-indent: 1em;
+                    font-size: 14px;
                 }
             }
             .element-desc {
                 width: 100%;
-                border-top: 1px solid rgba(0, 0, 0, .3);
                 padding: 10px;
+                border: 1px solid rgba(0, 0, 0, .08);
                 textarea {
                     width: 100%;
                     height: 80px;
@@ -284,7 +279,7 @@
                     display: flex;
                     flex-direction: row;
                     justify-content: space-between;
-                    padding: 5px 15px;
+                    padding: 5px;
                 }
             }
             .pick-element-buffer {

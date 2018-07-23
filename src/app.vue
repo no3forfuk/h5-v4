@@ -41,15 +41,6 @@
             })
 
         },
-        updated() {
-            this.$nextTick(() => {
-
-
-            })
-        },
-        beforeDestroy() {
-
-        },
         methods: {
             //第三方登陆
             loginByType() {
@@ -111,11 +102,24 @@
         position: relative;
     }
 
-    .fade-enter-active {
-        animation: fadeIn 0.4s;
+    .u-center-enter-active, .back-enter-active {
+        animation: slideInLeft 0.6s;
+        position: absolute;
     }
 
-    .fade-leave-active {
-        animation: fadeOut 0.4s;
+    .u-center-leave-active, .back-leave-active {
+        animation: slideOutRight 0.6s;
+        position: absolute;
     }
+
+    .center-home-enter-active, .forward-enter-active {
+        animation: slideInRight 0.6s;
+        position: absolute;
+    }
+
+    .center-home-leave-active, .forward-leave-active {
+        animation: slideOutLeft 0.6s;
+        position: absolute;
+    }
+
 </style>

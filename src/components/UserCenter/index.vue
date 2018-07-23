@@ -1,5 +1,6 @@
 <template>
     <div class="user-center">
+        <rcm-head :type="'back'" @linkTo="goBack" :right="false"></rcm-head>
         <div class="user-body">
             <card :value="userData" v-if="userData"></card>
             <opts></opts>
@@ -22,13 +23,30 @@
                 userData: ''
             }
         },
-        methods: {
-            go() {
-                this.direction = 'home'
-            }
-        },
         created() {
-            
+            this.init()
+        },
+        methods: {
+            init() {
+                let userInfo = this.$storage.GET_session('userInfo')
+                if (userInfo) {
+                    this.userData = userInfo
+                } else {
+                    SVS_userInfo(res => {
+                        this.userData = res.data
+                        this.$storage.SET_session('userInfo', res.data)
+                    }, err => {
+                        throw err
+                    })
+                }
+            },
+            goBack() {
+                this.$store.commit('SET_TRANSITIONTYPE', 'center-home')
+                this.$router.push({
+                    name: 'hot',
+                    query: this.$route.query
+                })
+            }
         },
         mounted() {
             this.$nextTick(() => {
@@ -36,30 +54,6 @@
                 $('.user-body').height($(window).height() - 36)
             })
         },
-        beforeRouteEnter(to, from, next) {
-            let userInfo = Storage.GET_session('userInfo')
-            if (userInfo) {
-                next(vm => {
-                    vm.userData = userInfo
-                })
-            } else {
-                SVS_userInfo(res => {
-                    next(vm => {
-                        vm.userData = res.data
-                        Storage.SET_session('userInfo', res.data)
-                    })
-                }, err => {
-                    throw err
-                })
-            }
-        },
-        beforeRouteLeave(to, from, next) {
-            next()
-        },
-        beforeDestroy() {
-
-        },
-        methods: {},
         computed: {},
         components: {
             card: Card,

@@ -1,5 +1,5 @@
 <template>
-    <div class="ext-web">
+    <div class="ext-web" @click="$emit('click')">
         <div class="info">
             <p>{{value.link_title}}</p>
             <span>-- 外站</span>

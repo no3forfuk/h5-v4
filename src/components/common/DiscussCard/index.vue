@@ -1,6 +1,6 @@
 <template>
     <li>
-        <div class="left">
+        <div class="left" @click="didGreat" ref="likeTarget">
             <icon :value="'&#xe647;'" class="font-size-20"></icon>
             <span>{{value.like}}</span>
         </div>
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+    import {doLikeDiscuss} from '../../../api/api'
 
     export default {
         data() {
@@ -21,7 +22,38 @@
         created() {
 
         },
-        props: ['value']
+        methods: {
+            didGreat() {
+                let params = {
+                    comment_id: this.value.id,
+                    user_type: 1
+                }
+                doLikeDiscuss(params).then(res => {
+                    if (res.status == 200) {
+                        if (res.data.status_code == 1) {
+                            this.$toast({
+                                message: '点赞成功',
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                            this.$refs.likeTarget.style.color = '#FF2C09'
+                            this.value.like = parseInt(this.value.like) + 1
+                        } else {
+                            this.$toast({
+                                message: res.data.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                        }
+                    } else {
+                        return
+                    }
+                }).catch(err => {
+                    throw err
+                })
+            }
+        },
+        props: ['value', 'index']
     }
 
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <p v-html="value.post_content"></p>
+    <p v-html="value.post_content" @click="$emit('click')"></p>
 </template>
 
 <script>

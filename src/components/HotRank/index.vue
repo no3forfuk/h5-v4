@@ -1,6 +1,6 @@
 <template>
     <div class="hot-rank">
-        <rcm-head :idx="0" @getIndexData="getFirstRankInfo"></rcm-head>
+        <rcm-head :type="'menu'" @linkTo="goUserCenter" @getIndexData="getFirstRankInfo" :right="true"></rcm-head>
         <rcm-page-header :value="pageTitle"></rcm-page-header>
         <div class="hot-page-body" :style="scrollBoxHeight" ref="rankListBox">
             <mt-loadmore :bottom-method="loadBeforeDay"
@@ -49,23 +49,38 @@
             let time = Date.now()
             time = timeFormat('-', time)
             this.time = time;
-            this.getPushRank()
+            if (this.$route.query.firstId) {
+                this.getFirstRank(this.$route.query.firstId)
+            } else {
+                this.getPushRank()
+            }
             this.sharePage()
         },
         computed: {
             scrollBoxHeight() {
                 if (this.$store.getters.TOPNAVSTATE) {
                     return {
-                        height: $(window).height() - 133 + 'px'
+                        height: $(window).height() - 123 + 'px'
                     }
                 } else {
                     return {
-                        height: $(window).height() - 102 + 'px'
+                        height: $(window).height() - 92 + 'px'
                     }
                 }
             }
         },
         methods: {
+            goUserCenter() {
+                this.$store.commit('SET_TRANSITIONTYPE', 'u-center')
+                if (this.$storage.GET_session('X-Auth-Token')) {
+                    this.$router.push({
+                        name: 'userCenter',
+                        query: this.$route.query
+                    })
+                } else {
+                    this.$store.commit('GOLOGIN', true)
+                }
+            },
             getFirstRankInfo(val) {
                 this.list = []
                 if (val.ranking_name == '热门榜单') {
@@ -146,6 +161,7 @@
         overflow-y: hidden;
         .hot-page-body {
             width: 100%;
+            transition: all 0.5s;
             overflow-x: hidden;
             overflow-y: auto;
         }

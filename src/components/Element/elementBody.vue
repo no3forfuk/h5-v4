@@ -14,11 +14,16 @@
                     <div class="right">
                         <router-link
                                 :to="{name:'post',query:{postId:item.id,secondId:$route.query.secondId,firstId:$route.query.firstId,idx:$route.query.idx,elementId:$route.query.elementId},params:{postDetails:item}}">
-                            <text-post v-if="item.type == 1" :value="item"></text-post>
-                            <img-post v-if="item.type == 2" :value="item"></img-post>
-                            <img-text v-if="item.type == 3" :value="item"></img-text>
-                            <video-post v-if="item.type == 4" :value="item"></video-post>
-                            <ext-web v-if="item.type == 5" :value="item"></ext-web>
+                            <text-post v-if="item.type == 1" :value="item"
+                                       @click="$store.commit('SET_TRANSITIONTYPE','forward')"></text-post>
+                            <img-post v-if="item.type == 2" :value="item"
+                                      @click="$store.commit('SET_TRANSITIONTYPE','forward')"></img-post>
+                            <img-text v-if="item.type == 3" :value="item"
+                                      @click="$store.commit('SET_TRANSITIONTYPE','forward')"></img-text>
+                            <video-post v-if="item.type == 4" :value="item"
+                                        @click="$store.commit('SET_TRANSITIONTYPE','forward')"></video-post>
+                            <ext-web v-if="item.type == 5" :value="item"
+                                     @click="$store.commit('SET_TRANSITIONTYPE','forward')"></ext-web>
                         </router-link>
                         <div class="user">
                             <div>

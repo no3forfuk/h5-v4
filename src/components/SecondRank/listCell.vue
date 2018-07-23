@@ -13,7 +13,7 @@
             <div class="left">
                 <span>{{index+1}}</span>
             </div>
-            <div class="right">
+            <div class="right" @click="setTransition">
                 <div class="element-text">
                     <h2>@{{value.element_name}}</h2>
                     <p>{{value.element_desc}}</p>
@@ -37,7 +37,11 @@
         },
         created() {
         },
-        methods: {},
+        methods: {
+            setTransition() {
+                this.$store.commit('SET_TRANSITIONTYPE', 'forward')
+            }
+        },
         props: ['value', 'index']
     }
 

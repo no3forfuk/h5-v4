@@ -60,5 +60,24 @@ Servers.SVS_getNotice = function (success, error, options) {
 Servers.SVS_getRankList = function (success, error, options) {
     factory(API.getRankList, success, error, options)
 }
-
+//评论addComment
+Servers.SVS_addComment = function (success, error, options) {
+    factory(API.addComment, success, error, options)
+}
+//获取评论getDiscussList
+Servers.SVS_getDiscussList = function (success, error, options) {
+    factory(API.getDiscussList, success, error, options)
+}
+//批量添加元素addElementMore
+Servers.SVS_addElementMore = function (success, error, options) {
+    factory(API.addElementMore, success, error, options)
+}
+//单个添加元素addElement
+Servers.SVS_addElement = function (success, error, options) {
+    factory(API.addElement, success, error, options)
+}
+//获取元素详情
+Servers.SVS_getElementDetails = function (success, error, options) {
+    factory(API.getElementDetails, success, error, options)
+}
 module.exports = Servers;

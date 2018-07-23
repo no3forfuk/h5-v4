@@ -42,3 +42,7 @@
 .daly-bgc {
     background-color: rgba(0, 0, 0, .2);
 }
+
+.noscroll {
+    overflow: hidden !important;
+}

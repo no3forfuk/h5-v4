@@ -1,10 +1,11 @@
 <template>
     <div class="rcm-header-nav">
         <div class="rcm-head-ctrl">
-            <div class="rcm-head-ctrl-left">
-                <icon :value="'&#xe609;'" class="font-size-28">menu</icon>
+            <div class="rcm-head-ctrl-left" @click="$emit('linkTo')">
+                <icon :value="'&#xe609;'" class="font-size-28" v-if="type == 'menu'">menu</icon>
+                <icon :value="'&#xe600;'" class="font-size-24" v-if="type == 'back'">back</icon>
             </div>
-            <div class="rcm-head-ctrl-right" @click="toggleHeadNav">
+            <div class="rcm-head-ctrl-right" @click="toggleHeadNav" v-if="right">
                 <span v-text="crtRankName"></span>
                 <icon :value="'&#xe7e9;'" v-if="!navShow">down</icon>
                 <icon :value="'&#xe952;'" v-if="navShow">up</icon>

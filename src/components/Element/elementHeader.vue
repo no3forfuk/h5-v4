@@ -132,10 +132,7 @@
             },
             addPost() {
                 if (sessionStorage.getItem('X-Auth-Token')) {
-                    this.$router.push({
-                        name: 'addPost',
-                        query: this.$route.query
-                    })
+                    this.$emit('addPost')
                 } else {
                     this.$store.commit('GOLOGIN', true)
                 }

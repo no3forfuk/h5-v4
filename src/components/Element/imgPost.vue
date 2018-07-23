@@ -1,5 +1,5 @@
 <template>
-    <img :src="value.img" alt="">
+    <img :src="value.img" alt="" @click="$emit('click')">
 </template>
 
 <script>

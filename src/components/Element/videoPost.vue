@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div @click="$emit('click')">
         <video width="70%" :src="value.video" controls="controls"
                class="video-post">
             <source :src="value.video" type="video/mp4">

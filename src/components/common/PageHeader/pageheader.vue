@@ -1,9 +1,11 @@
 <template>
-    <p class="rcm-page-header">
+    <transition name="slide">
+        <p class="rcm-page-header" v-if="value">
         <span>
             <i>{{value}}</i>
         </span>
-    </p>
+        </p>
+    </transition>
 </template>
 
 <script>
@@ -18,6 +20,8 @@
 </script>
 
 <style scoped lang="less">
+
+
     .rcm-page-header {
         width: 100%;
         height: 40px;

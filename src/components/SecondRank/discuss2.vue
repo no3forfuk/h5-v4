@@ -1,8 +1,8 @@
 <template>
     <div class="dis-modal-rank">
         <div class="dis-modal-header">
-            <span>取消</span>
-            <span>完成</span>
+            <span @click="$emit('cancel')">取消</span>
+            <span @click="comfirm">完成</span>
         </div>
         <div class="dis-modal-body">
             <div class="dis-user">
@@ -16,32 +16,73 @@
             </div>
             <div class="discuss-content">
                 <textarea v-model="discussText" ref="discussTextarea" id="discussTextarea"></textarea>
-                <span style="color: #D3D3D3;">{{discussText.length}}/350</span>
+                <span style="color: #D3D3D3;font-size: 12px">{{discussText.length}}/350</span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import {SVS_addComment} from '../../Servers/API'
 
     export default {
         data() {
             return {
                 discussText: '',
-                user: ''
             }
         },
         created() {
-            this.user = this.$storage.GET_session('userInfo')
+
         },
         computed: {
             isVisitor() {
                 return this.$storage.GET_session('X-Auth-Token') ? false : true
+            },
+            userType() {
+                return this.$storage.GET_session('X-Auth-Token') ? 1 : 2
+            },
+            user() {
+                let user = this.$storage.GET_session('userInfo')
+                if (user) {
+                    return {
+                        avatar: user.avatar,
+                        name: user.name
+                    }
+                } else {
+                    return {
+                        avatar: 'http://p8rk87lub.bkt.clouddn.com/visitor.jpg',
+                        name: '广东猎人'
+                    }
+                }
             }
         },
         methods: {
             goRegister() {
-
+                this.$emit('cancel')
+                this.$store.commit('GOLOGIN', true)
+            },
+            comfirm() {
+                let params = {
+                    content: this.discussText,
+                    comment_type: 2,
+                    ranking_id: this.$route.query.secondId,
+                    type: this.userType
+                }
+                SVS_addComment(res => {
+                    this.$toast({
+                        message: res.message,
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                    this.$emit('cancel', true)
+                    this.$store.commit('SET_GETDISCUSS', true)
+                }, err => {
+                    this.$toast({
+                        message: err.message,
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                }, params)
             }
         },
         watch: {
@@ -89,6 +130,7 @@
                         border-radius: 50%;
                     }
                     span {
+                        font-size: 12px;
                         margin-left: 10px;
                     }
                 }

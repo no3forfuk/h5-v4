@@ -1,17 +1,18 @@
 <template>
-    <div class="post">
-        <div class="post-scroll-box">
+    <div class="post-page">
+        <rcm-head :type="'back'" @linkTo="back"></rcm-head>
+        <div class="post-scroll-box"
+             :class="{noscroll:activeDiscuss}">
             <div class="post-user">
                 <user-card :value="user" v-if="user"></user-card>
             </div>
             <pre class="post-content" v-html="content"></pre>
             <h3 class="discuss-title">评论(<span>{{postDiscussList.length}}</span>)</h3>
             <ul class="discuss-list">
-                <discuss-card v-for="(item,index) in postDiscussList" :key="index" :value="item"></discuss-card>
+                <discuss-card v-for="(item,index) in postDiscussList" :key="index" :value="item" :index="index"></discuss-card>
                 <p class="post-footer">{{footerText}}</p>
             </ul>
         </div>
-        <div class="discuss-box-placeholder"></div>
         <div class="discuss-box">
             <div class="mock-input" @click="addPostDiscuss">
                 <span>回复</span>
@@ -20,7 +21,14 @@
             </div>
             <div class="send-box" @click="submitDisCuss">发送</div>
         </div>
-        <discuss-page v-show="activeDiscuss" @cancleDiscuss="cancle" @confirmDiscuss="setText"></discuss-page>
+        <rcm-popup :show="activeDiscuss"
+                   @close="activeDiscuss = false"
+                   :type="'full'">
+            <discuss-page slot="fullPage"
+                          @cancleDiscuss="cancle"
+                          @confirmDiscuss="setText">
+            </discuss-page>
+        </rcm-popup>
     </div>
 </template>
 
@@ -57,6 +65,13 @@
         },
         computed: {},
         methods: {
+            back() {
+                this.$store.commit('SET_TRANSITIONTYPE', 'back')
+                this.$router.push({
+                    name: 'element',
+                    query: this.$route.query
+                })
+            },
             sharePage() {
                 let vm = this;
                 let url = location.href;
@@ -148,7 +163,7 @@
                             if (this.postDiscussList.length > 0) {
                                 this.footerText = '很难选 很无趣 你可能需要RCM'
                             } else {
-                                this.footerText = '该榜单还没有评论 快抢沙发吧'
+                                this.footerText = '该帖子还没有评论 快抢沙发吧'
                             }
                         } else {
 
@@ -174,13 +189,14 @@
 <style scoped lang="less">
     .post-scroll-box {
         width: 100%;
+        height: calc(100% - 92px);
         overflow-x: hidden;
         overflow-y: auto;
     }
 
-    .post {
+    .post-page {
         width: 100%;
-        position: relative;
+        height: 100%;
     }
 
     .post-user {
@@ -211,7 +227,9 @@
     .post-footer {
         width: 100%;
         text-align: center;
-        margin-bottom: 10px;
+        padding: 10px 0px;
+        font-size: 14px;
+        margin-bottom: 20px;
         color: rgba(0, 0, 0, .3);
     }
 

@@ -6,7 +6,7 @@
         <div class="rank-info">
             <router-link
                     :to="{name:'secondRankList',query:{secondId:renderData.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
-                <h3>#{{renderData.ranking_name}}</h3>
+                <h3 @click="goSecondRank">#{{renderData.ranking_name}}</h3>
             </router-link>
             <div class="info-body">
                 <span class="prevmask" v-if="leftBoundary"></span>
@@ -17,7 +17,7 @@
                         <router-link
                                 :to="{name:'element',query:{elementId:item.id,secondId:renderData.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
                             <i>No.{{index+1}}</i>
-                            <div class="element-item">
+                            <div class="element-item" @click="goSecondRank">
                                 <span v-if="!item.img">{{item.element_name}}</span>
                                 <img :src="item.img" alt="" v-if="item.img">
                             </div>
@@ -72,7 +72,7 @@
             }
         },
         created() {
-            this.renderData = inheritObject(this.value, this.defaultData)
+            this.renderData = this.value
         },
         mounted() {
             this.$nextTick(() => {
@@ -83,6 +83,9 @@
         methods: {
             init() {
 
+            },
+            goSecondRank() {
+                this.$store.commit('SET_TRANSITIONTYPE', 'forward')
             },
             initUlWidth() {
                 $('.info-ul').width($(window).width() - 30)

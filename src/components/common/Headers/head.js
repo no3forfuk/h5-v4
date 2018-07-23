@@ -25,7 +25,11 @@ module.exports = {
     methods: {
         init() {
             //初始化index
-            this.crtIndex = this.$store.getters.GET_FIRSTRANKINDEX
+            if (this.$route.query.idx) {
+                this.crtIndex = this.$route.query.idx
+            } else {
+                this.crtIndex = 0
+            }
             //获取导航数据
             let navList = this.$storage.GET_session('firstRank')
             if (navList) {
@@ -51,7 +55,8 @@ module.exports = {
             this.$router.replace({
                 name: 'hot',
                 query: {
-                    idx: index
+                    idx: index,
+                    firstId: item.id
                 }
             })
         },
@@ -62,7 +67,7 @@ module.exports = {
         }
     },
     props:
-        ['idx'],
+        ['idx', 'type', 'right'],
     computed:
         {
             calcHeight() {

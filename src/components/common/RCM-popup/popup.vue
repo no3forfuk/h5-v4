@@ -43,7 +43,7 @@
     .rcm-popup-temp {
         width: 100%;
         height: 100%;
-        position: fixed;
+        position: absolute;
         top: 0;
         z-index: 500;
         left: 0;

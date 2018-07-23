@@ -1,17 +1,27 @@
 <template>
     <div class="second-page">
-        <rcm-head></rcm-head>
+        <rcm-head :type="'back'" @linkTo="back" :right="true"></rcm-head>
         <div class="second-page-body" @scroll="scrollSecondPage" :style="scrollBoxHeight">
             <transition name="active-title">
                 <p class="activeTitle" v-if="showActiveTitle" :style="positionTop">#{{secondInfo.ranking_name}}</p>
             </transition>
             <second-head :value="secondInfo" class="second-head" ref="secondHead"></second-head>
-            <tabs :value="listInfo" class="second-tabs-box" @nextListPage="loadNextList" @openDis="openDis"></tabs>
+            <tabs :value="listInfo"
+                  class="second-tabs-box"
+                  @nextListPage="loadNextList"
+                  @openDis="openDis"
+                  @openAddEle="activeAddElement=true">
+            </tabs>
         </div>
         <rcm-popup :show="activeDiscuss"
                    :type="'full'"
                    @close="closeDIS">
-            <dis-modal slot="fullPage"></dis-modal>
+            <dis-modal slot="fullPage" @cancel="activeDiscuss = false"></dis-modal>
+        </rcm-popup>
+        <rcm-popup :show="activeAddElement"
+                   @close="activeAddElement = false"
+                   :type="'full'">
+            <add-ele slot="fullPage" @cancel="activeAddElement = false" @refresh="getSecondRankInfo"></add-ele>
         </rcm-popup>
     </div>
 </template>
@@ -22,6 +32,7 @@
     import disModal from './discuss2'
     import {sharePage} from '../../utils/index'
     import {SVS_getRankList} from '../../Servers/API'
+    import addEle from './addElement'
 
     export default {
         data() {
@@ -35,7 +46,8 @@
                 listPage: 1,
                 listTotalPage: 1,
                 showActiveTitle: false,
-                activeDiscuss: true
+                activeDiscuss: false,
+                activeAddElement: false
             }
         },
         mounted() {
@@ -54,11 +66,11 @@
             scrollBoxHeight() {
                 if (!this.$store.getters.TOPNAVSTATE) {
                     return {
-                        height: $(window).height() - 73 + 'px'
+                        height: $(window).height() - 42 + 'px'
                     }
                 } else {
                     return {
-                        height: $(window).height() - 42 + 'px'
+                        height: $(window).height() - 73 + 'px'
                     }
                 }
             },
@@ -75,6 +87,13 @@
             }
         },
         methods: {
+            back() {
+                this.$store.commit('SET_TRANSITIONTYPE', 'back')
+                this.$router.push({
+                    name: 'hot',
+                    query: this.$route.query
+                })
+            },
             //打开评论框
             openDis() {
                 this.activeDiscuss = true
@@ -82,6 +101,9 @@
             //关闭评论框
             closeDIS() {
                 this.activeDiscuss = false
+            },
+            closeAdd() {
+                this.activeAddElement = false
             },
             scrollSecondPage() {
                 let height = $('.second-page-body')[0].scrollTop
@@ -125,7 +147,8 @@
         components: {
             secondHead,
             tabs,
-            disModal
+            disModal,
+            addEle
         },
         watch: {}
     }
@@ -144,6 +167,7 @@
             width: 100%;
             overflow-y: auto;
             overflow-x: hidden;
+            transition: all 0.5s;
         }
     }
 

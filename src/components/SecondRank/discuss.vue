@@ -32,6 +32,7 @@
 <script>
     import discuessList from './discuessList'
     import {addComment, getDiscussList} from '../../api/api'
+    import {SVS_getDiscussList} from '../../Servers/API'
 
     export default {
         data() {
@@ -74,33 +75,19 @@
             }
         },
         methods: {
-            goRegister() {
-                this.$router.push({
-                    name: 'register',
-                    query: this.$route.query
-                })
-            },
             getRankDiscuss() {
                 let params = {};
                 params.level = 2;
                 params.page = this.page;
                 params.id = this.$route.query.secondId;
-                getDiscussList(params).then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
-                            this.totalPage = res.data.data.last_page
-                            this.crtPage = res.data.data.current_page
-                            this.discussList = this.discussList.concat(res.data.data.data)
-                        } else {
-
-                        }
-
-                    } else {
-
-                    }
-                }).catch(err => {
-                    throw err
-                })
+                SVS_getDiscussList(res => {
+                    this.totalPage = res.data.last_page
+                    this.crtPage = res.data.current_page
+                    this.discussList = this.discussList.concat(res.data.data)
+                    this.$store.commit('SET_GETDISCUSS', false)
+                }, err => {
+                    return
+                }, params)
             },
             sort(type) {
                 if (type == 0) {
@@ -130,48 +117,22 @@
             },
             activeDiscuss() {
                 this.$emit('openDis')
-            },
-            cancelDiscuss() {
-                this.discussIsOpen = false;
-            },
-            getTextareaFocus() {
-
-            },
-            confirmDiscuss() {
-                if (this.discussText.length == 0) {
-                    this.$toast({
-                        message: '评论不能为空',
-                        duration: 1000,
-                        position: 'middle'
-                    })
-                    return
-                }
-                let params = {};
-                params.content = this.discussText;
-                params.comment_type = 2;
-                params.ranking_id = parseInt(this.$route.query.secondId);
-                params.type = this.type;
-                addComment(params).then(res => {
-                    if (res.status == 200) {
-                        if (res.data.status_code == 1) {
-                            this.discussList = []
-                            this.getRankDiscuss()
-                            this.discussText = ''
-                            this.discussIsOpen = false;
-                        }
-                    } else {
-
-                    }
-                }).catch(err => {
-                    throw err
-                })
             }
-
         },
         watch: {
             discussText(n, o) {
                 this.wordLength = n.length;
+            },
+            '$store.getters.GET_GETDISCUSS'(val) {
+                if (val) {
+                    this.discussList = []
+                    this.discussText = ''
+                    this.getRankDiscuss()
+                } else {
+                    return
+                }
             }
+
         },
         components: {
             discuessList

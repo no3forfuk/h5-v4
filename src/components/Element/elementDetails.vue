@@ -39,13 +39,14 @@
 <style scoped lang="less">
     .element-details {
         width: 100%;
-        height: 90%;
+        height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
         position: absolute;
         background-color: #fff;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
+        text-align: center;
         box-shadow: 0 -1px 1px 1px rgba(0, 0, 0, .2);
         bottom: 0;
         left: 0;
