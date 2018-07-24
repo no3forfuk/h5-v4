@@ -102,6 +102,7 @@
 <style scoped lang="less">
     .tabs-div {
         width: 100%;
+        overflow-x: hidden;
         overflow-y: hidden;
     }
 

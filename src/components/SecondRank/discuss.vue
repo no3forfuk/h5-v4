@@ -136,7 +136,8 @@
         },
         components: {
             discuessList
-        }
+        },
+        props: ['value']
     }
 
 </script>

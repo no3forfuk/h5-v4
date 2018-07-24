@@ -1,6 +1,7 @@
 <template>
     <div class="user-opts">
         <opts v-bind:optionsData="item"
+              @addRank="addrank"
               v-for="(item,index) in optionsData"
               :key="index">
             <i style="font-family: iconfont" slot="before" v-html="item.icon"></i>
@@ -23,7 +24,8 @@
                         type: 'opts',
                         title: '我的消息',
                         icon: '&#xe64b;',
-                        routeName: 'myself'
+                        routeName: 'myself',
+                        point:'UserCenter_To_MySelf'
                     },
                     {
                         type: 'blet'
@@ -80,7 +82,11 @@
         created() {
 
         },
-        methods: {},
+        methods: {
+            addrank() {
+                this.$emit('publicRank')
+            }
+        },
         components: {
             opts
         }

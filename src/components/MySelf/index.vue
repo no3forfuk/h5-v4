@@ -1,10 +1,9 @@
 <template>
-
     <div class="myself">
+        <rcm-head :type="'back'" @linkTo="goPrve"></rcm-head>
         <banner></banner>
         <tabs></tabs>
     </div>
-
 </template>
 
 <script>
@@ -20,7 +19,8 @@
         },
         methods: {
             goPrve() {
-                this.$router.replace({name: 'userCenter'})
+                this.$store.commit('SET_TRANSITIONTYPE', 'back')
+                this.$router.back()
             }
         },
         components: {
@@ -33,6 +33,8 @@
 
 <style scoped lang="less">
     .myself {
+        width: 100%;
+        height: 100%;
         background-color: #fff;
     }
 

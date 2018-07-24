@@ -48,9 +48,36 @@ Vue.filter('timeformat', val => {
     }
 })
 
+
 import Storage from './Servers/Storage'
 
 Vue.prototype.$storage = Storage
+
+//统计
+import {countUseTimes} from './api/api'
+
+const count = function (data, success) {
+    let params = {};
+    params.statistical_serial = data[0]
+    params.statistical_num = data[1]
+    if (Storage.GET_session('X-Auth-Token') && Storage.GET_session('userInfo')) {
+        params.from_uid = Storage.GET_session('userInfo').id
+        params.user_type = 1
+    } else {
+        params.user_type = 2
+    }
+    countUseTimes(params).then(res => {
+        if (res.status == 200 && res.data.status_code == 1) {
+            if (!success) return
+            success(res.data)
+        } else {
+            return
+        }
+    }).catch(err => {
+        throw err
+    })
+}
+Vue.prototype.$count = count
 let bus = new Vue()
 Vue.prototype.bus = bus
 //vuex

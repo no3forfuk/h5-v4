@@ -3,7 +3,11 @@
         <transition :name="transitionName">
             <router-view></router-view>
         </transition>
-        <rcm-login v-if="isLogin"></rcm-login>
+        <rcm-popup :show="$store.getters.GOLOGIN"
+                   :type="'full'"
+                   @close="$store.commit('GOLOGIN',false)">
+            <rcm-login slot="fullPage"></rcm-login>
+        </rcm-popup>
     </div>
 </template>
 
@@ -31,6 +35,11 @@
         created() {
             this.init()
 
+        },
+        beforeDestroy() {
+            //统计加载页面个数
+            let num = this.$store.getters.GET_LOADPAGENUMBER
+            this.$count(['Loading_All_Num', num])
         },
         mounted() {
             this.$nextTick(() => {
@@ -89,7 +98,11 @@
                 return this.$store.getters.GET_TRANSITIONTYPE
             }
         },
-        watch: {}
+        watch: {
+            '$route.name'(val) {
+                this.$store.commit('SET_LOADPAGENUMBER', val)
+            }
+        }
     }
 
 </script>

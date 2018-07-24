@@ -1,7 +1,8 @@
 <template>
     <div class="rank-card">
         <div class="hot-level">
-            <span>{{renderData.rating[0]}}<sup>{{renderData.rating[1]}}</sup></span>
+            <span>{{renderData.rating?renderData.rating[0]:'C'}}<sup
+                    v-if="renderData.rating">{{renderData.rating[1]}}</sup></span>
         </div>
         <div class="rank-info">
             <router-link

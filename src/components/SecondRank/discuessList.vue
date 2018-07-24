@@ -5,7 +5,7 @@
                      :bottomDistance="pullHeight"
                      :auto-fill="false"
                      ref="loadmore">
-            <ul>
+            <ul class="rank-discuss-ul">
                 <li v-for="(item,index) in value" :key="index">
                     <div class="left" @click="didGreat(index,item)" ref="likes">
                         <icon :value="'&#xe647;'" class="font-size-20"></icon>
@@ -39,6 +39,7 @@
         },
         mounted() {
             this.$nextTick(() => {
+                $('.rank-discuss-ul').height($(window).height() - 230)
             })
         },
         created() {

@@ -26,7 +26,7 @@
             return {
                 ulTranslateY: 0,
                 scrollData: [],
-                step: 21,
+                step: 23,
                 index: 0
             }
         },

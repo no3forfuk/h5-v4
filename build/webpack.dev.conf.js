@@ -31,8 +31,8 @@ module.exports = merge(base, {
             const rp = require('request-promise');
             app.use(bodyParser.urlencoded({extended: false}));
             app.use(bodyParser.json());
-            // var baseUrl = 'http://test.bantangtv.com';
-            var baseUrl = 'http://www.rcm.ink';
+            var baseUrl = 'http://test.bantangtv.com';
+            // var baseUrl = 'http://www.rcm.ink';
             const go = function (requset, response) {
                 var method = requset.method;
                 var options;
@@ -174,6 +174,10 @@ module.exports = merge(base, {
             })
             //通知
             app.post('/api/home/user/userNotice', (req, res) => {
+                go(req, res)
+            })
+            //统计
+            app.post('/api/home/statistical/add', (req, res) => {
                 go(req, res)
             })
             //--------------------------------------------

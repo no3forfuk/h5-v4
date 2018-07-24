@@ -10,7 +10,7 @@
                     <icon :value="'&#xe62b;'" class="font-size-16" :class="{'collected':isCollect}"></icon>
                     <span :class="{'collected':isCollect}">收藏</span>
                 </div>
-                <div class="more">
+                <div class="more" @click="$emit('activeMore',value.id)">
                     <icon :value="'&#xe62f;'" class="font-size-16"></icon>
                     <span>更多</span>
                 </div>

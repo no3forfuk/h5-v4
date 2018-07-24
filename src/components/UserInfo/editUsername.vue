@@ -1,9 +1,9 @@
 <template>
-    <div class="user-name" @click="$emit('click','username')">
+    <div class="user-name" @click="$emit('click')">
                 <span class="font-size-16">
                     <input type="text"
                            disabled
-                           v-model="value">
+                           v-model="label">
                 </span>
         <icon :value="'&#xe601;'" class="font-size-20"></icon>
     </div>
@@ -13,7 +13,9 @@
 
     export default {
         data() {
-            return {}
+            return {
+                label: '查看我的ID'
+            }
         },
         props: ['value']
     }

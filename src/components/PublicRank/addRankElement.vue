@@ -2,7 +2,7 @@
     <div class="add-element">
         <div class="add-header">
             <div class="add-left" @click="$emit('cancle')">
-                <icon :value="'&#xe600;'" class="font-size-20"></icon>
+                <span style="color: #FF2C09;">取消</span>
             </div>
             <div class="add-right font-size-16" style="color: #FF2C09;" @click="$emit('confirmAddRank',selectList)">
                 完成
@@ -58,7 +58,6 @@
         },
         mounted() {
             this.$nextTick(() => {
-                $('.add-element').height($(window).height())
 
             })
         },
@@ -106,14 +105,17 @@
 <style scoped lang="less">
     .add-element {
         width: 100%;
+        height: 90%;
         position: fixed;
-        top: 0;
+        bottom: 0;
         left: 0;
-        z-index: 1000;
+        z-index: 600;
+        border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
         background-color: #fff;
         .add-header {
             display: flex;
-            padding: 10px;
+            padding: 10px 20px;
             flex-direction: row;
             justify-content: space-between;
         }

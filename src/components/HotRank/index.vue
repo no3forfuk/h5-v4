@@ -37,7 +37,9 @@
                 dayNum: 0,
                 page: 1,
                 pageTitle: 'RCM热门榜单',
-                pageType: ''
+                pageType: '',
+                enterTime: 0,
+                leaveTime: 0
             }
         },
         mounted() {
@@ -55,6 +57,33 @@
                 this.getPushRank()
             }
             this.sharePage()
+            //统计
+            this.enterTime = new Date().getTime()
+            if (this.$route.query.firstId) {
+                //一级榜单浏览次数
+                this.$count(['Reading_Rank_Lv1_Num', 1])
+            } else {
+                //首页浏览次数
+                this.$count(['Reading_Index_Num', 1])
+            }
+        },
+        beforeDestroy() {
+            //浏览时长
+            this.leaveTime = new Date().getTime()
+            let time = Math.round((this.leaveTime - this.enterTime) / 1000)
+            if (this.$route.query.firstId) {
+                this.$count(['Reading_Rank_Lv1_Time', time])
+            } else {
+                this.$count(['Reading_Index_Time', time])
+            }
+        },
+        beforeRouteLeave(to, from, next) {
+            if (to.name == 'secondRankList') {
+                this.$count(['Ranking_Lv1_To_Lv2', 1])
+            } else if (to.name == 'element') {
+                this.$count(['Ranking_Lv1_To_Element', 1])
+            }
+            next()
         },
         computed: {
             scrollBoxHeight() {
@@ -71,6 +100,8 @@
         },
         methods: {
             goUserCenter() {
+                //打开侧边栏次数
+                this.$count(['Ranking_Lv1_Burger'], 1)
                 this.$store.commit('SET_TRANSITIONTYPE', 'u-center')
                 if (this.$storage.GET_session('X-Auth-Token')) {
                     this.$router.push({
@@ -82,6 +113,7 @@
                 }
             },
             getFirstRankInfo(val) {
+                this.page = 1;
                 this.list = []
                 if (val.ranking_name == '热门榜单') {
                     this.pageType = 'hot'

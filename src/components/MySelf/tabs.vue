@@ -162,6 +162,9 @@
     .tabs {
         width: 100%;
         padding: 10px 0px;
+        height: calc(100% - 150px);
+        overflow-x: hidden;
+        overflow-y: auto;
         ul {
             width: 100%;
             display: flex;

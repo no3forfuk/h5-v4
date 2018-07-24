@@ -35,6 +35,7 @@
         },
         methods: {
             editUserInfo() {
+                this.$store.commit('SET_TRANSITIONTYPE', 'forward')
                 this.$router.push({name: 'userInfo'})
             }
         },

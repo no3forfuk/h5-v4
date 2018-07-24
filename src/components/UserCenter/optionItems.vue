@@ -1,5 +1,5 @@
 <template>
-    <div :class="{opts:opts,blet:blet,btn:btn}" @click="goWhere(optionsData.routeName)">
+    <div :class="{opts:opts,blet:blet,btn:btn}" @click="goWhere(optionsData.routeName,optionsData.point)">
         <div v-if="opts" class="left">
             <slot name="before"></slot>
         </div>
@@ -20,11 +20,13 @@
             return {}
         },
         methods: {
-            goWhere(routerName) {
+            goWhere(routerName, point) {
+                this.$count([point, 1])
+                this.$store.commit('SET_TRANSITIONTYPE', 'forward')
                 this.$router.push({name: routerName})
             },
             publicRank() {
-                this.$router.push({name: 'addRank'})
+                this.$emit('addRank')
             }
         },
         props: ['optionsData'],

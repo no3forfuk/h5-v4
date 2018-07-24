@@ -1,11 +1,17 @@
 <template>
     <div class="second-page">
         <rcm-head :type="'back'" @linkTo="back" :right="true"></rcm-head>
-        <div class="second-page-body" @scroll="scrollSecondPage" :style="scrollBoxHeight">
+        <div class="second-page-body"
+             :class="{noscroll:activeDiscuss || activeAddElement || $store.getters.GOLOGIN || activeMore}"
+             @scroll="scrollSecondPage"
+             :style="scrollBoxHeight">
             <transition name="active-title">
                 <p class="activeTitle" v-if="showActiveTitle" :style="positionTop">#{{secondInfo.ranking_name}}</p>
             </transition>
-            <second-head :value="secondInfo" class="second-head" ref="secondHead"></second-head>
+            <second-head :value="secondInfo"
+                         class="second-head"
+                         ref="secondHead"
+                         @activeMore="activeMore=true"></second-head>
             <tabs :value="listInfo"
                   class="second-tabs-box"
                   @nextListPage="loadNextList"
@@ -22,6 +28,11 @@
                    @close="activeAddElement = false"
                    :type="'full'">
             <add-ele slot="fullPage" @cancel="activeAddElement = false" @refresh="getSecondRankInfo"></add-ele>
+        </rcm-popup>
+        <rcm-popup :items="more"
+                   :show="activeMore"
+                   @close="activeMore=false"
+                   @clickItem="clickMoreItem">
         </rcm-popup>
     </div>
 </template>
@@ -47,16 +58,17 @@
                 listTotalPage: 1,
                 showActiveTitle: false,
                 activeDiscuss: false,
-                activeAddElement: false
+                activeAddElement: false,
+                more: [
+                    {
+                        label: '邀请添加排名'
+                    },
+                    {
+                        label: '举报'
+                    }
+                ],
+                activeMore: false
             }
-        },
-        mounted() {
-        },
-        updated() {
-
-        },
-        beforeCreate() {
-
         },
         created() {
             this.getSecondRankInfo()
@@ -87,6 +99,9 @@
             }
         },
         methods: {
+            clickMoreItem(val) {
+                this.activeMore = false
+            },
             back() {
                 this.$store.commit('SET_TRANSITIONTYPE', 'back')
                 this.$router.push({

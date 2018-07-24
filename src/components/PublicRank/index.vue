@@ -1,6 +1,9 @@
 <template>
     <div class="add-rank-page">
-
+        <div class="add-rank-header">
+            <span @click="$emit('cancel')">取消</span>
+            <span @click="comfirmAddRank">完成</span>
+        </div>
         <div class="input-rank-name">
             <span>#</span>
             <input type="text" placeholder="榜单好玩重要，名字帅更重要" v-model="rankName">
@@ -14,14 +17,14 @@
         <transition name="slide-element">
             <add-element v-show="nextAddElemet"
                          :value="{'ranking_name':rankName}"
-                         @confirmAddRank="submitAddRank"
+                         @confirmAddRank="addElementList"
                          @cancle="cancleAddElement"></add-element>
         </transition>
     </div>
 </template>
 
 <script>
-    import {addRank} from '../../api/api'
+    import {addRank, addElementMore} from '../../api/api'
     import scrollSelect from './scrollSelect'
     import addElement from './addRankElement'
 
@@ -33,53 +36,105 @@
                 rankDesc: '',
                 fatherId: '',
                 selectFather: false,
-                nextAddElemet: false
+                nextAddElemet: false,
+                newSecondId: ''
             }
         },
-        beforeDestroy() {
-            $(this.rightDom).unbind()
-        },
-        mounted() {
-            this.$nextTick(() => {
-                $('.add-rank-page').height($(window).height() - 33)
-                this.rightDom = this.$parent.$refs.rcmHeaders.$refs.comfirm;
-                $(this.rightDom).on('click', () => {
-                    if (this.rankName == '') {
-                        this.$toast({
-                            message: '榜单名不能为空',
-                            duration: 1000,
-                            position: 'middle'
-                        })
-                        return
-                    }
-                    if (this.rankDesc == '') {
-                        this.$toast({
-                            message: '请填写榜单描述',
-                            duration: 1000,
-                            position: 'middle'
-                        })
-                        return
-                    }
-                    if (this.fatherId) {
-                        this.nextAddElemet = true
-                    } else {
-                        this.selectFather = true
-                    }
-                })
-            })
-        },
         methods: {
+            comfirmAddRank() {
+                if (this.rankName == '') {
+                    this.$toast({
+                        message: '榜单名不能为空',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                    return
+                }
+                if (this.rankDesc == '') {
+                    this.$toast({
+                        message: '请填写榜单描述',
+                        duration: 1000,
+                        position: 'middle'
+                    })
+                    return
+                }
+                if (this.fatherId) {
+                    let params = {};
+                    params.ranking_name = this.rankName
+                    params.ranking_desc = this.rankDesc
+                    params.ranking_pid = this.fatherId
+                    addRank(params).then(res => {
+                        if (res.status == 200 && res.data.status_code == 1) {
+                            this.$toast({
+                                message: '添加成功',
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                            this.newSecondId = res.data.data.ranking_id
+                            this.nextAddElemet = true
+                        } else {
+                            this.$toast({
+                                message: res.data.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                        }
+                    }).catch(err => {
+                        return
+                    })
+                } else {
+                    this.selectFather = true
+                }
+            },
+            addElementList(val) {
+                if (val.length > 0) {
+                    let arr = []
+                    for (let i = 0; i < val.length; i++) {
+                        arr.push(val[i].id)
+                    }
+                    let str = arr.join(',')
+                    let params = {
+                        ranking_id: this.newSecondId,
+                        list: str
+                    }
+                    addElementMore(params).then(res => {
+                        if (res.status == 200 && res.data.status_code == 1) {
+                            this.$toast({
+                                message: '添加成功',
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                            this.$emit('cancel')
+                            this.$router.push({
+                                name: 'secondRankList',
+                                query: {
+                                    secondId: this.newSecondId,
+                                    firstId: this.fatherId,
+                                }
+                            })
+                        } else {
+                            this.$toast({
+                                message: res.data.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                        }
+                    }).catch(err => {
+                        return
+                    })
+                } else {
+                    this.$emit('cancel')
+                    this.$router.push({
+                        name: 'secondRankList',
+                        query: {
+                            secondId: this.newSecondId,
+                            firstId: this.fatherId,
+                        }
+                    })
+                }
+            },
             submitAddRank(val) {
-                let arr = []
-                for (let i = 0; i < val.length; i++) {
-                    arr.push(val[i].id)
-                }
-                let str = arr.join(',')
                 let params = {};
-                params.ranking_name = this.rankName
-                if (str.length > 0) {
-                    params.list = str
-                }
                 params.ranking_desc = this.rankDesc
                 params.ranking_pid = this.fatherId
                 addRank(params).then(res => {
@@ -117,20 +172,20 @@
                 this.nextAddElemet = false
             },
             cancleAddElement() {
-                this.nextAddElemet = false
+                this.$emit('cancel')
+                this.$router.push({
+                    name: 'secondRankList',
+                    query: {
+                        secondId: this.newSecondId,
+                        firstId: this.fatherId,
+                    }
+                })
             },
             confirmSelectFather() {
                 this.selectFather = false
             },
-            nextStep() {
-
-            },
             getFatherId(val) {
                 this.fatherId = val.id
-            },
-            submitAdd() {
-
-
             }
         },
         components: {
@@ -144,6 +199,13 @@
 <style scoped lang="less">
     .add-rank-page {
         width: 100%;
+        .add-rank-header {
+            padding: 10px 20px;
+            color: #FF2C09;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
     }
 
     .input-rank-name {

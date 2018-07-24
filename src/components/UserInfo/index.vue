@@ -1,33 +1,29 @@
 <template>
-    <transition name="transitionName" mode="in-out">
+    <div>
+        <rcm-head :type="'back'" @linkTo="back"></rcm-head>
         <div class="user-info">
             <edit-pic :img="userInfo.avatar" @editConfirm="submitEdit"></edit-pic>
-            <!--<edit-username @click="editStart" :value="userInfo.name"></edit-username>-->
+            <edit-username @click="lookUserId"></edit-username>
             <edit-userfav @click="editFavorite" :value="fav"></edit-userfav>
             <edit-usersign @click="editSign" :value="signature"></edit-usersign>
             <div class="belt"></div>
             <div class="confirm" @click="logOut">退出登陆</div>
             <div class="belt"></div>
             <div class="footer"><p>用爱喂食挚爱，那么TA将GO BIG</p></div>
-            <transition name="editModal">
-                <div class="modal-edit" v-if="editActive">
-                    <rcm-header>
-                    <span slot="back"
-                          class="font-size-16"
-                          @click="editCancel"
-                          style="color:#FF2C09;">取消</span>
-                        <span slot="right"
-                              class="font-size-16"
-                              @click="submitEdit"
-                              style="color:#FF2C09;">完成</span>
-                    </rcm-header>
-                    <div class="modal-body">
+            <rcm-popup :type="'full'"
+                       @close="editActive = false"
+                       :show="editActive">
+                <div class="modal-edit" slot="fullPage">
+                    <div class="look-id" v-if="editType == 'look'">
+                        <span>您的ID为<span style="color: #FF2C09;">{{userInfo.id}}</span>,请妥善保管</span>
+                        <button @click="editActive = false">确定</button>
+                    </div>
+                    <div class="dis-modal-header" v-if="editType !== 'look'">
+                        <span @click="editCancel">取消</span>
+                        <span @click="submitEdit">完成</span>
+                    </div>
+                    <div class="modal-body" v-if="editType !== 'look'">
                         <div class="input-box">
-                            <!--<input type="text"-->
-                            <!--placeholder="有趣的昵称很重要哦！"-->
-                            <!--v-model="username"-->
-                            <!--ref="username"-->
-                            <!--v-show="editItem == 'username'">-->
                             <input type="text"
                                    placeholder="输入自己的个性签名"
                                    v-model="signature"
@@ -41,9 +37,9 @@
                         <scroll-select v-if="editType == 'fav'" @change="selectFav"></scroll-select>
                     </div>
                 </div>
-            </transition>
+            </rcm-popup>
         </div>
-    </transition>
+    </div>
 </template>
 
 <script>
@@ -69,7 +65,7 @@
             }
         },
         created() {
-
+            this.$count(['UserInfo_Edit', 1])
         },
         beforeRouteEnter(to, from, next) {
             if (sessionStorage.getItem('userInfo')) {
@@ -97,9 +93,17 @@
             next()
         },
         methods: {
+            back() {
+                this.$store.commit('SET_TRANSITIONTYPE', 'back')
+                this.$router.back()
+            },
             selectFav(val) {
                 this.fav = val.ranking_name
                 this.expert = val.id
+            },
+            lookUserId() {
+                this.editActive = true
+                this.editType = 'look'
             },
             submitEdit(val) {
                 if (val.type == 'pic') {
@@ -148,13 +152,6 @@
                             })
                             this.editActive = false;
                             SNI_userInfo()
-                            // getUserInfo().then(res => {
-                            //     this.userInfo = res.data.data
-                            //     let str = JSON.stringify(res.data.data)
-                            //     sessionStorage.setItem('userInfo', str)
-                            // }).catch(err => {
-                            //     throw err
-                            // })
                         }
                     }
                 }).catch(err => {
@@ -201,6 +198,33 @@
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
         box-shadow: 0 -1px 1px 1px rgba(0, 0, 0, .2);
+        .look-id {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+            button {
+                margin-top: 20px;
+                width: 100%;
+                border: 0 none;
+                text-align: center;
+                background-color: #FFCECE;
+                padding: 5px 0;
+                height: 100%;
+                border-radius: 4px;
+                color: #FF2C09;
+                font-size: 18px;
+                font-weight: 700;
+            }
+        }
+        .dis-modal-header {
+            padding: 10px 20px;
+            color: #FF2C09;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
         .modal-body {
             padding: 10px;
             width: 100%;

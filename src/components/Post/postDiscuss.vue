@@ -42,10 +42,8 @@
         },
         methods: {
             goRegister() {
-                this.$router.push({
-                    name: 'register',
-                    query: this.$route.query
-                })
+                this.$emit('cancleDiscuss', '')
+                this.$store.commit('GOLOGIN', true)
             }
         },
         watch: {
@@ -93,6 +91,7 @@
                 }
                 .right {
                     padding: 2px 5px;
+                    font-size: 14px;
                     background-color: #E4E4E4;
                     color: #FF2C09;
                     font-weight: bold;

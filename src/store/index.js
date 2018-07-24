@@ -7,7 +7,8 @@ const state = {
     topNavShow: false,
     transitionType: '',//路由切换动画类型
     firstRankIndex: 0,
-    getDiscuss: false
+    getDiscuss: false,
+    loadPageNumber: []
 }
 const mutations = {
     TOGGLENAVSHOW(state, val) {
@@ -29,6 +30,29 @@ const mutations = {
     //获取评论
     SET_GETDISCUSS(state, val) {
         state.getDiscuss = val
+    },
+    //记录加载页面数量
+    SET_LOADPAGENUMBER(state, val) {
+        let flag = false;
+        if (state.loadPageNumber.length > 0) {
+            for (let i = 0; i < state.loadPageNumber.length; i++) {
+                if (state.loadPageNumber[i] !== val) {
+                    flag = true
+                    continue
+                } else {
+                    flag = false
+                    break
+                }
+            }
+        } else {
+            flag = true
+        }
+        if (flag) {
+            state.loadPageNumber.push(val)
+        } else {
+            flag = false;
+        }
+
     }
 };
 const getters = {
@@ -50,6 +74,10 @@ const getters = {
     },
     GET_GETDISCUSS: state => {
         return state.getDiscuss
+    },
+    //获取页面加载数量
+    GET_LOADPAGENUMBER: state => {
+        return state.loadPageNumber.length
     }
 }
 module.exports = {

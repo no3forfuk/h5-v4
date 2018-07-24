@@ -192,7 +192,7 @@ module.exports = {
     rankCollect(data) {
         return request({
             url: '/ranking/secondCollect',
-            method: 'Post',
+            method: 'POST',
             data: data
         })
     },
@@ -200,7 +200,7 @@ module.exports = {
     elementCollect(data) {
         return request({
             url: '/element/elementCollect',
-            method: 'Post',
+            method: 'POST',
             data: data
         })
     },
@@ -208,7 +208,7 @@ module.exports = {
     elementVote(data) {
         return request({
             url: '/vote/addVote',
-            method: 'Post',
+            method: 'POST',
             data: data
         })
     },
@@ -216,7 +216,7 @@ module.exports = {
     resetPwd(data) {
         return request({
             url: '/login/forgot',
-            method: 'Post',
+            method: 'POST',
             data: data
         })
     },
@@ -224,7 +224,7 @@ module.exports = {
     addElementMore(data) {
         return request({
             url: '/ranking/secondBindElement',
-            method: 'Post',
+            method: 'POST',
             data: data
         })
     },
@@ -232,10 +232,18 @@ module.exports = {
     getNotice(data) {
         return request({
             url: '/user/userNotice',
-            method: 'Post',
+            method: 'POST',
             data: data
         })
-    }
+    },
+    //埋点统计
+    countUseTimes(data) {
+        return request({
+            url: '/statistical/add',
+            method: 'POST',
+            data: data
+        })
+    },
 
 
 }

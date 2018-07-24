@@ -68,24 +68,24 @@ module.exports = {
     },
     props:
         ['idx', 'type', 'right'],
-    computed:
-        {
-            calcHeight() {
-                if (this.navShow) {
-                    return {
-                        height: '30px'
-                    }
-                } else {
-                    return {
-                        height: '0px'
-                    }
-                }
-            }
-            ,
-            spanPosition() {
+    computed: {
+        calcHeight() {
+            if (this.navShow) {
+                this.$count(['Ranking_Lv1_Discover', 1])
                 return {
-                    transform: 'translateX(' + this.crtPositon + 'px)'
+                    height: '30px'
+                }
+            } else {
+                return {
+                    height: '0px'
                 }
             }
         }
+        ,
+        spanPosition() {
+            return {
+                transform: 'translateX(' + this.crtPositon + 'px)'
+            }
+        }
+    }
 }

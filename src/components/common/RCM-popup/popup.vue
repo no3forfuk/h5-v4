@@ -6,14 +6,14 @@
                 <slot name="fullPage">
                 </slot>
             </div>
-            <!--<slot name="bottom">-->
-            <!--<ul class="popup-temp-ul" @click.stop="aa">-->
-            <!--<li v-for="(item,index) in items" :key="index">-->
-            <!--{{item}}-->
-            <!--</li>-->
-            <!--</ul>-->
-            <!--<div class="prop-mask"></div>-->
-            <!--</slot>-->
+            <ul class="popup-temp-ul" v-if="type !== 'full'">
+                <li v-for="(item,index) in items"
+                    class="popup-temp-li"
+                    :key="index"
+                    v-text="item.label"
+                    @click="clickItem(item)">
+                </li>
+            </ul>
         </div>
     </transition>
 </template>
@@ -22,19 +22,17 @@
 
     export default {
         data() {
-            return {
-                items: [0, 0, 0]
-            }
+            return {}
         },
         mounted() {
             $('.rcm-popup-temp').height($(window).height())
         },
         methods: {
-            aa() {
-                console.log('a');
+            clickItem(item) {
+                this.$emit('clickItem', item)
             }
         },
-        props: ['show', 'type']
+        props: ['show', 'type', 'items']
     }
 
 </script>
@@ -69,13 +67,29 @@
         }
         .popup-temp-ul {
             display: flex;
+            background-color: #fff;
             flex-direction: column;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 502;
+            width: 100%;
             align-items: center;
+            box-shadow: 0 -1px 1px 1px rgba(0, 0, 0, .2);
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
-        }
-        .prop-mask {
-
+            .popup-temp-li {
+                color: #FF2C09;
+                width: 100%;
+                text-align: center;
+                height: 50px;
+                font-size: 16px;
+                border-bottom: 1px solid #DEDEDE;
+                line-height: 50px;
+            }
+            li:nth-last-child(1) {
+                border-bottom: 0 none;
+            }
         }
     }
 

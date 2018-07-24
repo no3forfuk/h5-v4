@@ -3,15 +3,21 @@
         <rcm-head :type="'back'" @linkTo="goBack" :right="false"></rcm-head>
         <div class="user-body">
             <card :value="userData" v-if="userData"></card>
-            <opts></opts>
+            <opts @publicRank="activeAddRank = true"></opts>
             <footer class="footer">为了保证RCM榜单数据的客观真实，需要您的支持</footer>
         </div>
+        <rcm-popup :show="activeAddRank"
+                   :type="'full'"
+                   @close="activeAddRank = false">
+            <add-rank slot="fullPage" @cancel="activeAddRank = false"></add-rank>
+        </rcm-popup>
     </div>
 </template>
 
 <script>
     import Card from './idCard'
     import opts from './options'
+    import addRank from '../PublicRank/index'
     import {SVS_userInfo} from '../../Servers/API'
     import Storage from '../../Servers/Storage'
     import {SNI_userInfo} from '../../Snippet'
@@ -20,7 +26,8 @@
         data() {
             return {
                 direction: '',
-                userData: ''
+                userData: '',
+                activeAddRank: false
             }
         },
         created() {
@@ -57,7 +64,8 @@
         computed: {},
         components: {
             card: Card,
-            opts
+            opts,
+            addRank
         }
     }
 
