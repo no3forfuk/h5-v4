@@ -10,7 +10,7 @@
                         <icon :value="'&#xe62b;'" class="font-size-16" :class="{'collected':isCollect}"></icon>
                         <span :class="{'collected':isCollect}">收藏</span>
                     </div>
-                    <div class="more">
+                    <div class="more" @click="$emit('more')">
                         <icon :value="'&#xe62f;'" class="font-size-16"></icon>
                         <span>更多</span>
                     </div>
@@ -105,6 +105,9 @@
                                     position: 'middle'
                                 })
                                 this.isCollect = !this.isCollect
+                                if (this.isCollect) {
+                                    this.$count(['Element_Collect', 1])
+                                }
                             } else {
                                 this.$toast({
                                     message: res.data.message,
@@ -132,6 +135,7 @@
             },
             addPost() {
                 if (sessionStorage.getItem('X-Auth-Token')) {
+                    this.$count(['Element_AddPost', 1])
                     this.$emit('addPost')
                 } else {
                     this.$store.commit('GOLOGIN', true)
@@ -142,6 +146,7 @@
                 if (!sessionStorage.getItem('X-Auth-Token')) {
                     this.$store.commit('GOLOGIN', true)
                 } else {
+                    this.$count(['Element_Vote', 1])
                     elementVote({
                         element_id: this.$route.query.elementId
                     }).then(res => {

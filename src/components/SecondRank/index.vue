@@ -2,7 +2,7 @@
     <div class="second-page">
         <rcm-head :type="'back'" @linkTo="back" :right="true"></rcm-head>
         <div class="second-page-body"
-             :class="{noscroll:activeDiscuss || activeAddElement || $store.getters.GOLOGIN || activeMore}"
+             :class="{noscroll:activeDiscuss || activeAddElement || $store.getters.GOLOGIN || activeMore || inviteOthers || activeDetails}"
              @scroll="scrollSecondPage"
              :style="scrollBoxHeight">
             <transition name="active-title">
@@ -11,6 +11,7 @@
             <second-head :value="secondInfo"
                          class="second-head"
                          ref="secondHead"
+                         @openDetails="activeDetails=true"
                          @activeMore="activeMore=true"></second-head>
             <tabs :value="listInfo"
                   class="second-tabs-box"
@@ -34,6 +35,16 @@
                    @close="activeMore=false"
                    @clickItem="clickMoreItem">
         </rcm-popup>
+        <rcm-popup :type="'full'"
+                   :show="inviteOthers"
+                   @close="inviteOthers=false">
+            <invite slot="fullPage" @cancel="inviteOthers=false" @comfirm="inviteOthers=false"></invite>
+        </rcm-popup>
+        <rcm-popup :type="'full'"
+                   :show="activeDetails"
+                   @close="activeDetails=false">
+            <rank-details slot="fullPage"></rank-details>
+        </rcm-popup>
     </div>
 </template>
 
@@ -44,6 +55,8 @@
     import {sharePage} from '../../utils/index'
     import {SVS_getRankList} from '../../Servers/API'
     import addEle from './addElement'
+    import invite from './inviteOthers'
+    import rankDetails from './details'
 
     export default {
         data() {
@@ -59,20 +72,35 @@
                 showActiveTitle: false,
                 activeDiscuss: false,
                 activeAddElement: false,
+                activeDetails: false,
+                inviteOthers: false,
                 more: [
                     {
-                        label: '邀请添加排名'
+                        label: '邀请添加排名',
+                        value: 1
                     },
                     {
-                        label: '举报'
+                        label: '举报',
+                        value: 2
                     }
                 ],
-                activeMore: false
+                activeMore: false,
+                enterTime: 0,
+                leaveTime: 0
             }
         },
         created() {
             this.getSecondRankInfo()
             this.$store.commit('TOGGLENAVSHOW', false)
+            //统计二级榜单浏览次数
+            this.$count(['Reading_Rank_Lv2_Num', 1])
+            this.enterTime = new Date().getTime()
+        },
+        beforeDestroy() {
+            //统计二级榜单浏览时长
+            this.leaveTime = new Date().getTime()
+            let time = Math.round((this.leaveTime - this.enterTime) / 1000)
+            this.$count(['Reading_Rank_Lv2_Time', time])
         },
         computed: {
             scrollBoxHeight() {
@@ -101,6 +129,16 @@
         methods: {
             clickMoreItem(val) {
                 this.activeMore = false
+                this.$count(['Ranking_Lv2_ClickMore', 1])
+                if (val.value == 1) {
+                    this.$count(['Ranking_Lv2_More_Invite', 1])
+                    this.inviteOthers = true
+                    return
+                }
+                if (val.value == 2) {
+                    this.$count(['Ranking_Lv2_More_Report', 1])
+                    return
+                }
             },
             back() {
                 this.$store.commit('SET_TRANSITIONTYPE', 'back')
@@ -163,7 +201,9 @@
             secondHead,
             tabs,
             disModal,
-            addEle
+            addEle,
+            invite,
+            rankDetails
         },
         watch: {}
     }

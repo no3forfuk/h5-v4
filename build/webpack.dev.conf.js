@@ -180,6 +180,18 @@ module.exports = merge(base, {
             app.post('/api/home/statistical/add', (req, res) => {
                 go(req, res)
             })
+            //邀请用户列表
+            app.post('/api/home/ranking/inviteView', (req, res) => {
+                go(req, res)
+            })
+            //搜索邀请人
+            app.post('/api/home/ranking/searchInvite', (req, res) => {
+                go(req, res)
+            })
+            //邀请
+            app.post('/api/home/ranking/invite', (req, res) => {
+                go(req, res)
+            })
             //--------------------------------------------
             //获取微信签名
             // app.post('/api/Wx/signature', (req, res) => {

@@ -3,13 +3,22 @@
         <div class="register-body">
             <div class="register-form">
                 <div class="phone-number">
-                    <input type="tel" placeholder="手机号" v-model="phoneNumber">
+                    <input type="tel"
+                           @focus="$count(['Register_Input_Tel',1])"
+                           placeholder="手机号"
+                           v-model="phoneNumber">
                 </div>
                 <div class="pass-word">
-                    <input type="password" placeholder="您的密码" v-model="password">
+                    <input type="password"
+                           @focus="$count(['Register_Input_Pwd',1])"
+                           placeholder="您的密码"
+                           v-model="password">
                 </div>
                 <div class="short-msg">
-                    <input type="nubmer" placeholder="短信验证码" v-model="yzm">
+                    <input type="nubmer"
+                           @focus="$count(['Register_Input_YZM',1])"
+                           placeholder="短信验证码"
+                           v-model="yzm">
                     <span @click="getYZM">{{yzmText}}</span>
                 </div>
             </div>
@@ -20,7 +29,7 @@
             </div>
         </div>
         <div class="register-footer">
-            <div class="protocol">
+            <div class="protocol" @click="readProtocol">
                 <span>点击[下一步]，表示您已阅读并同意<i>用户使用协议</i></span>
             </div>
         </div>
@@ -44,14 +53,27 @@
                 lock: false//验证码发送按钮开关
             }
         },
-        mounted() {
-
+        created() {
+            if (this.$route.name == 'secondRankList') {
+                this.$count(['Rank_Lv2_To_Register', 1])
+            } else if (this.$route.name == 'post') {
+                this.$count(['Post_To_Register', 1])
+            } else if (this.$route.name == 'element') {
+                this.$count(['Element_To_Register', 1])
+            } else if (this.$route.name == 'hot') {
+                this.$count(['Index_To_Register', 1])
+            }
         },
         methods: {
+            //点击阅读协议
+            readProtocol() {
+                this.$count(['Register_Read_Protocol', 1])
+            },
             //获取验证码
             getYZM() {
                 if (!this.lock) {
                     //开关打开时
+                    this.$count(['Register_Get_YZM', 1])
                     this.time = 60
                     if (this.phoneNumber.length !== 11) {
                         this.$toast({
@@ -96,7 +118,6 @@
                 } else {
                     return
                 }
-
             },
             //登陆逻辑
             login() {
@@ -117,6 +138,7 @@
                 }, loginInfo)
             },
             submitRegister() {
+                this.$count(['Register_Next', 1])
                 if (this.phoneNumber.length !== 11) {
                     this.$toast({
                         message: '请输入有效手机号码',

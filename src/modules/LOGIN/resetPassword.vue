@@ -3,14 +3,22 @@
         <div class="register-body">
             <div class="register-form">
                 <div class="phone-number">
-                    <input type="tel" placeholder="手机号" v-model="phoneNumber">
+                    <input type="tel"
+                           placeholder="手机号"
+                           @focus="$count(['Reset_Input_Tel',1])"
+                           v-model="phoneNumber">
                 </div>
                 <div class="short-msg">
-                    <input type="nubmer" placeholder="输入短信验证码" v-model="yzm">
+                    <input type="nubmer"
+                           @focus="$count(['Reset_Input_YZM',1])"
+                           placeholder="输入短信验证码"
+                           v-model="yzm">
                     <span @click="getYZM">{{yzmText}}</span>
                 </div>
                 <div class="pass-word">
-                    <input type="password" placeholder="设置新的密码" v-model="password">
+                    <input type="password"
+                           placeholder="设置新的密码"
+                           v-model="password">
                 </div>
             </div>
             <div class="register-opts">
@@ -40,6 +48,7 @@
         methods: {
             getYZM() {
                 if (!this.lock) {
+                    $count(['Reset_Get_YZM', 1])
                     this.time = 60
                     if (this.phoneNumber.length !== 11) {
                         this.$toast({
@@ -111,6 +120,7 @@
                     })
                     return
                 }
+                this.$count(['Reset_Next', 1])
                 resetPwd(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {

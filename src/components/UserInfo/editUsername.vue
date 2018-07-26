@@ -17,6 +17,9 @@
                 label: '查看我的ID'
             }
         },
+        created() {
+
+        },
         props: ['value']
     }
 

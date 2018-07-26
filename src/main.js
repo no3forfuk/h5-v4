@@ -69,7 +69,6 @@ const count = function (data, success) {
     countUseTimes(params).then(res => {
         if (res.status == 200 && res.data.status_code == 1) {
             if (!success) return
-            success(res.data)
         } else {
             return
         }

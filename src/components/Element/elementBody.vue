@@ -11,19 +11,14 @@
                         <icon :value="'&#xe64b;'" class="font-size-20"></icon>
                         <span>{{item.comment_num}}</span>
                     </div>
-                    <div class="right">
+                    <div class="right" @click="clickItem">
                         <router-link
                                 :to="{name:'post',query:{postId:item.id,secondId:$route.query.secondId,firstId:$route.query.firstId,idx:$route.query.idx,elementId:$route.query.elementId},params:{postDetails:item}}">
-                            <text-post v-if="item.type == 1" :value="item"
-                                       @click="$store.commit('SET_TRANSITIONTYPE','forward')"></text-post>
-                            <img-post v-if="item.type == 2" :value="item"
-                                      @click="$store.commit('SET_TRANSITIONTYPE','forward')"></img-post>
-                            <img-text v-if="item.type == 3" :value="item"
-                                      @click="$store.commit('SET_TRANSITIONTYPE','forward')"></img-text>
-                            <video-post v-if="item.type == 4" :value="item"
-                                        @click="$store.commit('SET_TRANSITIONTYPE','forward')"></video-post>
-                            <ext-web v-if="item.type == 5" :value="item"
-                                     @click="$store.commit('SET_TRANSITIONTYPE','forward')"></ext-web>
+                            <text-post v-if="item.type == 1" :value="item"></text-post>
+                            <img-post v-if="item.type == 2" :value="item"></img-post>
+                            <img-text v-if="item.type == 3" :value="item"></img-text>
+                            <video-post v-if="item.type == 4" :value="item"></video-post>
+                            <ext-web v-if="item.type == 5" :value="item"></ext-web>
                         </router-link>
                         <div class="user">
                             <div>
@@ -66,6 +61,10 @@
             loadNextPagePost() {
                 this.$emit('loadmorePost', '')
                 this.$refs.loadmore.onBottomLoaded();
+            },
+            clickItem() {
+                this.$count(['Element_To_Post', 1])
+                this.$store.commit('SET_TRANSITIONTYPE', 'forward')
             }
         },
         updated() {

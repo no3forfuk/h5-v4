@@ -1,6 +1,6 @@
 <template>
     <div class="like-discuss">
-        <div class="left">
+        <div class="left" @click="$emit('openSomeoneInfo')">
             <img :src="user.avatar" alt="">
         </div>
         <div class="right">

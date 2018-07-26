@@ -11,7 +11,14 @@ import RcmPageHeader from './common/PageHeader/pageheader'
 import RcmHead from './common/Headers/head.vue'
 
 Vue.component('rcm-head', RcmHead)
+//tabs
+import Tabs from './common/Tabs/tabs.vue'
 
+Vue.component('rcm-tab', Tabs)
+//头部取消完成
+import CancelComfirm from './common/cancelAndComfirm/index'
+
+Vue.component('cancel-comfirm', CancelComfirm)
 Vue.component('icon', Icon)
 Vue.component('user-card', UserCard)
 Vue.component('rank-card', RankCard)

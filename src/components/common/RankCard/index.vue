@@ -28,7 +28,7 @@
                         <router-link
                                 :to="{name:'secondRankList',query:{secondId:renderData.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
 
-                            <div class="element-item">
+                            <div class="element-item" @click="goSecondRank">
                                 <span>更多...</span>
                             </div>
                         </router-link>
@@ -89,7 +89,7 @@
                 this.$store.commit('SET_TRANSITIONTYPE', 'forward')
             },
             initUlWidth() {
-                $('.info-ul').width($(window).width() - 30)
+                $('.info-ul').width($(window).width() - 55)
             },
             judgeBoundary() {
                 this.$nextTick(() => {
@@ -164,7 +164,7 @@
                     display: block;
                     background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
                     z-index: 1;
-                    right: 19px;
+                    right: 0px;
                     top: 0;
                 }
                 .prevmask {
@@ -183,6 +183,7 @@
                     width: 100%;
                     padding-bottom: 20px;
                     padding-right: 10px;
+                    box-sizing: content-box;
                     display: flex;
                     li {
                         flex: 0 0 70px;

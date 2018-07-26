@@ -244,6 +244,28 @@ module.exports = {
             data: data
         })
     },
-
-
+    //邀请ranking/inviteView
+    inviteOthers(data) {
+        return request({
+            url: '/ranking/inviteView',
+            method: 'POST',
+            data: data
+        })
+    },
+    //搜索邀请人
+    searchInvite(data) {
+        return request({
+            url: '/ranking/searchInvite',
+            method: 'POST',
+            data: data
+        })
+    },
+    //邀请
+    invite(data) {
+        return request({
+            url: '/ranking/invite',
+            method: 'POST',
+            data: data
+        })
+    },
 }

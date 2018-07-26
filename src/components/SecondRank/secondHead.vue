@@ -1,8 +1,8 @@
 <template>
     <div class="second-head">
         <div class="left">
-            <h2>#{{value.ranking_name}}</h2>
-            <div class="desc">
+            <h2 @click="$emit('openDetails')">#{{value.ranking_name}}</h2>
+            <div class="desc" @click="$emit('openDetails')">
                 <p>{{value.ranking_desc}}</p>
             </div>
             <div class="more-options">
@@ -58,6 +58,9 @@
                                     position: 'middle'
                                 })
                                 this.isCollect = !this.isCollect
+                                if (this.isCollect) {
+                                    this.$count(['Ranking_Lv2_Collect', 1])
+                                }
                             } else {
                                 this.$toast({
                                     message: res.data.message,

@@ -8,7 +8,8 @@ const state = {
     transitionType: '',//路由切换动画类型
     firstRankIndex: 0,
     getDiscuss: false,
-    loadPageNumber: []
+    loadPageNumber: [],
+    someoneInfo: false
 }
 const mutations = {
     TOGGLENAVSHOW(state, val) {
@@ -53,6 +54,10 @@ const mutations = {
             flag = false;
         }
 
+    },
+    //查看他人信息
+    SET_SOMEONEINFO(state, val) {
+        state.someoneInfo = val
     }
 };
 const getters = {
@@ -78,6 +83,9 @@ const getters = {
     //获取页面加载数量
     GET_LOADPAGENUMBER: state => {
         return state.loadPageNumber.length
+    },
+    GET_SOMEONEINFO: state => {
+        return state.someoneInfo
     }
 }
 module.exports = {

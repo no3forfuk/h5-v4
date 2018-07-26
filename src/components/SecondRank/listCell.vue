@@ -39,6 +39,7 @@
         },
         methods: {
             setTransition() {
+                this.$count(['Ranking_Lv2_To_Element', 1])
                 this.$store.commit('SET_TRANSITIONTYPE', 'forward')
             }
         },

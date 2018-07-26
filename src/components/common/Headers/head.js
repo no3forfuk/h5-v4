@@ -34,7 +34,9 @@ module.exports = {
             let navList = this.$storage.GET_session('firstRank')
             if (navList) {
                 this.rankList = this.rankList.concat(navList)
-                this.crtRankName = this.rankList[this.crtIndex].ranking_name
+                if (this.$route.name != 'hot') {
+                    this.crtRankName = this.rankList[this.crtIndex].ranking_name
+                }
             } else {
 
             }

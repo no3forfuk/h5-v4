@@ -49,6 +49,7 @@
                 this.$store.commit('GOLOGIN', false)
             },
             goRegister() {
+                this.$count(['Login_To_Register', 1])
                 this.step = 2
             },
             goSetInfo(val) {
@@ -56,6 +57,7 @@
                 this.step = 3
             },
             goReset() {
+                this.$count(['Login_To_ResetPwd', 1])
                 this.step = 4
             }
         },

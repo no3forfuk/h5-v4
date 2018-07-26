@@ -21,7 +21,9 @@
         },
         methods: {
             goWhere(routerName, point) {
-                this.$count([point, 1])
+                if (point) {
+                    this.$count([point, 1])
+                }
                 this.$store.commit('SET_TRANSITIONTYPE', 'forward')
                 this.$router.push({name: routerName})
             },
@@ -68,6 +70,7 @@
         justify-content: space-between;
         padding: 0 15px;
         padding-right: 0px;
+        align-items: center;
         .right {
             flex: 1;
             display: flex;

@@ -8,6 +8,11 @@
                    @close="$store.commit('GOLOGIN',false)">
             <rcm-login slot="fullPage"></rcm-login>
         </rcm-popup>
+        <rcm-popup :show="$store.getters.GET_SOMEONEINFO"
+                   @close="$store.commit('SET_SOMEONEINFO',false)"
+                   :type="'full'">
+
+        </rcm-popup>
     </div>
 </template>
 

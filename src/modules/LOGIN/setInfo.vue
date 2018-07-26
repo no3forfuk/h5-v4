@@ -4,7 +4,10 @@
             <img :src="avatar" ref="viewBox" alt="" @click="selectPhoto">
         </div>
         <div class="user-name">
-            <input type="text" placeholder="起个响亮的昵称吧" v-model="userName">
+            <input type="text"
+                   @focus="$count(['SetInfo_Input_Name',1])"
+                   placeholder="起个响亮的昵称吧"
+                   v-model="userName">
         </div>
         <div class="set-info-opts">
             <button @click="submit">下一步</button>
@@ -47,6 +50,7 @@
                 this.activeSelectPhoto = false
             },
             submit() {
+                this.$count(['SetInfo_Next', 1])
                 if (this.imgFile) {
                     uploadFile(this, this.imgFile, this.afterUploadFile)
                 } else {
@@ -84,6 +88,7 @@
                 })
             },
             selectPhoto() {
+                this.$count(['SetInfo_Input_Pic', 1])
                 this.activeSelectPhoto = true
             },
             cancelSelect() {

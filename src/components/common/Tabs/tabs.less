@@ -1,0 +1,42 @@
+.rcm-tab-com {
+  width: 100%;
+  height: 100%;
+  padding: 10px 0px;
+  .rcm-tab-header {
+    width: 100%;
+    height: 26px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    padding-bottom: 5px;
+    position: relative;
+    .tab-item {
+      margin-left: 20px;
+      font-size: 16px;
+      transition: all 0.5s;
+      color: #939398;
+    }
+    .mask-position {
+      display: block;
+      width: 16px;
+      height: 1px;
+      background-color: #7D09FF;
+      position: absolute;
+      bottom: 0px;
+      //left: 34px;
+      transition: all 0.5s;
+    }
+  }
+  .rcm-tab-body {
+    width: 100%;
+    height: calc(100% - 26px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-top: 1px solid #CDCED4;
+  }
+}
+
+.active-li {
+  transform: scale(1.125);
+  color: #000 !important;
+}

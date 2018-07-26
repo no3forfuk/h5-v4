@@ -3,10 +3,10 @@
         <img :src="value.avatar||'http://p8rk87lub.bkt.clouddn.com/visitor.jpg'" alt="">
         <div class="user-info">
             <h6>{{value.name || value.area +'猎人'}}</h6>
-            <p>
-                <span>#{{ value.ranking_name||'暂无'}}</span>
-                <span></span>
-                <span>{{value.signature||'暂无'}}</span>
+            <p v-if="value.ranking_name || value.signature">
+                <span v-if="value.ranking_name">#{{ value.ranking_name||'暂无'}}</span>
+                <span v-if="value.ranking_name"></span>
+                <span v-if="value.signature">{{value.signature||'暂无'}}</span>
             </p>
         </div>
     </div>

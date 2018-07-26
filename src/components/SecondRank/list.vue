@@ -103,6 +103,7 @@
             },
             addElement() {
                 if (sessionStorage.getItem('X-Auth-Token')) {
+                    this.$count(['Ranking_Lv2_AddElement', 1])
                     this.$emit('openAddEle')
                 } else {
                     this.$store.commit('GOLOGIN', true)
@@ -112,6 +113,7 @@
                 this.selection.selectActive = !this.selection.selectActive;
             },
             toggleSelect(i) {
+                this.$count(['Ranking_Lv2_Sort_Element', 1])
                 this.selection.selectActive = false;
                 this.selection.value = this.selection.selectItems[i].text;
                 this.sort(i)

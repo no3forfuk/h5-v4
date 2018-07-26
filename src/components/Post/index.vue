@@ -9,7 +9,8 @@
             <pre class="post-content" v-html="content"></pre>
             <h3 class="discuss-title">评论(<span>{{postDiscussList.length}}</span>)</h3>
             <ul class="discuss-list">
-                <discuss-card v-for="(item,index) in postDiscussList" :key="index" :value="item" :index="index"></discuss-card>
+                <discuss-card v-for="(item,index) in postDiscussList" :key="index" :value="item"
+                              :index="index"></discuss-card>
                 <p class="post-footer">{{footerText}}</p>
             </ul>
         </div>
@@ -52,16 +53,22 @@
                     title: '',
                     desc: ''
                 },
+                enterTime: 0,
+                leaveTime: 0
             }
-        },
-        mounted() {
-            this.$nextTick(() => {
-                $('.post').height($(window).height() - 33)
-            })
         },
         created() {
             this.getPostDetails();
             this.getPostDiscuss();
+            //统计Post浏览次数
+            this.$count(['Reading_Post_Num', 1])
+            this.enterTime = new Date().getTime()
+        },
+        beforeDestroy() {
+            //统计Post浏览时长
+            this.leaveTime = new Date().getTime()
+            let time = Math.round((this.leaveTime - this.enterTime) / 1000)
+            this.$count(['Reading_Post_Time', time])
         },
         computed: {},
         methods: {
@@ -107,6 +114,7 @@
                                 duration: 1000,
                                 position: 'middle'
                             })
+                            this.$count(['Post_Reply', 1])
                             this.discussContext = ''
                             this.activeDiscuss = false
                         } else {

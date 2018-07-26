@@ -3,10 +3,13 @@
         <div class="login-body">
             <div class="login-form">
                 <div class="phone-number">
-                    <input type="tel" placeholder="手机号" v-model="phone">
+                    <input type="tel" placeholder="手机号" v-model="phone" @focus="$count(['Login_Input_Tel',1])">
                 </div>
                 <div class="pass-word">
-                    <input type="password" placeholder="密码" v-model="pwd">
+                    <input type="password"
+                           @focus="$count(['Login_Input_Pwd',1])"
+                           placeholder="密码"
+                           v-model="pwd">
                 </div>
             </div>
         </div>
@@ -47,7 +50,16 @@
                 code: ''
             }
         },
-        mounted() {
+        created() {
+            if (this.$route.name == 'secondRankList') {
+                this.$count(['Rank_Lv2_To_Login', 1])
+            } else if (this.$route.name == 'post') {
+                this.$count(['Post_To_Login', 1])
+            } else if (this.$route.name == 'element') {
+                this.$count(['Element_To_Login', 1])
+            } else if (this.$route.name == 'hot') {
+                this.$count(['Index_To_Login', 1])
+            }
         },
         methods: {
             //准备登陆参数
@@ -94,6 +106,8 @@
                 }
             },
             login() {
+                //统计
+                this.$count(['Login_By_Tel'])
                 //登录校验
                 if (this.phone.length !== 11) {
                     this.$toast({
@@ -120,9 +134,11 @@
                 this.$storage.SET_session('loginType', type)
                 this.$storage.SET_session('crtUrl', location.href)
                 if (this.type == 'weixin') {
+                    this.$count(['Login_By_weixin', 1])
                     location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx50d671a0a75e1115&redirect_uri=http://www.rcm.ink&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
                 }
                 if (this.type == 'qq') {
+                    this.$count(['Login_By_qq', 1])
                     location.href = `https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101476497&state=rcm&redirect_uri=http%3a%2f%2fwww.rcm.ink%2f%23%2fhot`
                 }
             }

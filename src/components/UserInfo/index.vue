@@ -102,6 +102,7 @@
                 this.expert = val.id
             },
             lookUserId() {
+                this.$count(['UserCenter_To_CheckId', 1])
                 this.editActive = true
                 this.editType = 'look'
             },
@@ -114,44 +115,59 @@
                     let submitData = {
                         expert: this.expert
                     }
-                    this.editComplete(submitData)
+                    this.editComplete(submitData, () => {
+                        this.$count(['UserCenter_To_EditBest_success', 1])
+                    })
                     return
                 }
                 if (this.editType == 'sign') {
                     let submitData = {
                         signature: this.signature
                     }
-                    this.editComplete(submitData)
+                    this.editComplete(submitData, () => {
+                        this.$count(['UserCenter_To_EditSignature_success', 1])
+                    })
                     return
                 }
 
             },
             editFavorite() {
+                this.$count(['UserCenter_To_EditBest', 1])
                 this.editActive = true
                 this.editType = 'fav'
             },
             editSign(val) {
+                this.$count(['UserCenter_To_EditSignature', 1])
                 this.editType = 'sign'
                 this.editActive = true;
                 this.signature = val
             },
             editPic(params, fileName) {
+                this.$count(['UserCenter_To_EditPic', 1])
                 const submitData = {
                     avatar: 'http://p8rk87lub.bkt.clouddn.com/' + fileName,
                     avatar_key: 'http://p8rk87lub.bkt.clouddn.com/' + params.key
                 }
-                this.editComplete(submitData)
+                this.editComplete(submitData, () => {
+                    this.$count(['UserCenter_To_EditPic_success', 1])
+                })
             },
-            editComplete(params) {
+            editComplete(params, cb) {
                 editUserInfo(params).then(res => {
                     if (res.status == 200) {
                         if (res.data.status_code == 1) {
+                            cb()
                             this.$toast({
                                 message: '修改成功',
                                 duration: 1000
                             })
                             this.editActive = false;
                             SNI_userInfo()
+                        } else {
+                            this.$toast({
+                                message: res.data.message,
+                                duration: 1000
+                            })
                         }
                     }
                 }).catch(err => {

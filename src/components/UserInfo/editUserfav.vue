@@ -17,6 +17,9 @@
                 label: '修改擅长领域'
             }
         },
+        created() {
+
+        },
         props: ['value'],
         watch: {
             'value'(val) {

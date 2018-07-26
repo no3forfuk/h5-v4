@@ -7,6 +7,7 @@
         <div class="add-body">
             <div class="input-box">
                 <input type="text"
+                       @focus="$count(['Rank_Lv2_AddElement_Input_Name',1])"
                        placeholder="为这个榜单添加新的成员"
                        @keyup="searchElement"
                        v-model="elemenName"
@@ -22,7 +23,10 @@
                        style="width: 0;height: 0;opacity: 0;position: absolute;top: 0;left: -9999px;">
             </div>
             <div class="element-desc" v-if="hasTitle">
-                <textarea v-model="elementDesc" placeholder="介绍一下啊这个新成员吧" ref="addDesc"></textarea>
+                <textarea v-model="elementDesc"
+                          @focus="$count(['Rank_Lv2_AddElement_Input_Desc',1])"
+                          placeholder="介绍一下啊这个新成员吧"
+                          ref="addDesc"></textarea>
             </div>
             <ul class="pick-element">
                 <div class="pick-element-buffer">
@@ -133,6 +137,7 @@
                         }, params)
                     })
                 } else {
+                    this.$count(['Rank_AddElement_Creat', 1])
                     if (this.elemenName.length > 0) {
                         this.hasTitle = true
                         if (this.elementDesc.length == 0) {
@@ -155,6 +160,7 @@
                                     duration: 1000,
                                     position: 'middle'
                                 })
+                                this.$count(['Rank_AddElement_Success', 1])
                                 this.$emit('cancel')
                                 this.$emit('refresh')
                             }, err => {
@@ -201,6 +207,7 @@
                 this.tempArr.splice(index, 1)
             },
             selectElement(item, index) {
+                this.$count(['Rank_AddElement_Select', 1])
                 this.selectList.push(item)
                 this.iconList[index] = index
                 if (this.iconList[index] || this.iconList[index] == 0) {

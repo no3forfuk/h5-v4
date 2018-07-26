@@ -80,4 +80,16 @@ Servers.SVS_addElement = function (success, error, options) {
 Servers.SVS_getElementDetails = function (success, error, options) {
     factory(API.getElementDetails, success, error, options)
 }
+//邀请用户列表
+Servers.SVS_inviteOthers = function (success, error, options) {
+    factory(API.inviteOthers, success, error, options)
+}
+//搜索邀请用户
+Servers.SVS_searchInvite = function (success, error, options) {
+    factory(API.searchInvite, success, error, options)
+}
+//搜索邀请用户
+Servers.SVS_invite = function (success, error, options) {
+    factory(API.invite, success, error, options)
+}
 module.exports = Servers;

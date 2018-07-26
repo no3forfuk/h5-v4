@@ -9,6 +9,9 @@
     export default {
         data() {
             return {}
+        },
+        created(){
+            this.$count(['UserCenter_To_Examine',1])
         }
     }
 

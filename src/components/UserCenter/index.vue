@@ -55,12 +55,6 @@
                 })
             }
         },
-        mounted() {
-            this.$nextTick(() => {
-                $('.user-center').height($(window).height())
-                $('.user-body').height($(window).height() - 36)
-            })
-        },
         computed: {},
         components: {
             card: Card,

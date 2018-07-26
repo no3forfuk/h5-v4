@@ -36,12 +36,11 @@
 </template>
 
 <script>
-    import {getRankList, addElement, searchElementByName} from '../../api/api'
+    import {searchElementByName} from '../../api/api'
 
     export default {
         data() {
             return {
-                title: '',
                 elemenName: '',
                 elementDesc: '',
                 hasTitle: false,
@@ -52,14 +51,6 @@
                 tempArr: [],
                 routerFrom: ''
             }
-        },
-        created() {
-            this.getRankInfo()
-        },
-        mounted() {
-            this.$nextTick(() => {
-
-            })
         },
         methods: {
             searchElement() {
@@ -85,16 +76,6 @@
                     this.tempArr.push(index)
                 }
                 this.selectList = [...new Set(this.selectList)];
-            },
-            getRankInfo() {
-                let params = {};
-                params.id = this.$route.query.secondId
-                params.level = 2
-                getRankList(params).then(res => {
-                    this.title = res.data.data.ranking_name
-                }).catch(err => {
-                    throw err
-                })
             }
         },
         props: ['value']

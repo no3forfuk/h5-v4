@@ -2,9 +2,9 @@
     <div class="notice-all-page">
         <ul>
             <li v-for="(item,index) in noticeList">
-                <like-dis :value="item" v-if="item.notice_type == 5"></like-dis>
-                <dis-rank :value="item" v-if="item.notice_type == 1"></dis-rank>
-                <new-post :value="item" v-if="item.notice_type == 4"></new-post>
+                <like-dis :value="item" v-if="item.notice_type == 5" @></like-dis>
+                <dis-rank :value="item" v-if="item.notice_type == 1" @></dis-rank>
+                <new-post :value="item" v-if="item.notice_type == 4" @></new-post>
             </li>
         </ul>
     </div>
@@ -27,10 +27,11 @@
                 next(vm => {
                     vm.noticeList = res.data
                 })
-
             }, err => {
 
             }, {notice_type: 'all'})
+        },
+        created() {
         },
         methods: {},
         components: {

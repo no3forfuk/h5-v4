@@ -5,7 +5,7 @@
                   :right="true">
         </rcm-head>
         <div class="element-page-body"
-             :class="{noscroll:addPost || detailsIsOpen}"
+             :class="{noscroll:addPost || detailsIsOpen || activeMore}"
              :style="elementPageHeight"
              @scroll="scrollElementPage">
             <transition name="active-title">
@@ -18,6 +18,7 @@
             <element-header @openDetails="toggleDetails"
                             @sortPost="sortPostByType"
                             @addPost="addPost = true"
+                            @more="activeMore=true"
                             ref="elementHead"
                             :value="elementData"
                             v-if="elementData"></element-header>
@@ -32,6 +33,11 @@
             </rcm-popup>
             <rcm-popup :show="addPost" :type="'full'" @close="addPost = false">
                 <add-post slot="fullPage" @cancel="addPost=false" @refresh="elementInfo"></add-post>
+            </rcm-popup>
+            <rcm-popup :items="more"
+                       :show="activeMore"
+                       @close="activeMore=false"
+                       @clickItem="clickMoreItem">
             </rcm-popup>
         </div>
     </div>
@@ -59,17 +65,28 @@
                 page: 1,
                 totalPage: 1,
                 showActiveTitle: false,
-                addPost: false
+                addPost: false,
+                activeMore: false,
+                more: [{
+                    label: '举报',
+                    value: 1
+                }],
+                enterTime: 0,
+                leaveTime: 0
             }
         },
         created() {
             this.$store.commit('TOGGLENAVSHOW', false)
             this.elementInfo()
+            //统计元素浏览次数
+            this.$count(['Reading_Element_Num', 1])
+            this.enterTime = new Date().getTime()
         },
-        mounted() {
-            this.$nextTick(() => {
-
-            })
+        beforeDestroy() {
+            //统计元素浏览时长
+            this.leaveTime = new Date().getTime()
+            let time = Math.round((this.leaveTime - this.enterTime) / 1000)
+            this.$count(['Reading_Element_Time', time])
         },
         computed: {
             elementPageHeight() {
@@ -96,6 +113,13 @@
             }
         },
         methods: {
+            clickMoreItem(val) {
+                this.activeMore = false
+                this.$count(['Element_More', 1])
+                if (val.value == 1) {
+                    this.$count(['Element_More_Report', 1])
+                }
+            },
             back() {
                 this.$store.commit('SET_TRANSITIONTYPE', 'back')
                 this.$router.push({
@@ -120,6 +144,7 @@
                 }
             },
             sortPostByType(val) {
+                this.$count(['Element_Sort_Post', 1])
                 if (val == 0) {
                     this.postListArr.sort((a, b) => {
                         return b.exponent - a.exponent
@@ -163,6 +188,9 @@
             },
             toggleDetails(e) {
                 this.detailsIsOpen = !this.detailsIsOpen
+                if (this.detailsIsOpen) {
+                    this.$count(['Element_OpenDetails', 1])
+                }
             }
         },
         components: {
