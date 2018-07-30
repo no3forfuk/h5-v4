@@ -2,7 +2,8 @@
     <div class="hot-rank">
         <rcm-head :type="'menu'" @linkTo="goUserCenter" @getIndexData="getFirstRankInfo" :right="true"></rcm-head>
         <rcm-page-header :value="pageTitle"></rcm-page-header>
-        <div class="hot-page-body" :style="scrollBoxHeight" ref="rankListBox">
+        <div class="hot-page-body" :style="scrollBoxHeight" :class="{noscroll:$store.getters.GOLOGIN}"
+             ref=" rankListBox">
             <mt-loadmore :bottom-method="loadBeforeDay"
                          :bottom-all-loaded="allLoaded"
                          :bottomDistance="pullHeight"
@@ -45,6 +46,7 @@
         mounted() {
             this.$nextTick(() => {
                 $(document)[0].title = '首页';
+                $('.hot-rank').height($(window).height())
             })
         },
         created() {

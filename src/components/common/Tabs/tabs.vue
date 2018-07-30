@@ -1,11 +1,11 @@
 <template>
     <div class="rcm-tab-com">
-        <ul class="rcm-tab-header">
+        <ul class="rcm-tab-header" :style="align">
             <li class="tab-item"
                 v-for="(item,index) in tabItem"
                 :key="index"
                 ref="tabLis"
-                :class="{'active-li':index == crtIndex}"
+                :class="{'active-li':index == crtIndex,'tab-item-center':alignStyle == 'center'}"
                 @click="toggleTabItem(item,index)"
                 v-text="item.label"></li>
             <span :style="spanPosition" class="mask-position"></span>

@@ -54,7 +54,7 @@
                 let spanDom = this.$refs.likes[index].children[1]
                 let params = {
                     comment_id: item.id,
-                    user_type: 1
+                    user_type: this.$storage.GET_session('X-Auth-Token') ? 1 : 2
                 }
                 doLikeDiscuss(params).then(res => {
                     if (res.status == 200) {

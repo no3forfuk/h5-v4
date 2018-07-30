@@ -49,7 +49,7 @@
     import elementDetails from './elementDetails'
     import elementFooter from './elementFooter'
     import addPost from './addPost'
-    import {SVS_getElementDetails} from '../../Servers/API'
+    import {SVS_getElementDetails, SVS_report} from '../../Servers/API'
     import {sharePage} from '../../utils'
 
     export default {
@@ -74,6 +74,11 @@
                 enterTime: 0,
                 leaveTime: 0
             }
+        },
+        mounted() {
+            this.$nextTick(() => {
+                $('.element-page').height($(window).height())
+            })
         },
         created() {
             this.$store.commit('TOGGLENAVSHOW', false)
@@ -118,14 +123,42 @@
                 this.$count(['Element_More', 1])
                 if (val.value == 1) {
                     this.$count(['Element_More_Report', 1])
+                    this.$messagebox.prompt('请填写举报原因', {
+                        showConfirmButton: true,
+                        confirmButtonClass: 'btnclass',
+                        cancelButtonClass: 'btnclass'
+                    }).then((val) => {
+                        SVS_report(res => {
+                            this.$toast({
+                                message: res.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                        }, err => {
+                            this.$toast({
+                                message: err.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                        }, {
+                            report_cause: val.value,
+                            element_id: this.$route.query.elementId,
+                            report_type: 3
+                        })
+                    })
                 }
             },
             back() {
                 this.$store.commit('SET_TRANSITIONTYPE', 'back')
-                this.$router.push({
-                    name: 'secondRankList',
-                    query: this.$route.query
-                })
+                if (this.$route.query.secondId) {
+                    this.$router.push({
+                        name: 'secondRankList',
+                        query: this.$route.query
+                    })
+                } else {
+                    this.$router.back()
+                }
+
             },
             scrollElementPage() {
                 let height = $('.element-page-body')[0].scrollTop
@@ -167,8 +200,9 @@
                 let url = location.href;
                 let title = this.elementData.element_name;
                 let desc = this.elementData.element_desc;
+                let img = this.elementData.img;
                 let type = 'link';
-                sharePage(vm, url, title, desc, type)
+                sharePage(vm, url, title, desc, type, img)
             },
             elementInfo() {
                 let params = {}

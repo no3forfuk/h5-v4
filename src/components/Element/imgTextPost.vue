@@ -19,12 +19,23 @@
         },
         methods: {
             getText() {
-                this.text = this.value.post_content.split('<')[0]
+                if (this.value.post_content.split('<br>')) {
+                    this.text = this.value.post_content.split('<br>')[0]
+                }
+                if (this.text.split('<p>').length > 1) {
+                    this.text = this.text.split('<p>')[1]
+                }
                 let reg = /(([A-Za-z]*)\:\/\/(([A-Za-z0-9]*)\.)*com\/([A-Za-z]*|[0-9]*|[_]*|[-]*|[\.]*|[\u4e00-\u9fa5])*\.([A-Za-z])*)/
+                let reg2 = /(([A-Za-z]*)\:\/\/(([A-Za-z0-9]*)\.)*com\/([A-Za-z]*|[0-9]*|[_]*|[-]*|[\.]*|[\u4e00-\u9fa5])*)/
                 if (this.value.img) {
                     this.imgSrc = this.value.img
                 } else {
-                    this.imgSrc = reg.exec(this.value.post_content)[0]
+                    if (reg.exec(this.value.post_content)) {
+                        this.imgSrc = reg.exec(this.value.post_content)[0]
+                    } else {
+                        this.imgSrc = reg2.exec(this.value.post_content)[0]
+                    }
+
                 }
             }
         },

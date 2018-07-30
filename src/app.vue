@@ -11,7 +11,7 @@
         <rcm-popup :show="$store.getters.GET_SOMEONEINFO"
                    @close="$store.commit('SET_SOMEONEINFO',false)"
                    :type="'full'">
-
+            <someone-info slot="fullPage"></someone-info>
         </rcm-popup>
     </div>
 </template>
@@ -48,9 +48,7 @@
         },
         mounted() {
             this.$nextTick(() => {
-                $('#app').css({
-                    height: $(window).height()
-                })
+                $('#app').height($(window).height())
                 this.loginByType()
             })
 

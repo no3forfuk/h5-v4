@@ -48,7 +48,7 @@
         methods: {
             getYZM() {
                 if (!this.lock) {
-                    $count(['Reset_Get_YZM', 1])
+                    this.$count(['Reset_Get_YZM', 1])
                     this.time = 60
                     if (this.phoneNumber.length !== 11) {
                         this.$toast({

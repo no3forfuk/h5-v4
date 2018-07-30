@@ -268,4 +268,42 @@ module.exports = {
             data: data
         })
     },
+    //查看其他用户信息
+    viewSomeoneInfo(id) {
+        return request({
+            url: '/user/orderUserInfo',
+            method: 'GET',
+            params: {
+                id: id
+            }
+        })
+    },
+    //关注/取消关注
+    setFocusStatus(id) {
+        return request({
+            url: '/user/userAttention',
+            method: 'POST',
+            data: {
+                to_uid: id
+            }
+        })
+    },
+    //读取通知
+    readNotice(id) {
+        return request({
+            url: '/user/userNoticeEdit',
+            method: 'POST',
+            data: {
+                id: id
+            }
+        })
+    },
+    //举报
+    report(data) {
+        return request({
+            url: '/report/report',
+            method: 'POST',
+            data: data
+        })
+    }
 }

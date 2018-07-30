@@ -1,5 +1,7 @@
 /*Created By JSIR on 2018/7/21 0021*/
 'use strict'
+import {SVS_firstRankList} from '../../../Servers/API'
+
 module.exports = {
     data() {
         return {
@@ -38,7 +40,11 @@ module.exports = {
                     this.crtRankName = this.rankList[this.crtIndex].ranking_name
                 }
             } else {
-
+                //获取一级榜单列表
+                SVS_firstRankList(res => {
+                    this.$storage.SET_session('firstRank', res.data.data)
+                    this.rankList = this.rankList.concat(res.data.data)
+                })
             }
         },
         toggleHeadNav() {

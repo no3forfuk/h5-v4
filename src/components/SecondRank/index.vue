@@ -43,7 +43,7 @@
         <rcm-popup :type="'full'"
                    :show="activeDetails"
                    @close="activeDetails=false">
-            <rank-details slot="fullPage"></rank-details>
+            <rank-details slot="fullPage" :value="secondInfo" @openDetails="activeDetails=false"></rank-details>
         </rcm-popup>
     </div>
 </template>
@@ -53,7 +53,7 @@
     import tabs from './tabs'
     import disModal from './discuss2'
     import {sharePage} from '../../utils/index'
-    import {SVS_getRankList} from '../../Servers/API'
+    import {SVS_getRankList, SVS_report} from '../../Servers/API'
     import addEle from './addElement'
     import invite from './inviteOthers'
     import rankDetails from './details'
@@ -86,8 +86,14 @@
                 ],
                 activeMore: false,
                 enterTime: 0,
-                leaveTime: 0
+                leaveTime: 0,
+                fromRouter: ''
             }
+        },
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                vm.fromRouter = from.name
+            })
         },
         created() {
             this.getSecondRankInfo()
@@ -95,6 +101,11 @@
             //统计二级榜单浏览次数
             this.$count(['Reading_Rank_Lv2_Num', 1])
             this.enterTime = new Date().getTime()
+        },
+        mounted() {
+            this.$nextTick(() => {
+                $('.second-page').height($(window).height())
+            })
         },
         beforeDestroy() {
             //统计二级榜单浏览时长
@@ -137,15 +148,43 @@
                 }
                 if (val.value == 2) {
                     this.$count(['Ranking_Lv2_More_Report', 1])
+                    this.$messagebox.prompt('请填写举报原因', {
+                        showConfirmButton: true,
+                        confirmButtonClass: 'btnclass',
+                        cancelButtonClass: 'btnclass'
+                    }).then((val) => {
+                        SVS_report(res => {
+                            this.$toast({
+                                message: res.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                        }, err => {
+                            this.$toast({
+                                message: err.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                        }, {
+                            report_cause: val.value,
+                            second_id: this.$route.query.secondId,
+                            report_type: 2
+                        })
+                    })
                     return
                 }
             },
             back() {
                 this.$store.commit('SET_TRANSITIONTYPE', 'back')
-                this.$router.push({
-                    name: 'hot',
-                    query: this.$route.query
-                })
+                if (this.fromRouter == 'element' || this.fromRouter == 'hot') {
+                    this.$router.push({
+                        name: 'hot',
+                        query: this.$route.query
+                    })
+                } else {
+                    this.$router.back()
+                }
+
             },
             //打开评论框
             openDis() {
@@ -167,7 +206,7 @@
                 }
             },
             sharePage() {
-                sharePage(this, location.href, this.share.title, this.share.desc, 'link')
+
             },
             loadNextList() {
                 this.listPage++
@@ -187,11 +226,8 @@
                     this.secondInfo = res.data;
                     this.listInfo = this.listInfo.concat(res.data.data.data)
                     this.listTotalPage = res.data.data.last_page
-                    // this.$refs.secondHead.initIsCollect(this.secondInfo.collect)
-                    this.$set(this.share, 'title', res.data.ranking_name);
-                    this.$set(this.share, 'desc', res.data.ranking_desc);
-                    this.sharePage();
-                    $(document)[0].title = this.secondInfo.ranking_name;
+                    sharePage(this, location.href, res.data.ranking_name, res.data.ranking_desc, 'link')
+                    $(document)[0].title = res.data.ranking_name;
                 }, err => {
                     return
                 }, params)
@@ -211,6 +247,8 @@
 </script>
 
 <style scoped lang="less">
+
+
     .second-page {
         background-color: #fff;
         overflow-x: hidden;

@@ -42,6 +42,7 @@
                         title: '全部动态',
                         icon: '&#xe641;',
                         borderLine: true,
+                        routeName: 'myself',
                         point: 'My_Message_All'
                     },
                     {

@@ -92,4 +92,20 @@ Servers.SVS_searchInvite = function (success, error, options) {
 Servers.SVS_invite = function (success, error, options) {
     factory(API.invite, success, error, options)
 }
+//查看他人信息
+Servers.SVS_viewSomeoneInfo = function (success, error, options) {
+    factory(API.viewSomeoneInfo, success, error, options)
+}
+//关注/取消关注
+Servers.SVS_setFocusStatus = function (success, error, options) {
+    factory(API.setFocusStatus, success, error, options)
+}
+//读取通知 report
+Servers.SVS_readNotice = function (success, error, options) {
+    factory(API.readNotice, success, error, options)
+}
+//举报
+Servers.SVS_report = function (success, error, options) {
+    factory(API.report, success, error, options)
+}
 module.exports = Servers;

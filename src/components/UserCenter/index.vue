@@ -35,17 +35,13 @@
         },
         methods: {
             init() {
-                let userInfo = this.$storage.GET_session('userInfo')
-                if (userInfo) {
-                    this.userData = userInfo
-                } else {
-                    SVS_userInfo(res => {
-                        this.userData = res.data
-                        this.$storage.SET_session('userInfo', res.data)
-                    }, err => {
-                        throw err
-                    })
-                }
+                SVS_userInfo(res => {
+                    this.userData = res.data
+                    this.$storage.SET_session('userInfo', res.data)
+                }, err => {
+                    throw err
+                })
+
             },
             goBack() {
                 this.$store.commit('SET_TRANSITIONTYPE', 'center-home')

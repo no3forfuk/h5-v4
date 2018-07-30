@@ -2,24 +2,36 @@
     <div class="user-card">
         <div class="pic">
             <img :src="value.avatar" alt="">
-            <span @click="editUserInfo">
+            <span @click="editUserInfo" v-if="!$store.getters.GET_SOMEONEINFO">
                 <icon :value="'&#xe602;'">编辑</icon>
             </span>
+            <button v-if="$store.getters.GET_SOMEONEINFO" class="user-btn" @click="$emit('changeFocus')">
+                <span class="btn-focus" v-if="value.attention_status == 0">关注</span>
+                <span class="btn-focused" v-if="value.attention_status == 1">已关注</span>
+            </button>
         </div>
         <p class="name">
             <span>{{value.name}}</span>
         </p>
-        <div class="fav">
+        <div class="fav" v-if="value.ranking_name || value.signature">
             <span v-if="value.ranking_name">#{{value.ranking_name}}</span>
-            <span>{{value.signature}}</span>
+            <span v-if="value.signature">{{value.signature}}</span>
         </div>
-        <div class="focus">
-            <!--<i>1200</i>-->
-            <!--<span>关注</span>-->
-            <!--<i>230</i>-->
-            <!--<span>粉丝</span>-->
+        <div class="focus" v-if="!$store.getters.GET_SOMEONEINFO">
+            <i>{{value.attention}}</i>
+            <span>关注</span>
+            <i>{{value.fan}}</i>
+            <span>粉丝</span>
             <i>{{value.collect}}</i>
             <span>收藏</span>
+        </div>
+        <div class="focus" v-if="$store.getters.GET_SOMEONEINFO">
+            <i>{{value.attention}}</i>
+            <span>关注</span>
+            <i>{{value.fan}}</i>
+            <span>粉丝</span>
+            <i>{{value.praise_num}}</i>
+            <span>获赞</span>
         </div>
     </div>
 </template>
@@ -39,7 +51,8 @@
                 this.$router.push({name: 'userInfo'})
             }
         },
-        props: ['value']
+        props: ['value'],
+        watch: {}
     }
 
 </script>
@@ -65,6 +78,21 @@
             }
             i {
                 font-size: 20px;
+            }
+            .user-btn {
+                width: 70px;
+                height: 24px;
+                background-color: #D5D5D5;
+                border: 0 none;
+                border-radius: 4px;
+                font-size: 16px;
+                text-align: center;
+                .btn-focus {
+                    color: #FF2C09;
+                }
+                .btn-focused {
+                    color: #010101;
+                }
             }
         }
         .name {

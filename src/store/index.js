@@ -9,7 +9,8 @@ const state = {
     firstRankIndex: 0,
     getDiscuss: false,
     loadPageNumber: [],
-    someoneInfo: false
+    someoneInfo: false,
+    someoneDetails: {}
 }
 const mutations = {
     TOGGLENAVSHOW(state, val) {
@@ -57,7 +58,13 @@ const mutations = {
     },
     //查看他人信息
     SET_SOMEONEINFO(state, val) {
-        state.someoneInfo = val
+        if (val[1]) {
+            state.someoneInfo = val[0]
+            state.someoneDetails = val[1]
+        } else {
+            state.someoneInfo = val
+        }
+
     }
 };
 const getters = {
@@ -86,7 +93,10 @@ const getters = {
     },
     GET_SOMEONEINFO: state => {
         return state.someoneInfo
-    }
+    },
+    GET_SOMEONEDETAILS: state => {
+        return state.someoneDetails
+    },
 }
 module.exports = {
     state,

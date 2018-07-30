@@ -192,6 +192,18 @@ module.exports = merge(base, {
             app.post('/api/home/ranking/invite', (req, res) => {
                 go(req, res)
             })
+            //查看他人信息
+            app.get('/api/home/user/orderUserInfo', (req, res) => {
+                go(req, res)
+            })
+            //查看他人信息
+            app.post('/api/home/user/userAttention', (req, res) => {
+                go(req, res)
+            })
+            //读取通知
+            app.post('/api/home/user/userNoticeEdit', (req, res) => {
+                go(req, res)
+            })
             //--------------------------------------------
             //获取微信签名
             // app.post('/api/Wx/signature', (req, res) => {

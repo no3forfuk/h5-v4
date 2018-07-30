@@ -57,6 +57,11 @@
                 leaveTime: 0
             }
         },
+        mounted() {
+            this.$nextTick(() => {
+                $('.post-page').height($(window).height())
+            })
+        },
         created() {
             this.getPostDetails();
             this.getPostDiscuss();
@@ -85,7 +90,6 @@
                 let title = this.share.title;
                 let desc = this.share.desc;
                 let type = 'link';
-                sharePage(vm, url, title, desc, type)
             },
             submitDisCuss() {
                 let params = {}
@@ -156,6 +160,7 @@
                     this.postDetails = res.data.data;
                     this.user = res.data.data.user
                     this.getPostContent(this.postDetails.post_content)
+                    sharePage(this, location.href, document.title, res.data.data.post_content, 'link', res.data.data.img)
                 }).catch(err => {
                     throw err
                 })

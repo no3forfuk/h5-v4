@@ -1,10 +1,14 @@
 <template>
     <div class="like-discuss">
-        <div class="left" @click="$emit('openSomeoneInfo')">
+        <div class="left" @click="$store.commit('SET_SOMEONEINFO',[true,value])">
             <img :src="user.avatar" alt="">
         </div>
-        <div class="right">
-            <p><span>{{user.name}}</span>&nbsp;&nbsp;<span>赞了你的评论</span>&nbsp;&nbsp;<span>{{content.content}}</span></p>
+        <div class="right" @click="readNotice">
+            <p :class="{'content-status':value.is_read == 0}">
+                <span>{{user.name}}</span>&nbsp;&nbsp;
+                <span>赞了你的评论</span>&nbsp;&nbsp;
+                <span>{{content.content}}</span>
+            </p>
             <p class="time">{{value.created_at|timeformat}}</p>
         </div>
     </div>
@@ -18,6 +22,12 @@
         },
         created() {
 
+        },
+        methods: {
+            readNotice() {
+                this.$emit('readNotice', this.value.id)
+                this.$set(this.value, 'is_read', 1)
+            }
         },
         computed: {
             user() {
@@ -33,6 +43,10 @@
 </script>
 
 <style scoped lang="less">
+    .content-status {
+        background-color: rgba(0, 0, 0, .09);
+    }
+
     .like-discuss {
         width: 100%;
         display: flex;
@@ -52,6 +66,7 @@
             padding-right: 10px;
             border-bottom: 1px solid rgba(0, 0, 0, .2);
             p {
+                transition: all 1s;
                 span {
                     font-weight: bold;
                     font-size: 16px;

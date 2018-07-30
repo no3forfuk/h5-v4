@@ -19,6 +19,10 @@ Vue.component('rcm-tab', Tabs)
 import CancelComfirm from './common/cancelAndComfirm/index'
 
 Vue.component('cancel-comfirm', CancelComfirm)
+//查看他人信息
+import SomeoneInfo from './Someone/index'
+
+Vue.component('someone-info', SomeoneInfo)
 Vue.component('icon', Icon)
 Vue.component('user-card', UserCard)
 Vue.component('rank-card', RankCard)

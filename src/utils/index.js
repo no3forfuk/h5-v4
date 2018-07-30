@@ -37,7 +37,7 @@ utils.timeFormat = function (type, ms) {
     return time.getFullYear() + type + mouth + type + day;
 }
 //微信分享
-utils.sharePage = function (vm, url, title, desc, type, cb) {
+utils.sharePage = function (vm, url, title, desc, type, img, cb) {
     var params = {};
     var linkUrl = url.split('#')[0] + url.split('#/')[1];
     params.url = linkUrl
@@ -58,7 +58,7 @@ utils.sharePage = function (vm, url, title, desc, type, cb) {
                     title: title,
                     desc: desc,
                     link: url,
-                    imgUrl: 'http://p8rk87lub.bkt.clouddn.com/logo.png',
+                    imgUrl: img ? img : 'http://p8rk87lub.bkt.clouddn.com/logo.png',
                     type: type,
                     success: function () {
                         vm.$toast({
@@ -72,7 +72,7 @@ utils.sharePage = function (vm, url, title, desc, type, cb) {
                     title: title,
                     desc: desc,
                     link: url,
-                    imgUrl: 'http://p8rk87lub.bkt.clouddn.com/logo.png',
+                    imgUrl: img ? img : 'http://p8rk87lub.bkt.clouddn.com/logo.png',
                     type: type,
                     success: function () {
                         vm.$toast({

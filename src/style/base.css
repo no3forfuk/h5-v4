@@ -8,6 +8,10 @@
     url('//at.alicdn.com/t/font_707731_e6iya93y48f.svg#iconfont') format('svg');
 }
 
+.btnclass {
+    text-align: center;
+}
+
 /*全局样式*/
 /*字体*/
 .font-size-16 {

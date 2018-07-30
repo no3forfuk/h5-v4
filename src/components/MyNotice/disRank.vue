@@ -1,10 +1,10 @@
 <template>
     <div class="like-discuss">
-        <div class="left" @click="$emit('openSomeoneInfo')">
+        <div class="left" @click="$store.commit('SET_SOMEONEINFO',[true,value])">
             <img :src="user.avatar" alt="">
         </div>
-        <div class="right">
-            <div class="content">
+        <div class="right" @click="readNotice(rank)">
+            <div class="content" :class="{'content-status':value.is_read == 0}">
                 <span>{{user.name}}</span>&nbsp;&nbsp;
                 <span>回复了你的榜单</span>&nbsp;&nbsp;
                 <p class="rank">#{{rank.ranking_name}}</p>
@@ -24,6 +24,18 @@
         created() {
 
         },
+        methods: {
+            readNotice(rank) {
+                this.$store.commit('SET_TRANSITIONTYPE', 'forward')
+                this.$emit('readNotice', this.value.id)
+                this.$router.push({
+                    name: 'secondRankDiscuss',
+                    query: {
+                        secondId: rank.id
+                    }
+                })
+            }
+        },
         computed: {
             user() {
                 return this.value.from_user
@@ -42,6 +54,10 @@
 </script>
 
 <style scoped lang="less">
+    .content-status {
+        background-color: rgba(0, 0, 0, .09);
+    }
+
     .like-discuss {
         width: 100%;
         display: flex;
@@ -58,7 +74,7 @@
         }
         .right {
             width: calc(100% - 70px);
-            padding-right: 10px;
+            padding-right: 20px;
             border-bottom: 1px solid rgba(0, 0, 0, .2);
             .content {
                 span {

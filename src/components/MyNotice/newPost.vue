@@ -1,6 +1,6 @@
 <template>
     <div class="like-discuss">
-        <div class="left" @click="$emit('openSomeoneInfo')">
+        <div class="left" @click="$store.commit('SET_SOMEONEINFO',[false,userInfo])">
             <img :src="userInfo.avatar" alt="">
         </div>
         <div class="right">
@@ -22,6 +22,7 @@
         },
         created() {
             this.userInfo = this.$storage.GET_session('userInfo')
+
         },
         computed: {
             element() {

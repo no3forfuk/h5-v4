@@ -8,7 +8,14 @@ module.exports = {
         }
     },
     created() {
-        this.crtIndex = this.initIndex
+        if (this.initIndex) {
+            this.crtIndex = this.initIndex
+        }
+    },
+    mounted() {
+        this.$nextTick(() => {
+            this.setMaskSpanPosition(this.crtIndex)
+        })
     },
     methods: {
         toggleTabItem(item, index) {
@@ -28,7 +35,24 @@ module.exports = {
             return {
                 transform: 'translateX(' + this.liOffsetX + 'px)'
             }
+        },
+        align() {
+            if (this.alignStyle == 'center') {
+                return {
+                    justifyContent: "space-between",
+                }
+            }
+            if (this.alignStyle == 'left') {
+                return {
+                    justifyContent: "left"
+                }
+            }
+            if (this.alignStyle == 'right') {
+                return {
+                    justifyContent: "right"
+                }
+            }
         }
     },
-    props: ['tabItem','initIndex']
+    props: ['tabItem', 'initIndex', 'alignStyle']
 }
