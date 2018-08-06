@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <p style="width: 100%;font-size: 14px;color: rgba(0,0,0,.2);text-align: center;margin-top: 20px;">暂时没有新的活动</p>
+    <div class="active-page">
+        <img src="../../static/imgs/active-0806.png" alt="">
     </div>
 </template>
 
@@ -15,5 +15,11 @@
 </script>
 
 <style scoped lang="less">
-
+    .active-page {
+        padding: 5px;
+        width: 100%;
+        img {
+            width: 100%;
+        }
+    }
 </style>

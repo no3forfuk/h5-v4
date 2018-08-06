@@ -22,7 +22,6 @@
             <span>{{value.vote}}(票)</span>
             <span v-if="value.data">{{value.data.total}}(排名)</span>
         </div>
-        <!--<rcm-popup></rcm-popup>-->
     </div>
 </template>
 
@@ -107,22 +106,23 @@
         padding: 10px 20px;
         justify-content: space-between;
         .left {
-            padding-right: 10px;
             position: relative;
+            padding: 4px 20px 4px 0px;
             h2 {
                 font-weight: bold;
                 line-height: 24px;
                 font-size: 20px;
-                transition: all 1s;
             }
             .desc {
                 p {
-                    height: 20px;
-                    padding: 3px 0px;
+                    padding: 8px 0px 10px 0px;
                     box-sizing: content-box;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
+                    color: #939398;
+                    font-size: 13px;
+                    line-height: 14px;
                 }
             }
             .more-options {
@@ -135,6 +135,10 @@
                     font-size: 12px;
                     justify-content: center;
                     align-items: center;
+                    span {
+                        font-size: 12px;
+                        line-height: 14px;
+                    }
                 }
                 .more {
                     width: 30px;
@@ -144,6 +148,10 @@
                     justify-content: center;
                     align-items: center;
                     margin-left: 10px;
+                    span {
+                        font-size: 12px;
+                        line-height: 14px;
+                    }
                 }
             }
         }

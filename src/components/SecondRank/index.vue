@@ -14,8 +14,11 @@
                          @openDetails="activeDetails=true"
                          @activeMore="activeMore=true"></second-head>
             <tabs :value="listInfo"
+                  :totalItems="totalList"
                   class="second-tabs-box"
                   @nextListPage="loadNextList"
+                  @loadMore="loadOtherList"
+                  @sortElement="sortElementByType"
                   @openDis="openDis"
                   @openAddEle="activeAddElement=true">
             </tabs>
@@ -63,11 +66,15 @@
             return {
                 secondInfo: {},
                 listInfo: [],
+                listInfobefore: [],
+                listInfoAfter: [],
+                loadMoreFlag: false,
                 share: {
                     title: '',
                     desc: ''
                 },
                 listPage: 1,
+                totalList: 0,
                 listTotalPage: 1,
                 showActiveTitle: false,
                 activeDiscuss: false,
@@ -87,7 +94,8 @@
                 activeMore: false,
                 enterTime: 0,
                 leaveTime: 0,
-                fromRouter: ''
+                fromRouter: '',
+                solt_name: 'exponent'
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -138,6 +146,22 @@
             }
         },
         methods: {
+            sortElementByType(val) {
+                if (val == 1) {
+                    this.solt_name = 'exponent'
+                }
+                if (val == 2) {
+                    this.solt_name = 'created_at'
+                }
+                this.listInfo = []
+                this.loadMoreFlag = false
+                this.getSecondRankInfo()
+            },
+            loadOtherList() {
+                this.loadMoreFlag = true;
+                this.listInfo = this.listInfobefore.concat(this.listInfoAfter)
+                this.totalList = 6;
+            },
             clickMoreItem(val) {
                 this.activeMore = false
                 this.$count(['Ranking_Lv2_ClickMore', 1])
@@ -205,9 +229,6 @@
                     this.showActiveTitle = false
                 }
             },
-            sharePage() {
-
-            },
             loadNextList() {
                 this.listPage++
                 if (this.listPage > this.listTotalPage) {
@@ -218,13 +239,24 @@
             getSecondRankInfo() {
                 let params = {
                     level: 2,
-                    page: this.page,
+                    page: this.listPage,
                     id: this.$route.query.secondId,
                     solt_name: this.solt_name
                 }
                 SVS_getRankList(res => {
                     this.secondInfo = res.data;
-                    this.listInfo = this.listInfo.concat(res.data.data.data)
+                    if (!this.loadMoreFlag) {
+                        this.listInfobefore = res.data.data.data.splice(0, 4)
+                        this.listInfoAfter = res.data.data.data
+                        let arr = []
+                        arr = this.listInfobefore.concat(null);
+                        let arrLast = res.data.last
+                        arr.push(arrLast)
+                        this.listInfo = arr
+                        this.totalList = res.data.data.total
+                    } else {
+                        this.listInfo = this.listInfo.concat(res.data.data.data)
+                    }
                     this.listTotalPage = res.data.data.last_page
                     sharePage(this, location.href, res.data.ranking_name, res.data.ranking_desc, 'link')
                     $(document)[0].title = res.data.ranking_name;

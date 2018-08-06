@@ -6,23 +6,24 @@
                 <span>添加新的排名</span>
             </div>
             <div class="sort-element">
+                <transition name="sort-select">
+                    <ul class="sort-select" v-if="selection.selectActive">
+                        <li @click="selectType(selection.selectItems[0])"
+                            :class="{'selected':selection.type == 1?true:false}">
+                            <span><icon :value="'&#xe608;'"></icon></span>
+                            <span>最热</span>
+                        </li>
+                        <li @click="selectType(selection.selectItems[1])"
+                            :class="{'selected':selection.type == 2?true:false}">
+                            <span><icon :value="'&#xe605;'"></icon></span>
+                            <span>最新</span>
+                        </li>
+                    </ul>
+                </transition>
                 <div class="sort-ctrl" @click.stop="toggleSort">
                     <span><icon :value="'&#xe638;'"></icon></span>
                     <span v-text="selection.value"></span>
                 </div>
-                <transition name="sort-select">
-                    <ul class="sort-select" v-if="selection.selectActive">
-                        <span class="sanjiao"></span>
-                        <li @click.stop="toggleSelect(index)"
-                            :key="index"
-                            v-for="(item,index) in selection.selectItems">
-                            <span>{{item.text}}</span>
-                            <icon :value="'&#xe680;'"
-                                  v-if="selection.value == item.text">
-                            </icon>
-                        </li>
-                    </ul>
-                </transition>
             </div>
         </div>
         <div class="second-list-body">
@@ -35,6 +36,9 @@
                     <cell v-for="(item,index) in value"
                           :value="item"
                           :index="index"
+                          :total="totalItems"
+                          :showborder="showborder"
+                          @loadMore="loadMoreElement"
                           :key="index"></cell>
                     <div class="index-footer">
                         <p>每个榜单都会发现不同的玩法</p>
@@ -51,17 +55,21 @@
     export default {
         data() {
             return {
-                allLoaded: false,
+                allLoaded: true,
                 pullHeight: 20,
+                showborder: false,
                 selection: {
                     selectActive: false,
                     value: '最热',
+                    type: 1,
                     selectItems: [
                         {
-                            text: '最热'
+                            text: '最热',
+                            type: 1
                         },
                         {
-                            text: '最新'
+                            text: '最新',
+                            type: 2
                         }
                     ]
                 },
@@ -79,6 +87,11 @@
 
         },
         methods: {
+            loadMoreElement() {
+                this.allLoaded = false
+                this.showborder = true
+                this.$emit('loadAll')
+            },
             sort(type) {
                 if (type == 0) {
                     this.value = this.value.sort((a, b) => {
@@ -112,22 +125,27 @@
             toggleSort() {
                 this.selection.selectActive = !this.selection.selectActive;
             },
-            toggleSelect(i) {
+            selectType(val) {
                 this.$count(['Ranking_Lv2_Sort_Element', 1])
                 this.selection.selectActive = false;
-                this.selection.value = this.selection.selectItems[i].text;
-                this.sort(i)
+                this.selection.value = val.text
+                this.selection.type = val.type
+                this.$emit('sortList', val.type)
             }
         },
         components: {
             cell
         },
-        props: ['value']
+        props: ['value', 'totalItems']
     }
 
 </script>
 
 <style scoped lang="less">
+    .selected {
+        background-color: rgba(0, 0, 0, .2) !important;
+    }
+
     .second-list-root {
         width: 100%;
         overflow: hidden;
@@ -138,7 +156,7 @@
             flex-wrap: nowrap;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
+            padding: 7px 20px;
             .add-element {
                 border: 1px solid rgba(0, 0, 0, 0.2);
                 display: inline-flex;
@@ -158,6 +176,8 @@
             }
             .sort-element {
                 background-color: #fff;
+                display: flex;
+                flex-direction: row;
                 position: relative;
                 .sort-ctrl {
                     display: flex;
@@ -166,6 +186,7 @@
                     span:nth-child(1) {
                         font-size: 20px;
                         line-height: 20px;
+                        color: #777;
                         text-align: center;
                     }
                     span:nth-child(2) {
@@ -173,34 +194,23 @@
                     }
                 }
                 .sort-select {
-                    background-color: #fff;
-                    width: 66px;
-                    height: 40px;
-                    border: 1px solid rgba(0, 0, 0, 0.1);
-                    position: absolute;
-                    z-index: 100;
-                    right: 0px;
-                    top: 40px;
-                    .sanjiao {
-                        display: block;
-                        width: 10px;
-                        height: 10px;
-                        border-top: 1px solid rgba(0, 0, 0, 0.1);
-                        border-right: 1px solid rgba(0, 0, 0, 0.1);
-                        background-color: #fff;
-                        position: absolute;
-                        top: -5px;
-                        right: 10px;
-                        transform: rotate(-45deg);
-                    }
+                    display: flex;
+                    flex-direction: row;
                     li {
+                        display: inline-block;
+                        color: #FF2C09;
                         display: flex;
-                        flex-direction: row;
-                        flex-wrap: nowrap;
-                        justify-content: space-between;
-                        align-items: baseline;
-                        span {
-                            font-size: 14px;
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 0px 3px;
+                        span:nth-child(1) {
+                            font-size: 16px;
+                            line-height: 23px;
+                        }
+                        span:nth-child(2) {
+                            color: #000;
+                            font-size: 12px;
+                            line-height: 12px;
                         }
                     }
                 }

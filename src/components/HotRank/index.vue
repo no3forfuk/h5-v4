@@ -54,20 +54,18 @@
             time = timeFormat('-', time)
             this.time = time;
             if (this.$route.query.firstId) {
+                this.pageTitle = '开荒神器RCM'
+                //一级榜单浏览次数
+                this.$count(['Reading_Rank_Lv1_Num', 1])
                 this.getFirstRank(this.$route.query.firstId)
             } else {
+                //首页浏览次数
+                this.$count(['Reading_Index_Num', 1])
                 this.getPushRank()
             }
             this.sharePage()
             //统计
             this.enterTime = new Date().getTime()
-            if (this.$route.query.firstId) {
-                //一级榜单浏览次数
-                this.$count(['Reading_Rank_Lv1_Num', 1])
-            } else {
-                //首页浏览次数
-                this.$count(['Reading_Index_Num', 1])
-            }
         },
         beforeDestroy() {
             //浏览时长

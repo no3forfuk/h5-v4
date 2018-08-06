@@ -22,7 +22,7 @@
                        @change="viewPicture"
                        style="width: 0;height: 0;opacity: 0;position: absolute;top: 0;left: -9999px;">
             </div>
-            <div class="element-desc" v-if="hasTitle">
+            <div class="element-desc">
                 <textarea v-model="elementDesc"
                           @focus="$count(['Rank_Lv2_AddElement_Input_Desc',1])"
                           placeholder="介绍一下啊这个新成员吧"
@@ -139,13 +139,26 @@
                 } else {
                     this.$count(['Rank_AddElement_Creat', 1])
                     if (this.elemenName.length > 0) {
-                        this.hasTitle = true
-                        if (this.elementDesc.length == 0) {
-                            this.$toast({
-                                message: '请介绍一下新元素吧',
-                                duration: 1000,
-                                position: 'middle'
-                            })
+                        if (!this.imgFile) {
+                            let params = {};
+                            params.element_name = this.elemenName
+                            params.ranking_id = this.$route.query.secondId
+                            SVS_addElement(res => {
+                                this.$toast({
+                                    message: res.message,
+                                    duration: 1000,
+                                    position: 'middle'
+                                })
+                                this.$count(['Rank_AddElement_Success', 1])
+                                this.$emit('cancel')
+                                this.$emit('refresh')
+                            }, err => {
+                                this.$toast({
+                                    message: err.message,
+                                    duration: 1000,
+                                    position: 'middle'
+                                })
+                            }, params)
                             return
                         }
                         uploadFile(this, this.imgFile, (response, filename) => {

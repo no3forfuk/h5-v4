@@ -37,14 +37,6 @@
                 pullHeight: 20
             }
         },
-        mounted() {
-            this.$nextTick(() => {
-                $('.rank-discuss-ul').height($(window).height() - 230)
-            })
-        },
-        created() {
-
-        },
         methods: {
             loadNextPage() {
                 this.$refs.loadmore.onBottomLoaded();

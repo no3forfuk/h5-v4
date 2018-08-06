@@ -72,7 +72,8 @@
                     value: 1
                 }],
                 enterTime: 0,
-                leaveTime: 0
+                leaveTime: 0,
+                solt_name: 'created_at'
             }
         },
         mounted() {
@@ -178,22 +179,22 @@
             },
             sortPostByType(val) {
                 this.$count(['Element_Sort_Post', 1])
-                if (val == 0) {
-                    this.postListArr.sort((a, b) => {
-                        return b.exponent - a.exponent
-                    })
-                    return
-                }
+                this.postListArr = []
                 if (val == 1) {
-                    this.postListArr.sort((a, b) => {
-                        let strA = a.updated_at.replace(/\-/g, '/');
-                        let strB = b.updated_at.replace(/\-/g, '/');
-                        let msA = new Date(strA).getTime()
-                        let msB = new Date(strB).getTime()
-                        return msB - msA
-                    })
-                    return
+                    this.solt_name = 'exponent'
                 }
+                if (val == 2) {
+                    this.solt_name = 'created_at'
+                }
+                let params = {}
+                params.id = this.$route.query.elementId;
+                params.solt_name = this.solt_name;
+                params.page = this.page;
+                SVS_getElementDetails(res => {
+                    this.postListArr = this.postListArr.concat(res.data.data.data)
+                }, err => {
+                    return
+                }, params)
             },
             sharePage() {
                 let vm = this;
@@ -207,6 +208,7 @@
             elementInfo() {
                 let params = {}
                 params.id = this.$route.query.elementId;
+                params.solt_name = this.solt_name;
                 params.page = this.page;
                 SVS_getElementDetails(res => {
                     this.elementData = res.data

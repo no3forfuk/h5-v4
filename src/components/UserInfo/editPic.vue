@@ -7,7 +7,6 @@
         <input type="file"
                @change="viewPicture"
                style="width: 0;opacity: 0;height: 0px;position: absolute;z-index: -10"
-               accept="image/jpg,image/png,image/gif"
                ref="pic">
         </span>
         <img :src="img" alt="" ref="viewBox">

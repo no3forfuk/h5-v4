@@ -6,7 +6,8 @@
             <div class="post-user">
                 <user-card :value="user" v-if="user"></user-card>
             </div>
-            <pre class="post-content" v-html="content"></pre>
+            <div class="post-content" v-html="content"></div>
+            <div class="post-create-time"><span>{{postDetails.created_at}}</span></div>
             <h3 class="discuss-title">评论(<span>{{postDiscussList.length}}</span>)</h3>
             <ul class="discuss-list">
                 <discuss-card v-for="(item,index) in postDiscussList" :key="index" :value="item"
@@ -146,12 +147,8 @@
                 this.activeDiscuss = true;
             },
             getPostContent(val) {
-                let reg = /\</g;
-                if (val.match(reg)) {
-                    this.content = val
-                } else {
-                    this.content = decodeURIComponent(val)
-                }
+                let reg = /\s+/g;
+                this.content = val.replace(reg, ' ')
             },
             getPostDetails() {
                 let params = {};
@@ -199,7 +196,9 @@
 
 </script>
 
-<style scoped lang="less">
+<style lang="less">
+
+
     .post-scroll-box {
         width: 100%;
         height: calc(100% - 92px);
@@ -217,6 +216,13 @@
         padding: 10px;
     }
 
+    .post-create-time {
+        margin-left: 40px;
+        color: #6A6A6A;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
     .post-content {
         width: 100%;
         display: flex;
@@ -224,6 +230,17 @@
         justify-content: center;
         padding-left: 40px;
         padding-right: 10px;
+        font-size: 16px;
+        color: #6A6A6A;
+        h1 {
+            font-size: 16px;
+        }
+        img {
+            max-width: 80%;
+            border-radius: 4px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
     }
 
     .discuss-title {

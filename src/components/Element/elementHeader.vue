@@ -4,15 +4,17 @@
             <div class="ele-info">
                 <p @click="$emit('openDetails','')" :style="showBGC">@{{value.element_name}}</p>
                 <p @click="$emit('openDetails','')">{{value.element_desc}}</p>
-                <p @click="vote">投一票</p>
                 <div class="more-options">
-                    <div class="collect" @click="doCollectElement">
-                        <icon :value="'&#xe62b;'" class="font-size-16" :class="{'collected':isCollect}"></icon>
-                        <span :class="{'collected':isCollect}">收藏</span>
-                    </div>
-                    <div class="more" @click="$emit('more')">
-                        <icon :value="'&#xe62f;'" class="font-size-16"></icon>
-                        <span>更多</span>
+                    <p @click="vote">投一票</p>
+                    <div class="new-more-option">
+                        <div class="collect" @click="doCollectElement">
+                            <icon :value="'&#xe62b;'" class="font-size-16" :class="{'collected':isCollect}"></icon>
+                            <span :class="{'collected':isCollect}">收藏</span>
+                        </div>
+                        <div class="more" @click="$emit('more')">
+                            <icon :value="'&#xe62f;'" class="font-size-16"></icon>
+                            <span>更多</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -44,23 +46,24 @@
                 <span @click.stop="addPost">说点什么，参与讨论</span>
             </div>
             <div class="sort-element">
+                <transition name="sort-select">
+                    <ul class="sort-select" v-if="selection.selectActive">
+                        <li @click="selectType(selection.selectItems[0])"
+                            :class="{'selected':selection.type == 1?true:false}">
+                            <span><icon :value="'&#xe608;'"></icon></span>
+                            <span>最热</span>
+                        </li>
+                        <li @click="selectType(selection.selectItems[1])"
+                            :class="{'selected':selection.type == 2?true:false}">
+                            <span><icon :value="'&#xe605;'"></icon></span>
+                            <span>最新</span>
+                        </li>
+                    </ul>
+                </transition>
                 <div class="sort-ctrl" @click="toggleSort">
                     <span><icon :value="'&#xe638;'"></icon></span>
                     <span v-text="selection.value"></span>
                 </div>
-                <transition name="sort-select" mode="in-out">
-                    <ul class="sort-select" v-if="selection.selectActive">
-                        <span class="sanjiao"></span>
-                        <li @click="toggleSelect(index)"
-                            :key="index"
-                            v-for="(item,index) in selection.selectItems">
-                            <span>{{item.text}}</span>
-                            <icon :value="'&#xe680;'"
-                                  v-if="selection.value == item.text">
-                            </icon>
-                        </li>
-                    </ul>
-                </transition>
             </div>
         </div>
     </div>
@@ -76,13 +79,16 @@
                 fatherData: [0, 0, 0, 0, 0, 0],
                 selection: {
                     selectActive: false,
-                    value: '最热',
+                    value: '最新',
+                    type: 1,
                     selectItems: [
                         {
-                            text: '最热'
+                            text: '最热',
+                            type: 1
                         },
                         {
-                            text: '最新'
+                            text: '最新',
+                            type: 2
                         }
                     ]
                 },
@@ -92,6 +98,12 @@
         },
         computed: {},
         methods: {
+            selectType(val) {
+                this.selection.selectActive = false;
+                this.selection.value = val.text
+                this.selection.type = val.type
+                this.$emit('sortPost', val.type)
+            },
             doCollectElement() {
                 if (sessionStorage.getItem('X-Auth-Token')) {
                     elementCollect({
@@ -127,11 +139,6 @@
             },
             toggleSort() {
                 this.selection.selectActive = !this.selection.selectActive;
-            },
-            toggleSelect(i) {
-                this.selection.selectActive = false;
-                this.selection.value = this.selection.selectItems[i].text;
-                this.$emit('sortPost', i)
             },
             addPost() {
                 if (sessionStorage.getItem('X-Auth-Token')) {
@@ -211,63 +218,69 @@
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
-            align-items: center;
-            padding: 10px 20px;
+            align-items: flex-start;
+            padding: 10px 20px 10px 20px;
             .ele-info {
                 width: 100%;
-                padding-right: 15px;
+                padding-right: 17px;
                 overflow: hidden;
+                display: flex;
+                flex-direction: column;
                 position: relative;
-                .more-options {
-                    position: absolute;
-                    right: 10px;
-                    bottom: 0px;
-                    z-index: 2;
-                    display: inline-flex;
-                    flex-direction: row;
-                    flex-wrap: nowrap;
-                    .collect {
-                        width: 30px;
-                        display: flex;
-                        flex-direction: column;
-                        font-size: 12px;
-                        justify-content: center;
-                        align-items: center;
-                    }
-                    .more {
-                        width: 30px;
-                        display: flex;
-                        flex-direction: column;
-                        font-size: 12px;
-                        justify-content: center;
-                        align-items: center;
-                        margin-left: 10px;
-                    }
-                }
                 p:nth-child(1) {
                     font-weight: bold;
                     line-height: 24px;
                     font-size: 20px;
-                    transition: all 1s;
+                    padding: 4px 0px;
                 }
                 p:nth-child(2) {
                     color: #939398;
-                    margin: 5px 0;
-                    max-height: 20px;
+                    padding: 4px 0px;
+                    font-size: 13px;
+                    line-height: 14px;
                     white-space: nowrap;
                     text-overflow: ellipsis;
                     box-sizing: content-box;
                     overflow: hidden;
                 }
-                p:nth-child(3) {
-                    color: #FF2C09;
-                    margin-top: 20px;
-                    width: 80px;
-                    text-align: center;
-                    border-radius: 6px;
-                    font-size: 14px;
-                    padding: 4px 18px;
-                    background-color: #E4E4E4;
+                .more-options {
+                    width: 100%;
+                    display: inline-flex;
+                    justify-content: space-between;
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    align-items: center;
+                    p {
+                        color: #FF2C09;
+                        width: 75px;
+                        height: 20px;
+                        text-align: center;
+                        border-radius: 5px;
+                        line-height: 14px;
+                        font-size: 13px;
+                        background-color: #E4E4E4;
+                    }
+                    .new-more-option {
+                        display: flex;
+                        flex-direction: row;
+                        .collect {
+                            width: 30px;
+                            display: flex;
+                            flex-direction: column;
+                            font-size: 12px;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        .more {
+                            width: 30px;
+                            display: flex;
+                            flex-direction: column;
+                            font-size: 12px;
+                            justify-content: center;
+                            align-items: center;
+                            margin-left: 10px;
+                        }
+                    }
                 }
             }
             img:nth-child(2) {
@@ -360,8 +373,10 @@
                 }
             }
             .sort-element {
-                position: relative;
                 background-color: #fff;
+                display: flex;
+                flex-direction: row;
+                position: relative;
                 .sort-ctrl {
                     display: flex;
                     flex-direction: column;
@@ -376,34 +391,23 @@
                     }
                 }
                 .sort-select {
-                    width: 66px;
-                    height: 40px;
-                    border: 1px solid rgba(0, 0, 0, 0.1);
-                    position: absolute;
-                    right: 0px;
-                    top: 40px;
-                    background-color: #fff;
-                    z-index: 100;
-                    .sanjiao {
-                        display: block;
-                        width: 10px;
-                        height: 10px;
-                        border-top: 1px solid rgba(0, 0, 0, 0.1);
-                        border-right: 1px solid rgba(0, 0, 0, 0.1);
-                        background-color: #fff;
-                        position: absolute;
-                        top: -5px;
-                        right: 10px;
-                        transform: rotate(-45deg);
-                    }
+                    display: flex;
+                    flex-direction: row;
                     li {
+                        display: inline-block;
+                        color: #FF2C09;
                         display: flex;
-                        flex-direction: row;
-                        flex-wrap: nowrap;
-                        justify-content: space-between;
-                        align-items: baseline;
-                        span {
-                            font-size: 14px;
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 0px 3px;
+                        span:nth-child(1) {
+                            font-size: 16px;
+                            line-height: 23px;
+                        }
+                        span:nth-child(2) {
+                            color: #000;
+                            font-size: 12px;
+                            line-height: 12px;
                         }
                     }
                 }
@@ -413,11 +417,9 @@
 
     .sort-select-enter-active {
         animation: fadeIn 0.5s;
-        position: absolute;
     }
 
     .sort-select-leave-active {
         animation: fadeOut 0.5s;
-        position: absolute;
     }
 </style>

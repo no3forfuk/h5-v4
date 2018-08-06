@@ -101,7 +101,7 @@
             submitReSet() {
                 let params = {
                     mobile: this.phoneNumber,
-                    password: this.password,
+                    password: this.MD5(this.password),
                     mobile_code: this.yzm
                 }
                 if (this.yzm.length == 0) {
@@ -129,6 +129,7 @@
                                 duration: 1000,
                                 position: 'middle'
                             })
+                            this.$store.commit('GOLOGIN', false)
                         } else {
                             this.$toast({
                                 message: res.data.message,

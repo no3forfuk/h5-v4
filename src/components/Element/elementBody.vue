@@ -22,10 +22,10 @@
                         </router-link>
                         <div class="user">
                             <div>
-                                <img :src="item.avatar" alt="">
+                                <img :src="item.avatar || 'http://p8rk87lub.bkt.clouddn.com/visitor.jpg'" alt="">
                                 <span>{{item.create_user}}</span>
                             </div>
-                            <span>{{item.updated_at|timeformat}}</span>
+                            <span>{{item.created_at|timeformat}}</span>
                         </div>
                     </div>
                 </li>
@@ -115,7 +115,6 @@
                 a {
                     display: block;
                     width: 100%;
-                    padding-right: 10px;
                     overflow: hidden;
                     color: #000;
                 }

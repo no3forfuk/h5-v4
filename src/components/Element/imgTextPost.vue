@@ -6,42 +6,43 @@
 </template>
 
 <script>
-
     export default {
         data() {
             return {
-                text: '',
-                imgSrc: ''
-            }
+                text: "",
+                imgSrc: ""
+            };
         },
         created() {
             this.getText();
         },
         methods: {
             getText() {
-                if (this.value.post_content.split('<br>')) {
-                    this.text = this.value.post_content.split('<br>')[0]
-                }
-                if (this.text.split('<p>').length > 1) {
-                    this.text = this.text.split('<p>')[1]
-                }
-                let reg = /(([A-Za-z]*)\:\/\/(([A-Za-z0-9]*)\.)*com\/([A-Za-z]*|[0-9]*|[_]*|[-]*|[\.]*|[\u4e00-\u9fa5])*\.([A-Za-z])*)/
-                let reg2 = /(([A-Za-z]*)\:\/\/(([A-Za-z0-9]*)\.)*com\/([A-Za-z]*|[0-9]*|[_]*|[-]*|[\.]*|[\u4e00-\u9fa5])*)/
+                let html = this.value.post_content
+                let regHtml = /<[^>]+>|&[a-z]*;/g;
+                let htmlArr = html.split(regHtml);
+                this.text = htmlArr.join('')
                 if (this.value.img) {
-                    this.imgSrc = this.value.img
+                    this.imgSrc = this.value.img;
                 } else {
-                    if (reg.exec(this.value.post_content)) {
-                        this.imgSrc = reg.exec(this.value.post_content)[0]
-                    } else {
-                        this.imgSrc = reg2.exec(this.value.post_content)[0]
+                    var imgReg = /<img.*?(?:>|\/>)/gi;
+                    let imgStr = ''
+                    if (html.match(imgReg)[0]) {
+                        imgStr = html.match(imgReg)[0]
+                        var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+                        if (imgStr.match(srcReg)[0]) {
+                            var srcArr = imgStr.match(srcReg)[0].split('"')
+                            this.imgSrc = srcArr[1]
+                        }
+
                     }
+
 
                 }
             }
         },
-        props: ['value']
-    }
-
+        props: ["value"]
+    };
 </script>
 
 <style scoped lang="less">
@@ -49,6 +50,16 @@
         width: 100%;
         p {
             width: 100%;
+            font-size: 16px;
+            line-height: 20px;
+            max-height: 80px;
+            overflow: hidden;
+            /* autoprefixer: off */
+            -webkit-box-orient: vertical;
+            /* autoprefixer: on */
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
         }
         img {
             max-width: 70%;
