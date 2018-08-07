@@ -7,7 +7,7 @@
         <div class="rank-info">
             <router-link
                     :to="{name:'secondRankList',query:{secondId:renderData.id,firstId:$route.query.firstId,idx:$route.query.idx}}">
-                <h3 @click="goSecondRank">#{{renderData.ranking_name}}</h3>
+                <h3 @click="goSecondRank(renderData.ranking_pid)">#{{renderData.ranking_name}}</h3>
             </router-link>
             <div class="info-body">
                 <span class="prevmask" v-if="leftBoundary"></span>
@@ -85,7 +85,8 @@
             init() {
 
             },
-            goSecondRank() {
+            goSecondRank(id) {
+                this.$store.commit('SET_ACTIVERANK', {id: id})
                 this.$store.commit('SET_TRANSITIONTYPE', 'forward')
             },
             initUlWidth() {

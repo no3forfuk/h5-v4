@@ -13,13 +13,14 @@
                    :type="'full'">
             <someone-info slot="fullPage"></someone-info>
         </rcm-popup>
+        <img-view v-if="$store.getters.GET_VIEWPIC"></img-view>
     </div>
 </template>
 
 <script>
     import {SNI_login} from './Snippet'
     import {SVS_loginByOther, SVS_firstRankList} from './Servers/API'
-
+    import imgView from './components/common/viewPic/viewPic'
 
     export default {
         data() {
@@ -105,6 +106,9 @@
             '$route.name'(val) {
                 this.$store.commit('SET_LOADPAGENUMBER', val)
             }
+        },
+        components: {
+            imgView
         }
     }
 

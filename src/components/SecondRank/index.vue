@@ -200,6 +200,10 @@
             },
             back() {
                 this.$store.commit('SET_TRANSITIONTYPE', 'back')
+                if (this.$store.getters.GET_ISBACK) {
+                    this.$router.back()
+                    return
+                }
                 if (this.fromRouter == 'element' || this.fromRouter == 'hot') {
                     this.$router.push({
                         name: 'hot',
@@ -208,7 +212,6 @@
                 } else {
                     this.$router.back()
                 }
-
             },
             //打开评论框
             openDis() {

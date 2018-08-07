@@ -10,7 +10,11 @@ const state = {
     getDiscuss: false,
     loadPageNumber: [],
     someoneInfo: false,
-    someoneDetails: {}
+    someoneDetails: {},
+    activeRank: {},
+    viewPic: false,
+    viewPicSrc: '',
+    isBack: false
 }
 const mutations = {
     TOGGLENAVSHOW(state, val) {
@@ -65,6 +69,16 @@ const mutations = {
             state.someoneInfo = val
         }
 
+    },
+    SET_ACTIVERANK(state, val) {
+        state.activeRank = val
+    },
+    SET_VIEWPIC(state, val) {
+        state.viewPic = val[0]
+        state.viewPicSrc = val[1]
+    },
+    SET_ISBACK(state, val) {
+        state.isBack = val
     }
 };
 const getters = {
@@ -97,6 +111,18 @@ const getters = {
     GET_SOMEONEDETAILS: state => {
         return state.someoneDetails
     },
+    GET_ACTIVERANK: state => {
+        return state.activeRank
+    },
+    GET_VIEWPIC: state => {
+        return state.viewPic
+    },
+    GET_VIEWPICSRC: state => {
+        return state.viewPicSrc
+    },
+    GET_ISBACK: state => {
+        return state.isBack
+    }
 }
 module.exports = {
     state,

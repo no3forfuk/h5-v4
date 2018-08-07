@@ -25,20 +25,20 @@
                 <p><span ref="voteNum">{{value.vote}}</span><i>票</i></p>
                 <span>{{value.vote_user}}人投票</span>
             </div>
-            <!--<div class="father-rank">-->
-            <!--<ul>-->
-            <!--<li v-for="(item,index) in fatherData" :key="index">-->
-            <!--<router-link :to="{name:'secondRankList'}">-->
-            <!--<div>-->
-            <!--<span>#1</span>-->
-            <!--<span>289</span>-->
-            <!--<span>/1120</span>-->
-            <!--</div>-->
-            <!--<span>2017最最最最最最打脸对白</span>-->
-            <!--</router-link>-->
-            <!--</li>-->
-            <!--</ul>-->
-            <!--</div>-->
+            <div class="father-rank">
+                <ul>
+                    <li v-for="(item,index) in ranking_p" :key="index" @click="linkToSecond(item)">
+                        <div class="father-item">
+                            <div>
+                                <span>#{{item.ranking_num}}</span>
+                                <span>{{value.vote}}</span>
+                                <span>/{{item.vote}}</span>
+                            </div>
+                            <span>{{item.ranking_name}}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="bottom">
             <div class="add-element">
@@ -76,7 +76,7 @@
     export default {
         data() {
             return {
-                fatherData: [0, 0, 0, 0, 0, 0],
+                fatherData: [],
                 selection: {
                     selectActive: false,
                     value: '最新',
@@ -96,8 +96,20 @@
                 showBGC: ''
             }
         },
+        created() {
+        },
         computed: {},
         methods: {
+            linkToSecond(item) {
+                if (item.id) {
+                    this.$route.query.secondId = item.id
+                    this.$store.commit('SET_ISBACK', true)
+                    this.$router.push({
+                        name: 'secondRankList',
+                        query: this.$route.query
+                    })
+                }
+            },
             selectType(val) {
                 this.selection.selectActive = false;
                 this.selection.value = val.text
@@ -181,7 +193,7 @@
                 }
             }
         },
-        props: ['value'],
+        props: ['value', 'ranking_p'],
         watch: {
             'value.element_name'(n, o) {
                 if (n) {
@@ -314,6 +326,7 @@
                 span:nth-child(2) {
                     font-size: 12px;
                     color: #8E8F93;
+                    text-decoration: underline
                 }
             }
             .father-rank {
@@ -326,7 +339,7 @@
                     padding-bottom: 10px;
                     li {
                         margin-left: 20px;
-                        a {
+                        .father-item {
                             display: block;
                             display: flex;
                             white-space: nowrap;

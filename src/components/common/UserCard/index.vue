@@ -1,5 +1,5 @@
 <template>
-    <div class="user-card" v-if="value">
+    <div class="user-card" v-if="value" @click="openOtherInfo">
         <img :src="value.avatar||'http://p8rk87lub.bkt.clouddn.com/visitor.jpg'" alt="">
         <div class="user-info">
             <h6>{{value.name || value.area +'猎人'}}</h6>
@@ -31,7 +31,11 @@
 
             })
         },
-        methods: {},
+        methods: {
+            openOtherInfo() {
+                this.$store.commit('SET_SOMEONEINFO', [true, this.value])
+            }
+        },
         props: ['value'],
         watch: {
             'value.get_expert.ranking_name'(val) {

@@ -20,6 +20,7 @@
                             @addPost="addPost = true"
                             @more="activeMore=true"
                             ref="elementHead"
+                            :ranking_p="elementData.ranking_p"
                             :value="elementData"
                             v-if="elementData"></element-header>
             <element-body :value="postListArr"
@@ -151,6 +152,7 @@
             },
             back() {
                 this.$store.commit('SET_TRANSITIONTYPE', 'back')
+                this.$store.commit('SET_ISBACK', false)
                 if (this.$route.query.secondId) {
                     this.$router.push({
                         name: 'secondRankList',

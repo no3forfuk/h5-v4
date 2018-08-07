@@ -305,5 +305,13 @@ module.exports = {
             method: 'POST',
             data: data
         })
-    }
+    },
+    //获取广告
+    getBanner(data) {
+        return request({
+            url: '/advert/getAdvert',
+            method: 'POST',
+            data: data
+        })
+    },
 }

@@ -52,6 +52,7 @@ module.exports = {
             this.$store.commit('TOGGLENAVSHOW', this.navShow)
         },
         toggleLi(index, item) {
+            this.$store.commit('SET_ACTIVERANK', item)
             //当前榜单动画
             this.crtIndex = index
             //设置span位置

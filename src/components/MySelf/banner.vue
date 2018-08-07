@@ -1,14 +1,24 @@
 <template>
     <div class="banner">
-        <img src="http://p8rk87lub.bkt.clouddn.com/2018-07-19_193050.png" alt="">
+        <img :src="imgSrc" alt="">
     </div>
 </template>
 
 <script>
+    import {getBanner} from '../../api/api'
 
     export default {
         data() {
-            return {}
+            return {
+                imgSrc: ''
+            }
+        },
+        created() {
+            getBanner({place_mark: 'bnr_user'}).then(res => {
+                this.imgSrc = res.data.data[0].img
+            }).catch(err => {
+                throw err
+            })
         }
     }
 
@@ -18,9 +28,14 @@
     .banner {
         width: 100%;
         padding: 10px 20px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
         img {
-            width: 100%;
-            height: 88px;
+            max-width: 100%;
+            max-height: 88px;
             overflow: hidden;
         }
     }

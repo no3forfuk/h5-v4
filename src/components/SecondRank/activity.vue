@@ -1,6 +1,6 @@
 <template>
     <div class="active-page">
-        <img src="../../static/imgs/active-0806.png" alt="">
+        <img :src="activeSrc" alt="" v-if="isCrtRank" @click="viewPic">
     </div>
 </template>
 
@@ -8,7 +8,22 @@
 
     export default {
         data() {
-            return {}
+            return {
+                activeSrc: 'http://p8rk87lub.bkt.clouddn.com/active-0806.png'
+            }
+        },
+        methods: {
+            viewPic() {
+                this.$store.commit('SET_VIEWPIC', [true, this.activeSrc])
+            }
+        },
+        computed: {
+            isCrtRank() {
+                if (this.$route.query.firstId == 15) return true
+                let crtRank = this.$store.getters.GET_ACTIVERANK
+                if (crtRank.id == 15) return true
+                return false
+            }
         }
     }
 

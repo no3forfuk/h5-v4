@@ -53,6 +53,8 @@
         created() {
             if (this.$store.getters.GET_SOMEONEDETAILS.from_user) {
                 this.u_id = this.$store.getters.GET_SOMEONEDETAILS.from_user.id
+            } else {
+                this.u_id = this.$store.getters.GET_SOMEONEDETAILS.id
             }
             SVS_viewSomeoneInfo(res => {
                 this.someInfo = res.data

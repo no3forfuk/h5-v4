@@ -204,6 +204,9 @@ module.exports = merge(base, {
             app.post('/api/home/user/userNoticeEdit', (req, res) => {
                 go(req, res)
             })
+            app.post('/api/home/advert/getAdvert', (req, res) => {
+                go(req, res)
+            })
             //--------------------------------------------
             //获取微信签名
             // app.post('/api/Wx/signature', (req, res) => {

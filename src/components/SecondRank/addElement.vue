@@ -109,6 +109,39 @@
         methods: {
             submitAddElement() {
                 if (this.selectList.length > 0) {
+                    if (!this.imgFile) {
+                        let arr = [], str = '';
+                        for (let i = 0; i < this.selectList.length; i++) {
+                            arr.push(this.selectList[i].id)
+                        }
+                        str = arr.join(',')
+                        let params = {
+                            ranking_id: this.$route.query.secondId,
+                            list: str
+                        }
+                        SVS_addElementMore(res => {
+                            this.$toast({
+                                message: res.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                            this.$count(['Rank_AddElement_Success', 1])
+                            this.$emit('cancel')
+                            this.$emit('refresh')
+                            this.$route.query.elementId = res.data.id
+                            this.$router.push({
+                                name: 'element',
+                                query: this.$route.query
+                            })
+                        }, err => {
+                            this.$toast({
+                                message: err.message,
+                                duration: 1000,
+                                position: 'middle'
+                            })
+                        }, params)
+                        return
+                    }
                     uploadFile(this, this.imgFile, (res, filename) => {
                         let arr = [], str = '';
                         for (let i = 0; i < this.selectList.length; i++) {
@@ -126,8 +159,14 @@
                                 duration: 1000,
                                 position: 'middle'
                             })
+                            this.$count(['Rank_AddElement_Success', 1])
                             this.$emit('cancel')
                             this.$emit('refresh')
+                            this.$route.query.elementId = res.data.id
+                            this.$router.push({
+                                name: 'element',
+                                query: this.$route.query
+                            })
                         }, err => {
                             this.$toast({
                                 message: err.message,
@@ -152,6 +191,11 @@
                                 this.$count(['Rank_AddElement_Success', 1])
                                 this.$emit('cancel')
                                 this.$emit('refresh')
+                                this.$route.query.elementId = res.data.id
+                                this.$router.push({
+                                    name: 'element',
+                                    query: this.$route.query
+                                })
                             }, err => {
                                 this.$toast({
                                     message: err.message,
@@ -176,6 +220,11 @@
                                 this.$count(['Rank_AddElement_Success', 1])
                                 this.$emit('cancel')
                                 this.$emit('refresh')
+                                this.$route.query.elementId = res.data.id
+                                this.$router.push({
+                                    name: 'element',
+                                    query: this.$route.query
+                                })
                             }, err => {
                                 this.$toast({
                                     message: err.message,

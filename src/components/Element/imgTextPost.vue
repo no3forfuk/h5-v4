@@ -62,9 +62,11 @@
             -webkit-line-clamp: 4;
         }
         img {
-            max-width: 70%;
+            max-width: 80%;
             border-radius: 4px;
             margin-top: 10px;
+            /*max-height: 350px;*/
+            /*overflow: hidden;*/
         }
     }
 </style>
