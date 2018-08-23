@@ -261,7 +261,15 @@
                         this.listInfo = this.listInfo.concat(res.data.data.data)
                     }
                     this.listTotalPage = res.data.data.last_page
-                    sharePage(this, location.href, res.data.ranking_name, res.data.ranking_desc, 'link')
+                    const shareArr = res.data.data.data
+                    let shareImg = ''
+                    for (let i = 0; i < shareArr.length; i++) {
+                        if (shareArr[i].img) {
+                            shareImg = shareArr[i].img
+                            break
+                        }
+                    }
+                    sharePage(this, location.href, res.data.ranking_name, res.data.ranking_desc, 'link', shareImg)
                     $(document)[0].title = res.data.ranking_name;
                 }, err => {
                     return

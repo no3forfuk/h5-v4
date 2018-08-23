@@ -128,8 +128,8 @@
             sharePage() {
                 let vm = this;
                 let url = location.href;
-                let title = '热门榜单';
-                let desc = 'RCM热门榜单';
+                let title = 'RCM今日热榜';
+                let desc = '给生活来点不一样的排行';
                 let type = 'link';
                 sharePage(vm, url, title, desc, type)
             },
@@ -141,6 +141,7 @@
                     this.time = timeFormat('-', time)
                 } else {
                     this.page++;
+                    this.getFirstRank(this.$route.query.firstId)
                 }
                 this.$refs.loadmore.onBottomLoaded();
             },
